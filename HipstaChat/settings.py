@@ -10,7 +10,10 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,7 +28,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-ACCOUNT_ACTIVATION_DAYS = 2 # кол-во дней для хранения кода активации
+ACCOUNT_ACTIVATION_DAYS = 2  # кол-во дней для хранения кода активации
 
 # для отправки кода активации
 AUTH_USER_EMAIL_UNIQUE = True
@@ -46,7 +49,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'registration',
+    'registration',
+    'chat',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,9 +63,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'a.urls'
+ROOT_URLCONF = 'HipstaChat.urls'
 
-WSGI_APPLICATION = 'a.wsgi.application'
+WSGI_APPLICATION = 'HipstaChat.wsgi.application'
 
 
 # Database
@@ -92,3 +96,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
+)
+
+
