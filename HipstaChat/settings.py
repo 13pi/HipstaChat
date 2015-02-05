@@ -51,7 +51,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'registration',
     'chat',
-    'api'
+    'api',
+    'HipstaChat'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -106,4 +107,9 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
 
+AUTH_USER_MODEL = 'HipstaChat.HCUser'
 
+# AUTHENTICATION_BACKENDS = (
+# 'HipstaChat.custom_auth.HCUserModelBackend',
+#     'django.contrib.auth.backends.ModelBackend'
+# )
