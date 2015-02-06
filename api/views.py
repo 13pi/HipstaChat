@@ -25,7 +25,7 @@ class APIView(View):
 
     def finalize(self, response):
         response['Allow'] = ", ".join(self.allowed_methods)
-        response['Access-Control-Allow-Credentials'] = True
+        response['Access-Control-Allow-Credentials'] = "true"
         response['Access-Control-Allow-Origin'] = self.request.META.get('HTTP_ORIGIN', "*")
         response['Access-Control-Allow-Methods'] = response['Allow']
         response[
