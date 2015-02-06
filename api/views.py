@@ -1,8 +1,12 @@
 # Create your views here.
 import json
 
+from django.shortcuts import get_object_or_404
+
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+
+from HipstaChat.models import HCUser
 
 from api.decorators import auth_required, payload_required
 
@@ -82,10 +86,14 @@ class MyProfile(APIView):
         return api_response({"response": "ok"})
 
 
-class Room(APIView):
-    methods = ['PUT']
+class User(APIView):
+    methods = ['GET']
 
-    def put(self, request, *args, **kwargs):
-        a = json.loads(request.body.decode())
-        print(a)
-        return api_response({"response": "123"})
+    @auth_required
+    def get(self, request, pk=None, email=None, *args, **kwargs):
+        if pk:
+            return api_response(get_object_or_404(HCUser, pk=pk).serialize())
+        if email:
+            return api_response(get_object_or_404(HCUser, email=email).serialize())
+
+

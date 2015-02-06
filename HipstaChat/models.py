@@ -5,7 +5,7 @@ from django.db.models.fields import URLField, EmailField, CharField, DateTimeFie
 
 # class HCUserManager(BaseUserManager):
 # def create_user(self, email, password=None, **kwargs):
-#         user = self.model(email=email, **kwargs)
+# user = self.model(email=email, **kwargs)
 #         user.set_password(password)
 #         user.save()
 #         return user
@@ -78,3 +78,14 @@ class HCUser(AbstractBaseUser):
 
     def __repr__(self):
         return self.email
+
+    def serialize(self, extra_fields=None):
+        obj = {
+            "email": self.email,
+            "nickName": self.username,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+            "avatarUrl": self.avatar
+        }
+        return obj
+
