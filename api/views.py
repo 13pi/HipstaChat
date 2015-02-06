@@ -1,15 +1,13 @@
 # Create your views here.
 import json
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
-
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from HipstaChat.models import HCUser
-
 from api.decorators import auth_required, payload_required
-
 from api.utils import api_response
 
 
@@ -97,3 +95,56 @@ class User(APIView):
             return api_response(get_object_or_404(HCUser, email=email).serialize())
 
 
+class UserSearch(APIView):
+    methods = ['POST']
+
+    @auth_required
+    @payload_required
+    def post(self, request):
+        parser = json.loads(request.body.decode())
+
+        if "text" not in parser:
+            return api_response({"error": "text required"}, status=403)
+
+        text = str(parser["text"]).strip()
+        if " " not in text:
+            first, last = text, ""
+        else:
+            first, last = text.split(maxsplit=1)
+
+        obj = {
+            "response": []
+        }
+
+        query = HCUser.objects.filter(
+            Q(first_name__startswith=first) | Q(last_name__startswith=first),
+            Q(first_name__startswith=last) | Q(last_name__startswith=last)
+        )
+
+        obj["response"] += [{"name": user.get_full_name(), "id": user.pk} for user in query]
+        return api_response(obj)
+
+
+class ContactList(APIView):
+    methods = ['GET', 'PUT']
+
+    @auth_required
+    def get(self, request):
+        return api_response({
+            "response": [contact.pk for contact in request.user.contact_owner_id.contacts.all()]
+        })
+
+    @auth_required
+    @payload_required
+    def put(self, request):
+        parsed = json.loads(request.body.decode())
+
+        if "userid" not in parsed:
+            return api_response({"error": "userid required"}, status=403)
+
+        other = get_object_or_404(HCUser, pk=parsed['userid'])
+
+        request.user.contact_owner_id.contacts.add(other)
+        request.user.contact_owner_id.save()
+
+        return api_response({"response": "ok"})

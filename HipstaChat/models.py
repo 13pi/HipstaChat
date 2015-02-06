@@ -30,6 +30,7 @@ from django.db.models.fields import URLField, EmailField, CharField, DateTimeFie
 #         email.contribute_to_class('email', self)
 #
 #
+from chat.models import ContactList
 
 
 class HSUserManager(BaseUserManager):
@@ -39,6 +40,10 @@ class HSUserManager(BaseUserManager):
         user.set_password(password)
 
         user.save()
+        #
+        cl = ContactList(owner=user)
+        cl.save()
+
         return user
 
     def create_superuser(self, username, email, password):
@@ -68,7 +73,7 @@ class HCUser(AbstractBaseUser):
     objects = HSUserManager()
 
     def get_full_name(self):
-        return self.first_name + self.last_name
+        return "%s %s" % (self.first_name, self.last_name)
 
     def get_short_name(self):
         return self.username
