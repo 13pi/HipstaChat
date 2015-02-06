@@ -1,4 +1,7 @@
 # Create your views here.
+import json
+
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from api.utils import api_response
@@ -22,15 +25,20 @@ class APIView(View):
 
     def finalize(self, response):
         response['Allow'] = ", ".join(self.allowed_methods)
-
         response['Access-Control-Allow-Credentials'] = True
-        response['Access-Control-Allow-Origin'] = self.request.META.get('Origin', "*")
+        response['Access-Control-Allow-Origin'] = self.request.META.get('HTTP_ORIGIN', "*")
         response['Access-Control-Allow-Methods'] = response['Allow']
         response[
             'Access-Control-Allow-Headers'] = 'X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept, Authorization'
         response['Access-Control-Max-Age'] = 3600
 
         return response
+
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super().as_view(**initkwargs)
+        view.cls = cls
+        return csrf_exempt(view)
 
 
 class MyProfile(APIView):
@@ -53,4 +61,13 @@ class MyProfile(APIView):
                 "contactListsEmails": "костыль"
             })
         else:
-            return api_response({"error": "not authenticated"})
+            return api_response({"error": "not authenticated"}, status=401)
+
+
+class Room(APIView):
+    methods = ['PUT']
+
+    def put(self, request, *args, **kwargs):
+        a = json.loads(request.body.decode())
+        print(a)
+        return api_response({"response": "123"})

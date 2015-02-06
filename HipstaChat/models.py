@@ -30,7 +30,6 @@ from django.db.models.fields import URLField, EmailField, CharField, DateTimeFie
 #         email.contribute_to_class('email', self)
 #
 #
-from django.db.models.fields.related import ForeignKey
 
 
 class HSUserManager(BaseUserManager):
@@ -38,6 +37,7 @@ class HSUserManager(BaseUserManager):
         user = self.model(username=username, email=self.normalize_email(email), )
         user.is_active = True
         user.set_password(password)
+
         user.save()
         return user
 
@@ -61,7 +61,7 @@ class HCUser(AbstractBaseUser):
     is_staff = BooleanField(default=False, null=False)
 
     avatar = URLField()
-    contact_list = ForeignKey('chat.ContactList')
+    # contact_list = OneToOneField('chat.ContactList')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

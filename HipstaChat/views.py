@@ -6,4 +6,3 @@ from django.shortcuts import render_to_response
 def secret(response):
     return render_to_response('secret.html')
 
-
