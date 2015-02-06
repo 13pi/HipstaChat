@@ -42,15 +42,14 @@ class APIView(View):
 
 
 class MyProfile(APIView):
-    methods = ['GET', 'POST']
+    methods = ['GET', 'PUT']
 
     def get(self, request, *args, **kwargs):
-        Obj = {}
         if request.user.is_authenticated():
             return api_response({
                 "email": request.user.email,
                 "password": request.user.password,
-                "nickName": "костыль",
+                "nickName": request.user.username,
                 "firstName": request.user.first_name,
                 "lastName": request.user.last_name,
                 "avatarUrl": "костыль",
@@ -62,6 +61,31 @@ class MyProfile(APIView):
             })
         else:
             return api_response({"error": "not authenticated"}, status=401)
+
+    def put(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return api_response({"error": "not authenticated"}, status=401)
+
+        user = request.user
+
+        if not request.body:
+            return api_response({"error": "payload required"}, status=403)
+
+        decoded = json.loads(request.body.decode())
+
+        if "nickName" in decoded:
+            user.username = decoded["nickName"]
+        if "avatarUrl" in decoded:
+            user.avatar = decoded["avatarUrl"]
+        if "firstName" in decoded:
+            user.first_name = decoded["firstName"]
+        if "lastName" in decoded:
+            user.last_name = decoded["lastName"]
+
+        user.save()
+        return api_response({"response": "ok"})
+
+
 
 
 class Room(APIView):
