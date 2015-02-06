@@ -4,6 +4,8 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
+from api.decorators import auth_required, payload_required
+
 from api.utils import api_response
 
 
@@ -44,33 +46,27 @@ class APIView(View):
 class MyProfile(APIView):
     methods = ['GET', 'PUT']
 
+    @auth_required
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return api_response({
-                "email": request.user.email,
-                "password": request.user.password,
-                "nickName": request.user.username,
-                "firstName": request.user.first_name,
-                "lastName": request.user.last_name,
-                "avatarUrl": "костыль",
-                "createdDate": int(request.user.date_joined.timestamp()),
-                "lastOnlineDate": int(request.user.last_login.timestamp()),
-                "active": request.user.is_active,
-                "emailVerified": request.user.is_active,
-                "contactListsEmails": "костыль"
-            })
-        else:
-            return api_response({"error": "not authenticated"}, status=401)
+        return api_response({
+            "email": request.user.email,
+            "password": request.user.password,
+            "nickName": request.user.username,
+            "firstName": request.user.first_name,
+            "lastName": request.user.last_name,
+            "avatarUrl": "костыль",
+            "createdDate": int(request.user.date_joined.timestamp()),
+            "lastOnlineDate": int(request.user.last_login.timestamp()),
+            "active": request.user.is_active,
+            "emailVerified": request.user.is_active,
+            "contactListsEmails": "костыль"
+        })
 
+    @auth_required
+    @payload_required
     def put(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return api_response({"error": "not authenticated"}, status=401)
 
         user = request.user
-
-        if not request.body:
-            return api_response({"error": "payload required"}, status=403)
-
         decoded = json.loads(request.body.decode())
 
         if "nickName" in decoded:
@@ -84,8 +80,6 @@ class MyProfile(APIView):
 
         user.save()
         return api_response({"response": "ok"})
-
-
 
 
 class Room(APIView):
