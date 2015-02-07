@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, AbstractUser, BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import User, AbstractUser, BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db.models.fields import URLField, EmailField, CharField, DateTimeField, BooleanField
 
@@ -54,7 +54,7 @@ class HSUserManager(BaseUserManager):
         return user
 
 
-class HCUser(AbstractBaseUser):
+class HCUser(AbstractBaseUser, PermissionsMixin):
     alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', message='Only aphanumeric characters are allowed.')
 
     username = CharField(unique=False, max_length=20, validators=[alphanumeric])
