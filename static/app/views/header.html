@@ -1,0 +1,75 @@
+
+<header class="top-header clearfix" data-ng-controller="AppCtrl">
+
+<!-- Logo -->
+<div class="logo">
+    <a href="#/">
+         <span>HSE CHK</span>
+    </a>
+</div>
+
+ <div class="menu-button" toggle-off-canvas>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+</div>
+
+<div class="top-nav">
+<ul class="nav-left list-unstyled">
+    <li>
+        <a href="#/" data-toggle-nav-collapsed-min
+           class="toggle-min"
+                ><i class="fa fa-bars"></i></a>
+    </li>
+
+
+    <li >
+    <div   ng-if="! configuration.connectedToApiServer" style="align-content: center; padding-top: 7%; padding-bottom: 5%; background-color: red;" >
+        ОФФЛАЙН РЕЖИМ
+    </div>
+    </li>
+
+    <li >
+    <div    style="align-content: center; padding-top: 10%; padding-left: 5px; padding-right: 5px;" >
+        <b>{{getDatetime | date:'medium'}}</b>
+
+
+    </div>
+
+        </li>
+
+
+
+
+</ul>
+
+
+
+<ul class="nav-right pull-right list-unstyled"  >
+
+    <li class="dropdown text-normal nav-profile">
+        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                     <span class="hidden-xs">
+                        <span> {{currentUser.firstname}}   {{currentUser.lastname}} </span>
+                    </span>
+        </a>
+        <ul class="dropdown-menu with-arrow pull-right">
+
+            <a href="#/login/login">
+                <i class="fa fa-sign-out"></i>
+                <span>  Зайти под другой учётной записью </span>
+            </a>
+
+
+    </li>
+</ul>
+</li>
+
+
+
+
+</ul>
+</div>
+
+</header>
+<!--</div>-->

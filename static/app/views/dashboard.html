@@ -1,0 +1,408 @@
+<div >
+
+<div style="padding: 30px;">
+
+        <div class="row">
+
+            <div    >
+                <div data-ng-controller="DashboardCtrl">
+
+
+
+                    <section class="panel panel-default">
+                        <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Информация об аккаунте  </div>
+                        <div class="panel-body text-center">
+
+
+                            <div class="row">
+                                <!--<div class="col-md-6">-->
+
+                                    <!--{-->
+                                    <!--&lt;!&ndash;"lastName": null,&ndash;&gt;-->
+                                    <!--&lt;!&ndash;"emailVerified": true,&ndash;&gt;-->
+                                    <!--&lt;!&ndash;"nickName": "\u043a\u043e\u0441\u0442\u044b\u043b\u044c",&ndash;&gt;-->
+                                    <!--"contactListsEmails": "\u043a\u043e\u0441\u0442\u044b\u043b\u044c",-->
+                                    <!--"password": "pbkdf2_sha256$15000$YVfCGAmIhHst$6Bu8/L5yY/GCz4VHy108QB+H4j/UsOk5KwkGl80/ros=",-->
+                                    <!--&lt;!&ndash;"createdDate": 1423253772,&ndash;&gt;-->
+                                    <!--&lt;!&ndash;"active": true,&ndash;&gt;-->
+                                    <!--&lt;!&ndash;"firstName": null,&ndash;&gt;-->
+                                    <!--"avatarUrl": "\u043a\u043e\u0441\u0442\u044b\u043b\u044c",-->
+                                    <!--"email": "root@root.ru",-->
+                                    <!--"lastOnlineDate": 1423254117-->
+                                    <!--}-->
+
+
+
+                                    <div class="col-md-6">
+                                        firstName:
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <input type="text" ng-model="currentUser.firstName"  class="form-control">
+
+                                        <!--{{currentUser.firstName}}-->
+                                    </div>
+
+                                <div class="col-md-12"></div>
+
+                                    <div class="col-md-6">
+                                        lastName:
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" ng-model="currentUser.lastName"  class="form-control">
+                                        <!--{{currentUser.lastName}}-->
+                                    </div>
+
+
+                                <div class="col-md-12"></div>
+
+
+                                <div class="col-md-6">
+                                        emailVerified:
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" ng-model="currentUser.emailVerified"  class="form-control">
+                                        <!--{{currentUser.emailVerified}}-->
+                                    </div>
+
+
+                                <div class="col-md-12"></div>
+
+
+                                <div class="col-md-6">
+                                        nickName:
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" ng-model="currentUser.nickName"  class="form-control">
+                                        <!--{{currentUser.nickName}}-->
+                                    </div>
+
+                                <div class="col-md-12"></div>
+
+
+
+                                <div class="col-md-6">
+                                        avatarUrl:
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" ng-model="currentUser.avatarUrl"  class="form-control">
+                                        <!--{{currentUser.avatarUrl}}-->
+                                    </div>
+
+                                <div class="col-md-12"></div>
+
+
+                                <div class="col-md-6">
+                                        email:
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" ng-model="currentUser.email"  class="form-control">
+                                        <!--{{currentUser.email}}-->
+                                    </div>
+
+
+                                <div class="col-md-12"></div>
+
+                                <div class="col-md-6">
+                                    обновить
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!--{{currentUser.username}}-->
+
+                                        <button ng-click="updateMyProfile()" class="btn btn-success">обновить</button>
+                                </div>
+
+
+
+                            </div>
+
+
+                                <!--<div class="col-md-6">-->
+                                    <!--<div class="row">-->
+
+                                        <!--<div class="col-md-6">-->
+                                            <!--<input type="text"  ng-model="startNewConversationTelephoneNumber" >-->
+
+                                            <!--</div>-->
+
+                                        <!--<div class="col-md-6">-->
+                                            <!--<button class="btn btn-success" ng-click="startNewConversation()"> Добавить</button>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+
+
+
+                                <!--</div>-->
+
+
+
+
+                            <!--</div>-->
+
+                            </div>
+
+                        </section>
+
+
+<!--///////////////////////////////////////////////////////////////////////////-->
+                    <!--<section class="panel panel-default"  ng-repeat="conversation in allConversations" >-->
+                        <!--<div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Переписка  </div>-->
+                        <!--<div class="panel-body text-center">-->
+
+
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-6">-->
+                                    <!--<div ng-repeat="user in conversation.userAccounts ">-->
+                                      <!--{{user.username}}-->
+
+
+
+                                    <!--</div>-->
+
+                                <!--</div>-->
+
+
+
+
+                                <!--<div class="col-md-6">-->
+                                    <!--<a href="#/chat/details/{{conversation.id}}" class="btn btn-success">Перейти</a>-->
+                                    <!--</div>-->
+
+
+                            <!--</div>-->
+
+
+
+
+                        <!--</div>-->
+
+                    <!--</section>-->
+
+
+
+
+
+
+
+
+                    </div>
+
+
+            </div>
+
+                </div>
+            </div>
+
+</div>
+
+
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+    }
+
+    #chartdiv2 {
+        width: 100%;
+        height: 435px;
+        font-size: 11px;
+    }
+
+
+
+    .navbar {
+        padding: 0 20px;
+    }
+    a:hover {
+        cursor: pointer;
+    }
+    input {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 14px;
+        padding: 4px;
+    }
+    .container {
+        margin: auto;
+        max-width: 1000px;
+    }
+    .code-coverage {
+        color: #fff;
+        font-weight: bold;
+        float: right;
+        padding: 10px;
+    }
+
+    /***
+Bootstrap Line Tabs by @keenthemes
+A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+Licensed under MIT
+***/
+
+    /* Tabs panel */
+    .tabbable-panel {
+        border:1px solid #eee;
+        padding: 10px;
+    }
+
+    /* Default mode */
+    .tabbable-line > .nav-tabs {
+        border: none;
+        margin: 0px;
+    }
+    .tabbable-line > .nav-tabs > li {
+        margin-right: 2px;
+    }
+    .tabbable-line > .nav-tabs > li > a {
+        border: 0;
+        margin-right: 0;
+        color: #737373;
+    }
+    .tabbable-line > .nav-tabs > li > a > i {
+        color: #a6a6a6;
+    }
+    .tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
+        border-bottom: 4px solid #fbcdcf;
+    }
+    .tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
+        border: 0;
+        background: none !important;
+        color: #333333;
+    }
+    .tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
+        color: #a6a6a6;
+    }
+    .tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
+        margin-top: 0px;
+    }
+    .tabbable-line > .nav-tabs > li.active {
+        border-bottom: 4px solid #f3565d;
+        position: relative;
+    }
+    .tabbable-line > .nav-tabs > li.active > a {
+        border: 0;
+        color: #333333;
+    }
+    .tabbable-line > .nav-tabs > li.active > a > i {
+        color: #404040;
+    }
+    .tabbable-line > .tab-content {
+        margin-top: -3px;
+        background-color: #fff;
+        border: 0;
+        border-top: 1px solid #eee;
+        padding: 15px 0;
+    }
+    .portlet .tabbable-line > .tab-content {
+        padding-bottom: 0;
+    }
+
+    /* Below tabs mode */
+
+    .tabbable-line.tabs-below > .nav-tabs > li {
+        border-top: 4px solid transparent;
+    }
+    .tabbable-line.tabs-below > .nav-tabs > li > a {
+        margin-top: 0;
+    }
+    .tabbable-line.tabs-below > .nav-tabs > li:hover {
+        border-bottom: 0;
+        border-top: 4px solid #fbcdcf;
+    }
+    .tabbable-line.tabs-below > .nav-tabs > li.active {
+        margin-bottom: -2px;
+        border-bottom: 0;
+        border-top: 4px solid #f3565d;
+    }
+    .tabbable-line.tabs-below > .tab-content {
+        margin-top: -10px;
+        border-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+
+
+</style>
+
+
+
+
+
+
+    <!--<div class="row">-->
+
+        <!--<div class="col-lg-6 col-md-12">-->
+  <!--&lt;!&ndash;WEATHER START&ndash;&gt;-->
+            <!--<section class="panel panel-default" ng-controller="DashboardCtrl">-->
+
+                <!--<span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-2" spinner-start-active></span>-->
+
+                <!--<div class="panel-heading"><span class="glyphicon glyphicon-th"></span>Погода сейчас  в {{weather.created}}    {{weather.results.rss.channel.location.city}}</div>-->
+                <!--<div class="panel-body text-center">-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-6">-->
+            <!--<div >-->
+
+                <!--<section class="panel panel-box">-->
+                    <!--<div class="panel-left panel-item bg-reverse">-->
+                        <!--<p class="size-h1"> {{ weather.results.rss.channel.item.condition.temp }} &deg;</p>-->
+                        <!--<p class="text-muted">{{ weather.results.rss.channel.item.condition.text }}</p>-->
+                    <!--</div>-->
+                    <!--<div class="panel-right panel-item bg-success">-->
+                        <!--<i class="aza icon-{{ weather.results.rss.channel.item.condition.code }}"></i>-->
+                    <!--</div>-->
+                <!--</section>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+                <!--</div></section>-->
+
+
+
+<!--</div>-->
+
+
+
+
+    <!--</div>-->
+
+
+                    <!--<section class="panel panel-default">-->
+                        <!--<div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Прогноз погоды </div>-->
+                        <!--<div class="panel-body text-center">-->
+
+
+
+    <!--<div class="row"  ng-controller="DashboardCtrl">-->
+        <!--<div ng-repeat="cast in weather.results.rss.channel.item.forecast"  class="col-md-6 col-lg-4 ">-->
+            <!--<div>-->
+                <!--<section class="panel panel-box">-->
+                    <!--<div class="panel-left panel-item bg-reverse">-->
+                        <!--<p class="size-h4"> Max:  {{cast.high}} &deg;  </p>-->
+                        <!--<p class="size-h4"> Min:  {{cast.low}}  &deg; </p>-->
+                        <!--<p class="size-h4">  {{cast.day}}   </p>-->
+                        <!--<p class="size-h4">  {{cast.date}}   </p>-->
+
+                    <!--</div>-->
+                    <!--<div class="panel-right panel-item bg-success">-->
+                        <!--<i class="aza icon-{{ cast.code }}"></i>-->
+                        <!--<p class="text-muted" style="color: #ffffff"  >{{ cast.text }}</p>-->
+                    <!--</div>-->
+                <!--</section>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+                    <!--</div></section>-->
+
+    <!--WEATHER END-->
+
