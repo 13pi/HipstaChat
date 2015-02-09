@@ -3,7 +3,7 @@ Views which allow users to create and activate accounts.
 
 """
 
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, render_to_response
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
@@ -17,6 +17,7 @@ class _RequestPassingFormView(FormView):
     enable finer-grained processing.
 
     """
+
     def get(self, request, *args, **kwargs):
         # Pass request to get_form_class and get_form for per-request
         # form control.
@@ -84,6 +85,8 @@ class RegistrationView(_RequestPassingFormView):
         # success_url may be a simple string, or a tuple providing the
         # full argument set for redirect(). Attempting to unpack it
         # tells us which one it is.
+        return render_to_response('registration_complete.html',
+                                  {'activation_key': new_user.registrationprofile_set.get().activation_key})
         try:
             to, args, kwargs = success_url
             return redirect(to, *args, **kwargs)

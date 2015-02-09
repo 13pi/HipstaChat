@@ -116,7 +116,7 @@ class RegistrationView(BaseRegistrationView):
         user registration.
 
         """
-        return ('registration_complete', (), {})
+        return ('registration_complete', (), {'new_user':user})
 
 
 class ActivationView(BaseActivationView):
