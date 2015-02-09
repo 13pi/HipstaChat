@@ -9,7 +9,6 @@ you're using a custom model.
 """
 from __future__ import unicode_literals
 
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -47,11 +46,11 @@ class RegistrationForm(forms.Form):
         in use.
 
         """
-        existing = UserModel().objects.filter(username__iexact=self.cleaned_data['username'])
-        if existing.exists():
-            raise forms.ValidationError(_("A user with that username already exists."))
-        else:
-            return self.cleaned_data['username']
+        # existing = UserModel().objects.filter(username__iexact=self.cleaned_data['username'])
+        # if existing.exists():
+        # raise forms.ValidationError(_("A user with that username already exists."))
+        # `else:
+        return self.cleaned_data['username']
 
     def clean(self):
         """
