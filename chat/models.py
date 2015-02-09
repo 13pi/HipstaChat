@@ -12,7 +12,7 @@ class Room(Model):
 class Message(Model):
     sender = ForeignKey('HipstaChat.HCUser')
     receiver = ForeignKey(Room)
-    send_date = DateTimeField()
+    send_date = DateTimeField(auto_now_add=True)
     content = TextField(blank=True)
 
 
