@@ -3,33 +3,7 @@ from django.core.validators import RegexValidator
 from django.db.models.fields import URLField, EmailField, CharField, DateTimeField, BooleanField
 from django.db import models
 
-# class HCUserManager(BaseUserManager):
-# def create_user(self, email, password=None, **kwargs):
-# user = self.model(email=email, **kwargs)
-#         user.set_password(password)
-#         user.save()
-#         return user
-#
-#     def create_superuser(self, email, password, **kwargs):
-#         user = self.model(email=email, is_staff=True, is_superuser=True, **kwargs)
-#         user.set_password(password)
-#         user.save()
-#         return user
-#
-#
-# class HCUser(AbstractUser):
-#     avatar = URLField()
-#     objects = HCUserManager()
-#
-#     REQUIRED_FIELDS = []
-#     USERNAME_FIELD = 'email'
-#
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         email = EmailField(blank=False, unique=True)
-#         email.contribute_to_class('email', self)
-#
-#
+
 from chat.models import ContactList
 
 
@@ -99,7 +73,3 @@ class HCUser(AbstractBaseUser, PermissionsMixin):
         }
         return obj
 
-a=HCUser()
-# print(a.model)
-# a.create_user()
-# a.create_user('a','ad')
