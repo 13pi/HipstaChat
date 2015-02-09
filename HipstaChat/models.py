@@ -1,41 +1,19 @@
 from django.contrib.auth.models import User, AbstractUser, BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db.models.fields import URLField, EmailField, CharField, DateTimeField, BooleanField
+from django.db import models
 
 
-# class HCUserManager(BaseUserManager):
-# def create_user(self, email, password=None, **kwargs):
-# user = self.model(email=email, **kwargs)
-#         user.set_password(password)
-#         user.save()
-#         return user
-#
-#     def create_superuser(self, email, password, **kwargs):
-#         user = self.model(email=email, is_staff=True, is_superuser=True, **kwargs)
-#         user.set_password(password)
-#         user.save()
-#         return user
-#
-#
-# class HCUser(AbstractUser):
-#     avatar = URLField()
-#     objects = HCUserManager()
-#
-#     REQUIRED_FIELDS = []
-#     USERNAME_FIELD = 'email'
-#
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         email = EmailField(blank=False, unique=True)
-#         email.contribute_to_class('email', self)
-#
-#
 from chat.models import ContactList
 
 
-class HSUserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
-        user = self.model(username=username, email=self.normalize_email(email), )
+class HCUserManager(BaseUserManager):
+    # def __init__(self):
+    #     user = self.model()
+    # def create_user(self, username, email, password=None):
+    def create_user(self, username='a', email='b', password=None):
+        email=self.normalize_email(email)
+        user = self.model(username=username, email=email)
         user.is_active = True
         user.set_password(password)
 
@@ -54,6 +32,7 @@ class HSUserManager(BaseUserManager):
         return user
 
 
+
 class HCUser(AbstractBaseUser, PermissionsMixin):
     alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', message='Only aphanumeric characters are allowed.')
 
@@ -65,12 +44,12 @@ class HCUser(AbstractBaseUser, PermissionsMixin):
     is_active = BooleanField(default=True, null=False)
     is_staff = BooleanField(default=False, null=False)
 
-    avatar = URLField()
+    avatar = URLField(blank=True)
     # contact_list = OneToOneField('chat.ContactList')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-    objects = HSUserManager()
+    objects = HCUserManager()
 
     def get_full_name(self):
         return "%s %s" % (self.first_name, self.last_name)

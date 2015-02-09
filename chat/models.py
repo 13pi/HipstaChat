@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 
 # Create your models here.
-from django.db.models import Model, ForeignKey, ManyToManyField, DateTimeField
+from django.db.models import Model, ForeignKey, ManyToManyField, DateTimeField, TextField
 from django.db.models.fields.related import OneToOneField
 
 
@@ -13,6 +13,7 @@ class Message(Model):
     sender = ForeignKey('HipstaChat.HCUser')
     receiver = ForeignKey(Room)
     send_date = DateTimeField()
+    content = TextField(blank=True)
 
 
 class ContactList(Model):
