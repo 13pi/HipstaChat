@@ -149,7 +149,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
             //}
 
 
-            apiURL = "http://chat.hbakaev.ru:8000/api/";
+            apiURL = "http://chat.hbakaev.ru/api/";
 
             printSD();
             return apiURL;
