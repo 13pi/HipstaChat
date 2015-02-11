@@ -59,7 +59,7 @@ class MyProfile(APIView):
         # "firstName": request.user.first_name,
         # "lastName": request.user.last_name,
         # "avatarUrl": "костыль",
-        #     "createdDate": int(request.user.date_joined.timestamp()),
+        # "createdDate": int(request.user.date_joined.timestamp()),
         #     "lastOnlineDate": int(request.user.last_login.timestamp()),
         #     "active": request.user.is_active,
         #     "emailVerified": request.user.is_active,
@@ -179,7 +179,7 @@ class ContactListDetailed(APIView):
 
 
 class Rooms(APIView):
-    methods = ['GET', 'PUT']
+    methods = ['GET', 'PUT', 'POST']
 
     @auth_required
     def get(self, request, pk=None):
@@ -191,8 +191,8 @@ class Rooms(APIView):
         return api_response({
             'members': [u.pk for u in room.members.all()],
             'name': room.name,
-            'id' : room.pk,
-            'owner' : room.owner.email
+            'id': room.pk,
+            'owner': room.owner.email
         })
 
     @auth_required
@@ -208,7 +208,6 @@ class Rooms(APIView):
         else:
             members = []
 
-
         room = Room.objects.create(owner=request.user, name=parsed['name'])
         room.members.add(request.user, *members)
         room.save()
@@ -217,6 +216,29 @@ class Rooms(APIView):
             "response": "ok",
             "id": room.pk
         })
+
+    @auth_required
+    @payload_required
+    def post(self, request, pk):
+        parsed = json.loads(request.body.decode())
+        room = get_object_or_404(Room, pk=pk)
+
+        if not room.members.filter(pk=request.user.pk).exists():
+            return api_response({'error', 'access denied'}, status=403)
+
+        if 'name' in parsed:
+            room.name = parsed['name']
+
+        if 'addMembers' in parsed:
+            new_users = HCUser.objects.filter(pk__in=parsed['addMembers'])
+            room.members.add(*new_users)
+
+        if 'dismissMembers' in parsed:
+            delete_users = HCUser.objects.filter(pk__in=parsed['dismissMembers'])
+            room.members.remove(*delete_users)
+
+        room.save()
+        return api_response({"response": "ok"})
 
 
 class Messages(APIView):
