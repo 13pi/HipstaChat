@@ -6,7 +6,7 @@ from django.db.models.fields.related import OneToOneField
 
 
 class Room(Model):
-    owner = OneToOneField('HipstaChat.HCUser', related_name='room_owner', primary_key=True)
+    owner = ForeignKey('HipstaChat.HCUser', related_name='room_owner')
     name = CharField(max_length=256, blank=True)
     members = ManyToManyField('HipstaChat.HCUser')
 

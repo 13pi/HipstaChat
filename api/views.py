@@ -58,7 +58,7 @@ class MyProfile(APIView):
         # "nickName": request.user.username,
         # "firstName": request.user.first_name,
         # "lastName": request.user.last_name,
-        #     "avatarUrl": "костыль",
+        # "avatarUrl": "костыль",
         #     "createdDate": int(request.user.date_joined.timestamp()),
         #     "lastOnlineDate": int(request.user.last_login.timestamp()),
         #     "active": request.user.is_active,
@@ -182,20 +182,17 @@ class Rooms(APIView):
     methods = ['GET', 'PUT']
 
     @auth_required
-    @payload_required
-    def get(self, request):
-        parsed = json.loads(request.body.decode())
-        if "id" not in parsed:
-            return api_response({"error": "id required"}, status=403)
+    def get(self, request, pk=None):
+        room = get_object_or_404(Room, pk=pk)
 
-        room = get_object_or_404('Room', pk=parsed['id'])
-
-        if request.user not in room.members:
+        if not room.members.filter(pk=request.user.pk).exists():
             return api_response({'error', 'access denied'}, status=403)
 
         return api_response({
-            'members': [u.pk for u in room.members],
-            'name': 'Костыль'
+            'members': [u.pk for u in room.members.all()],
+            'name': room.name,
+            'id' : room.pk,
+            'owner' : room.owner.email
         })
 
     @auth_required
@@ -203,10 +200,18 @@ class Rooms(APIView):
     def put(self, request):
         parsed = json.loads(request.body.decode())
 
-        members = HCUser.objects.filter(id__in=parsed['members'])
+        if 'name' not in parsed:
+            return api_response({'error': 'name required'}, status=403)
+        if 'members' in parsed:
+            # return api_response({'error': 'member ids required required'}, status=403)
+            members = HCUser.objects.filter(pk__in=parsed['members'])
+        else:
+            members = []
 
-        room = Room.objects.create()
-        room.members.add(*members)
+
+        room = Room.objects.create(owner=request.user, name=parsed['name'])
+        room.members.add(request.user, *members)
+        room.save()
 
         return api_response({
             "response": "ok",
