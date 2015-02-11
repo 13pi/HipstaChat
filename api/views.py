@@ -1,5 +1,6 @@
 # Create your views here.
 import json
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -9,6 +10,7 @@ from django.views.generic import View
 from HipstaChat.models import HCUser
 from api.decorators import auth_required, payload_required
 from api.utils import api_response
+from chat.models import Room
 
 
 class APIView(View):
@@ -50,19 +52,20 @@ class MyProfile(APIView):
 
     @auth_required
     def get(self, request, *args, **kwargs):
-        return api_response({
-            "email": request.user.email,
-            "password": request.user.password,
-            "nickName": request.user.username,
-            "firstName": request.user.first_name,
-            "lastName": request.user.last_name,
-            "avatarUrl": "костыль",
-            "createdDate": int(request.user.date_joined.timestamp()),
-            "lastOnlineDate": int(request.user.last_login.timestamp()),
-            "active": request.user.is_active,
-            "emailVerified": request.user.is_active,
-            "contactListsEmails": "костыль"
-        })
+        # return api_response({
+        # "email": request.user.email,
+        # "password": request.user.password,
+        # "nickName": request.user.username,
+        # "firstName": request.user.first_name,
+        # "lastName": request.user.last_name,
+        #     "avatarUrl": "костыль",
+        #     "createdDate": int(request.user.date_joined.timestamp()),
+        #     "lastOnlineDate": int(request.user.last_login.timestamp()),
+        #     "active": request.user.is_active,
+        #     "emailVerified": request.user.is_active,
+        #     "contactListsEmails": "костыль"
+        # })
+        return api_response(request.user.serialize())
 
     @auth_required
     @payload_required
@@ -92,7 +95,8 @@ class User(APIView):
         if pk:
             return api_response(get_object_or_404(HCUser, pk=pk).serialize())
         if email:
-            return api_response(get_object_or_404(HCUser, email=email).serialize())
+            return api_response(get_object_or_404(HCUser, email=email).serialize(fields=[
+                'id', 'email', 'nickName', 'firstName', 'lastName', 'avatarUrl']))
 
 
 class UserSearch(APIView):
@@ -117,8 +121,8 @@ class UserSearch(APIView):
         }
 
         query = HCUser.objects.filter(
-            Q(first_name__startswith=first) | Q(last_name__startswith=first),
-            Q(first_name__startswith=last) | Q(last_name__startswith=last)
+            Q(first_name__istartswith=first) | Q(last_name__istartswith=first),
+            Q(first_name__istartswith=last) | Q(last_name__istartswith=last)
         )
 
         obj["response"] += [{"name": user.get_full_name(), "id": user.pk} for user in query]
@@ -126,12 +130,13 @@ class UserSearch(APIView):
 
 
 class ContactList(APIView):
-    methods = ['GET', 'PUT']
+    methods = ['GET', 'PUT', 'DELETE']
 
     @auth_required
     def get(self, request):
         return api_response({
-            "response": [contact.pk for contact in request.user.contact_owner_id.contacts.all()]
+            "response": [contact.serialize(fields=['email', 'id']) for contact in
+                         request.user.contact_owner_id.contacts.all()]
         })
 
     @auth_required
@@ -148,3 +153,66 @@ class ContactList(APIView):
         request.user.contact_owner_id.save()
 
         return api_response({"response": "ok"})
+
+    @auth_required
+    def delete(self, request, abr=None):
+        try:
+            contact = request.user.contact_owner_id.contacts.get(pk=abr)
+        except HCUser.DoesNotExist:
+            print(abr)
+            return api_response({"error:": "user with such id does not in contact list"}, status=403)
+
+        request.user.contact_owner_id.contacts.remove(abr)
+        request.user.contact_owner_id.save()
+        return api_response({"response": "ok"})
+
+
+class ContactListDetailed(APIView):
+    methods = ['GET']
+
+    @auth_required
+    def get(self, request):
+        fields = ['id', 'email', 'avatarUrl', 'lastName', 'firstName', 'lastOnlineDate']
+        return api_response({
+            "response": [contact.serialize(fields=fields) for contact in request.user.contact_owner_id.contacts.all()]
+        })
+
+
+class Rooms(APIView):
+    methods = ['GET', 'PUT']
+
+    @auth_required
+    @payload_required
+    def get(self, request):
+        parsed = json.loads(request.body.decode())
+        if "id" not in parsed:
+            return api_response({"error": "id required"}, status=403)
+
+        room = get_object_or_404('Room', pk=parsed['id'])
+
+        if request.user not in room.members:
+            return api_response({'error', 'access denied'}, status=403)
+
+        return api_response({
+            'members': [u.pk for u in room.members],
+            'name': 'Костыль'
+        })
+
+    @auth_required
+    @payload_required
+    def put(self, request):
+        parsed = json.loads(request.body.decode())
+
+        members = HCUser.objects.filter(id__in=parsed['members'])
+
+        room = Room.objects.create()
+        room.members.add(*members)
+
+        return api_response({
+            "response": "ok",
+            "id": room.pk
+        })
+
+
+class Messages(APIView):
+    pass

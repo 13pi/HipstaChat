@@ -20,7 +20,7 @@ class Message(Model):
 
 class ContactList(Model):
     owner = OneToOneField('HipstaChat.HCUser', related_name='contact_owner_id', primary_key=True)
-    contacts = ManyToManyField('HipstaChat.HCUser', null=True)
+    contacts = ManyToManyField('HipstaChat.HCUser',blank=True, null=True)
 
 
 

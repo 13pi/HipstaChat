@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     (r'^chat/', include('chat.urls')),
     (r'^api/', include('api.urls')),
     (r'^secret', secret),
-    (r'^accounts/profile/', RedirectView.as_view(url='/'), )
+    (r'^accounts/profile/', RedirectView.as_view(url='/')),
+
 )
