@@ -3,16 +3,15 @@ from django.core.validators import RegexValidator
 from django.db.models.fields import URLField, EmailField, CharField, DateTimeField, BooleanField
 from django.db import models
 
-
 from chat.models import ContactList
 
 
 class HCUserManager(BaseUserManager):
     # def __init__(self):
-    #     user = self.model()
+    # user = self.model()
     # def create_user(self, username, email, password=None):
     def create_user(self, username='a', email='b', password=None):
-        email=self.normalize_email(email)
+        email = self.normalize_email(email)
         user = self.model(username=username, email=email)
         user.is_active = True
         user.set_password(password)
@@ -32,14 +31,13 @@ class HCUserManager(BaseUserManager):
         return user
 
 
-
 class HCUser(AbstractBaseUser, PermissionsMixin):
     alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', message='Only aphanumeric characters are allowed.')
 
     username = CharField(unique=False, max_length=20, validators=[alphanumeric])
     email = EmailField(unique=True, max_length=255, verbose_name='email address')
-    first_name = CharField(max_length=30, blank=True, null=True)
-    last_name = CharField(max_length=50, blank=True, null=True)
+    first_name = CharField(max_length=30, blank=True)
+    last_name = CharField(max_length=50, blank=True)
     date_joined = DateTimeField(auto_now_add=True)
     is_active = BooleanField(default=True, null=False)
     is_staff = BooleanField(default=False, null=False)
@@ -63,13 +61,25 @@ class HCUser(AbstractBaseUser, PermissionsMixin):
     def __repr__(self):
         return self.email
 
-    def serialize(self, extra_fields=None):
+    def serialize(self, fields=None):
+        _ = lambda field, check: field if check in fields else None
+
         obj = {
+            'id' : self.pk,
             "email": self.email,
             "nickName": self.username,
             "firstName": self.first_name,
             "lastName": self.last_name,
-            "avatarUrl": self.avatar
+            "avatarUrl": self.avatar,
+            'createdDate': int(self.date_joined.timestamp()),
+            'lastOnlineDate': int(self.last_login.timestamp()),
+            'emailVerified': True,
         }
+
+        if fields:
+            obj = {k:v for k,v in obj.items() if k in fields}
+        if not fields or "contactListsEmails" in fields:
+            obj["contactListsEmails"] = [user.email for user in self.contact_owner_id.contacts.all()]
+
         return obj
 
