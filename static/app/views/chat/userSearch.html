@@ -1,0 +1,103 @@
+
+<section class="page-form-ele page">
+
+
+                    <section class="panel panel-default">
+                        <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Поиск по ФИО  </div>
+                        <div class="panel-body text-center">
+
+                            <input type="text"  ng-change="searchUserByData()" ng-model="searchData">
+
+                            <!--{{searchResult}}-->
+
+                            <h4> результаты поиска </h4>
+
+                            <table class="table table-bordered table-stripped"   ng-if="searchResult.length > 0  ">
+                                <thead>
+                                <tr>
+                                    <th  >№</th>
+                                    <th   >Название</th>
+                                    <th>Действие</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="project in searchResult">
+                                    <td  class="col-md-1" >{{$index+1}}</td>
+                                    <td > {{project.name}} </td>
+                                    <td>  <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист</button>    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                            <div ng-if="searchResult.length == 0">
+                                <div class="callout callout-warning">
+                                    <h4>нет результатов</h4>
+                                    <p>введите другие данные для поиска</p>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </section>
+
+
+
+
+
+
+
+    <section class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Поиск по Email или ID  </div>
+        <div class="panel-body text-center">
+
+            <input type="text"  ng-change="searchUserByEmail()" ng-model="searchDataEmail">
+
+            <!--{{searchResultEmail}}-->
+
+            <h4> результаты поиска </h4>
+
+            <table class="table table-bordered table-stripped" ng-if="searchResultEmail.id"  >
+                <thead>
+                <tr>
+
+                    <th   >Название</th>
+                    <th>Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr >
+
+                    <td > {{searchResultEmail.firstName}}   {{searchResultEmail.lastName}} | {{searchResultEmail.nickName}} </td>
+                    <td>  <button ng-click="addToContactListfoo(searchResultEmail.id)" class="btn btn-success"> В контакт лист</button>    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div  ng-if="!searchResultEmail.id">
+                <div class="callout callout-warning">
+                    <h4>нет результатов</h4>
+                    <p>введите другие данные для поиска</p>
+                </div>
+            </div>
+
+
+
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+    </section>

@@ -13,6 +13,8 @@
         'app.ui.ctrls',
         'app.ui.services',
 
+        'mgcrea.ngStrap',
+
         'app.services',
         'satellizer',
 

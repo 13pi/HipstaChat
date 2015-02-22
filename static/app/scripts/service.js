@@ -272,37 +272,72 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
     .service('chatService', function (Restangular, localStorageService, $http, configurationService) {//
 
 
-        this.getAllConversations = function () {
-            return Restangular.all("conversation/all");
-        };
-
-
         this.updateMyProfile = function (newSalesFunnel) {
             return Restangular.one("myaccount").customPUT(newSalesFunnel);
         };
 
-
-        this.getConversationById = function (id ) {
-            return Restangular.one("conversation/"+id);
+        this.addToContactList = function (a) {
+            var b = {};
+            b.userid = a;
+            return Restangular.one("contactList/").customPUT(b);
         };
 
-        this.addMessageToConversation = function (id, message) {
+        this.searchUserByNaveAndData = function (newSalesFunnel) {
             var a = {};
-            a.message = message;
-
-            return Restangular.one("conversation/addMessageToConversation/"+id).customPOST(a);
-        };
-
-
-        this.getAuthToken = function (newSalesFunnel) {
-            return Restangular.one("public/auth").customPOST(newSalesFunnel);
+            a.text = newSalesFunnel;
+            return Restangular.one("searchUser/").customPOST(a);
         };
 
 
 
-        this.startNewByTelephoneNumber = function (newSalesFunnel) {
-            return Restangular.one("conversation/startNewByTelephoneNumber/"+newSalesFunnel).customPOST();
-        }
+        this.addNewRoom = function (newSalesFunnel) {
+            var a = {};
+            a.name = newSalesFunnel;
+            return Restangular.one("room/").customPOST(a);
+        };
+
+
+        //this.getContactList = function () {
+        //    return Restangular.one("contactListWithDetails/");
+        //};
+
+
+        this.getUserById = function (userId) {
+            return Restangular.one("user/"+userId+"/");
+        };
+
+        this.getAccountListFull = function(){
+
+            return Restangular.one("contactListWithDetails/");
+
+        };
+
+
+
+
+
+        //this.getAllConversations = function () {
+        //    return Restangular.all("conversation/all");
+        //};
+
+
+
+        //this.addMessageToConversation = function (id, message) {
+        //    var a = {};
+        //    a.message = message;
+        //    return Restangular.one("conversation/addMessageToConversation/"+id).customPOST(a);
+        //};
+
+
+        //this.getAuthToken = function (newSalesFunnel) {
+        //    return Restangular.one("public/auth").customPOST(newSalesFunnel);
+        //};
+
+
+
+        //this.startNewByTelephoneNumber = function (newSalesFunnel) {
+        //    return Restangular.one("conversation/startNewByTelephoneNumber/"+newSalesFunnel).customPOST();
+        //}
 
     })
 

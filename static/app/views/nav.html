@@ -9,16 +9,20 @@
 </style>
 
 
-<div class="nav-wrapper">
+<div class="nav-wrapper"  data-ng-controller="DashboardCtrl">
     <ul id="nav"
         class="nav  nav2"
-        data-ng-controller="NavCtrl"
+
         data-slim-scroll
         data-collapse-nav
         data-highlight-active>
 
-        <li class="  admin-section" ng-if="hasRole('ROLE_ADMIN')">
-            <a href="#/dashboard"> <i class="fa fa-dashboard"></i><span data-i18n="  Dashboard"></span> </a>
+        <li class="  admin-section"  >
+            <a href="#/dashboard"> <i class="fa fa-dashboard"></i><span data-i18n="  Мой аккаунт"></span> </a>
+        </li>
+
+        <li class="  admin-section"  >
+            <a href="#/chat/userSearch"> <i class="fa fa-dashboard"></i><span data-i18n="Поиск пользователя"></span> </a>
         </li>
 
 
@@ -28,16 +32,16 @@
 
 
 
-        <li class="">
-            <a  ><i class="fa fa-trophy"></i><span data-i18n="Мой аккаунт"></span></a>
-            <ul>
+        <!--<li class="">-->
+            <!--<a  ><i class="fa fa-trophy"></i><span data-i18n="Мой аккаунт"></span></a>-->
+            <!--<ul>-->
 
-                <li> <a href="#/login/login">
-                       <i class="fa fa-angle-right"></i><span
-                        data-i18n="Зайти под другой учётной записью"></span></a></li>
+                <!--<li> <a href="#/login/login">-->
+                       <!--<i class="fa fa-angle-right"></i><span-->
+                        <!--data-i18n="Зайти под другой учётной записью"></span></a></li>-->
 
-            </ul>
-        </li>
+            <!--</ul>-->
+        <!--</li>-->
 
 
 
@@ -50,9 +54,27 @@
         </li>
 
 
+        <div class="text-center">
+            <li class="  admin-section"  >
+                <button class="btn" type="button"  content-template="templates/fastContacts.html"
+                        data-placement="right" data-animation="am-slide-right"  data-container="body" bs-aside="getAccountListFullResult">
+
+                    Быстрые Контакты
+                </button>
+                <!--<a href="#/dashboard"> <i class="fa fa-dashboard"></i><span data-i18n=" "></span> </a>-->
+            </li>
+        </div>
+
 
 
 
 
     </ul>
+
+
+
+
+
+
+
 </div>

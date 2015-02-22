@@ -135,6 +135,9 @@
         .controller('NavCtrl', [
         '$scope', 'filterFilter', 'userInfo', function ($scope, filterFilter, userInfo) {
 
+
+
+
         }
     ])
 
@@ -154,17 +157,69 @@
 
 
 
+                $scope.editProfileMode = false;
+
+                $scope.myContactList=  [];
+
+                $scope.searchDataEmail = "";
+                $scope.searchResultEmail = {};
+                $scope.searchResult = [];
 
                 $scope.updateMyProfile = function(){
-
                     chatService.updateMyProfile ($rootScope.currentUser).then(function(e){
-
                         logger.logSuccess("обновлен");
+                        $scope.editProfileMode = false;
                     })
+                };
 
+
+                $scope.searchUserByData = function (){
+                    $scope.searchResult = [];
+                    chatService.searchUserByNaveAndData($scope.searchData).then(function(e){
+                      $scope.searchResult = e.response;
+                  })
+                };
+
+
+                $scope.searchUserByEmail = function (){
+                    $scope.searchResultEmail = {};
+                    chatService.getUserById($scope.searchDataEmail).get().then(function(e){
+                        $scope.searchResultEmail = e;
+                    })
+                };
+
+
+                $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
+                $scope.getAccountListFullResultPromise.then(function(e){
+
+                    $scope.getAccountListFullResult = e.response;
+                });
+
+
+                $scope.addToContactListfoo = function(c){
+                    chatService.addToContactList (c).then(function(e){
+                        logger.logSuccess("Добавлен новый в контакт лист");
+                    })
+                };
+
+
+
+                $scope.addNewRoom = function(){
+
+                  chatService.addNewRoom($scope.newRomName).then(function(e){
+                      logger.logSuccess("Новая комната добавлена!");
+                  })
 
                 };
 
+
+                $scope.changeEditModeOn = function(){
+                      $scope.editProfileMode = true;
+                };
+
+                $scope.changeEditModeOff = function(){
+                    $scope.editProfileMode = false;
+                };
 
               //  $scope.startNewConversationTelephoneNumber = "7";
               //

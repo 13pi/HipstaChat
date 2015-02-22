@@ -6,7 +6,14 @@ angular.module('app.chat', ['restangular', 'ngRoute', 'LocalStorageModule']).
             when('/chat/details/:id', {
                 controller: ChatDetailsCtrl,
                 templateUrl: 'views/chat/details.html'
-            });
+            })
+
+            .when('/chat/userSearch', {
+            controller: 'DashboardCtrl',
+            templateUrl: 'views/chat/userSearch.html'
+        })
+
+        ;
     });
 
 function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localStorageService, configurationService,  $location,  logger
