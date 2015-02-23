@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 
-from HipstaChat.views import secret
+from HipstaChat.views import secret, helpage
 
 
 urlpatterns = patterns('',
@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^chat/', include('chat.urls')),
     (r'^api/', include('api.urls')),
     (r'^secret', secret),
+    (r'^help', helpage),
     (r'^accounts/profile/', RedirectView.as_view(url='/')),
 
 )
