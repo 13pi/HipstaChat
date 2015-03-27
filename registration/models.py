@@ -88,12 +88,12 @@ class RegistrationManager(models.Manager):
         new_user.is_active = False
         new_user.save()
 
-        registration_profile = self.create_profile(new_user)
+        registration_profile, returned_key = self.create_profile(new_user)
 
         if send_email:
             registration_profile.send_activation_email(site, request)
 
-        return new_user
+        return new_user,returned_key
 
     def create_profile(self, user):
         """
@@ -112,7 +112,7 @@ class RegistrationManager(models.Manager):
             username = username.encode('utf-8')
         activation_key = hashlib.sha1(salt+username).hexdigest()
         return self.create(user=user,
-                           activation_key=activation_key)
+                           activation_key=activation_key), activation_key
 
     def delete_expired_users(self):
         """

@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
-
+import requests
+from registration.send import send_invite
 from registration import signals
 from registration.models import RegistrationProfile
 from registration.views import ActivationView as BaseActivationView
@@ -85,11 +86,13 @@ class RegistrationView(BaseRegistrationView):
             site = Site.objects.get_current()
         else:
             site = RequestSite(request)
-        new_user = RegistrationProfile.objects.create_inactive_user(
+        new_user, returned_key = RegistrationProfile.objects.create_inactive_user(
             username, email, password, site,
-            send_email=self.SEND_ACTIVATION_EMAIL,
+            send_email=False,
             request=request,
         )
+
+        send_invite(email,returned_key)
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,
                                      request=request)

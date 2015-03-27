@@ -4,15 +4,17 @@ from chat.models import Room, Message, ContactList
 
 
 class RoomAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('owner','name')
+
 
 
 class MessageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('sender','send_date')
+    
 
 
 class ContactListAdmin(admin.ModelAdmin):
-    pass
+     list_display = ('owner',)
 
 
 
