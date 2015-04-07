@@ -85,7 +85,7 @@ class RegistrationView(_RequestPassingFormView):
         # success_url may be a simple string, or a tuple providing the
         # full argument set for redirect(). Attempting to unpack it
         # tells us which one it is.
-        return render_to_response('registration_complete.html',
+        return render_to_response('registration/registration_complete.html',
                                   {'activation_key': new_user.registrationprofile_set.get().activation_key})
         try:
             to, args, kwargs = success_url
