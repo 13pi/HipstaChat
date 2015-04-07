@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, include
 from django.contrib import admin
+from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.shortcuts import redirect
 from django.views.generic import TemplateView, RedirectView
 
 from HipstaChat.views import secret, helpage
@@ -7,7 +9,8 @@ from HipstaChat.views import secret, helpage
 
 urlpatterns = patterns('',
     (r'^accounts/', include('registration.backends.default.urls')),
-    # Uncomment the next line to enable the admin:
+    (r'^app', RedirectView.as_view(url='static/app/index.html')),
+    # Uncomment the next lin    e to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     (r'^$', TemplateView.as_view(template_name='index.html')),
     (r'^chat/', include('chat.urls')),

@@ -60,7 +60,8 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
             response: function (response) {
                 // ERROR INTERCEPT
                 if (response.status === 401) {
-                    $location.path('login/login');
+                    //$location.path('login/login');
+                    window.location = "http://hipstachat.tk/accounts/login/";
                     console.log("Response 401");
                 }
 
@@ -79,7 +80,8 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
             responseError: function (rejection) {
                 if (rejection.status === 401) {
                     console.log("Response Error 401", rejection);
-                    $location.path('login/login').search('returnTo', $location.path());
+                    window.location = "http://hipstachat.tk/accounts/login/";
+                    //$location.path('login/login').search('returnTo', $location.path());
                 }
 
                 if (rejection.status === 403) {
@@ -135,21 +137,14 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
             //    return apiURL;
             //}
 
-            //if (window.location.hostname == "localhost" || window.location.hostname == "hse.chk"  ) {
-            //    apiURL =  "http://localhost:8080";
-            //} else {
-            //    if (window.location.hostname == "192.168.1.198" || window.location.hostname == "nikita-notebook.local")
-            //    {
-            //        printSD();
-            //        apiURL = "http://192.168.1.198:8080";
-            //        return apiURL ;
-            //    }
-            //
-            //    apiURL =  "http://WEB_URL";
-            //}
+            if (window.location.hostname == "localhost" || window.location.hostname == "chat.hbakaev.ru"  ) {
+                apiURL = "http://chat.hbakaev.ru/api/";
+            } else {
 
+                apiURL =  "http://hipstachat.tk/api/";
+            }
 
-            apiURL = "http://chat.hbakaev.ru/api/";
+            //apiURL = "http://chat.hbakaev.ru/api/";
 
             printSD();
             return apiURL;
