@@ -1,39 +1,23 @@
 {% load i18n %}
 {% load url from future %}
 <!doctype html>
-<html lang="en">
-
 <head>
-    <title>Django Registration Test App</title>
+    {% block styles %}
+    {% endblock %}
+    <title>abc</title>
 </head>
-
-<body>
-    <div id="header">
-    {% block header %}
-    <a href="{% url 'index' %}">{% trans "Home" %}</a> |
-
-    {% if user.is_authenticated %}
-        {% trans "Logged in" %}: {{ user.username }}
-        (<a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a> |
-        <a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>)
-    {% else %}
-       <a href="{% url 'auth_login' %}">{% trans "Log In" %}</a>
-    {% endif %}
-    {% endblock %}
-    </div>
-
-    <div id="content">
-    <h1>{% block title %}{% endblock %}</h1>
-    {% block content %}
-
-    {% endblock content %}
-    </div>
-
-    <div id="footer">
-    {% block footer %}
-
-    {% endblock %}
-    </div>
-</body>
-
-</html>
+{% block content %}
+<h1>Регистрация</h1>
+<form method="post" action="">
+<dl class="register">
+{% for field in form %}
+    <dt>{{ field.label_tag }}</dt>
+    <dd class="clearfix">{{ field }}
+    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
+    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
+    </dd>
+{% endfor %}
+</dl>
+<input type="submit" value="Зарегистрироваться" / class="clearfix">
+</form>
+{% endblock %}
