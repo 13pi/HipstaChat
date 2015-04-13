@@ -16,7 +16,7 @@
         'mgcrea.ngStrap',
 
         'app.services',
-        'satellizer',
+        //'satellizer',
 
         'app.login',
         'cgBusy',
@@ -36,30 +36,21 @@
                 $rootScope.title = current.$$route.title;
             });
 
-
-
-
     }] ) )
 
 
-        .config(['$routeProvider',  '$httpProvider', '$authProvider', function ($routeProvider, $httpProvider, $authProvider) {
+        .config(['$routeProvider',  '$httpProvider', function ($routeProvider, $httpProvider) {
             $httpProvider.interceptors.push('authHttpResponseInterceptor');
             var routes, setRoutes;
 
             $httpProvider.defaults.withCredentials = true;
 
-
             routes = [
-
                 'dashboard',
-
                 'pages/404',
                 'pages/403',
                 'pages/500',
                 'pages/503'
-
-
-
             ];
 
 
@@ -85,9 +76,7 @@
         }
         ])
 
-
-
-
+    
 
 }).call(this)
 

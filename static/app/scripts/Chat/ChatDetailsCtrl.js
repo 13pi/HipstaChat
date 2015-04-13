@@ -21,14 +21,12 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 ) {
     $scope.currentChatId = $route.current.params.id;
     $scope.currentConversation   = chatService.getConversationById ($scope.currentChatId).get().$object;
-
     $scope.messageToConversation = "";
 
 
-    ///////////////////////////////
+///////////////////////////////
     $scope.diffDocs = function( obj3333 ) {
         var a = $scope.currentConversation.messages;
-        //var obj = obj333;
         var bIds = {};
         a.forEach(function (obj) {
             bIds[obj.id] = obj;
@@ -39,8 +37,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         });
 
     };
-        //////////////////
-
+//////////////////
 
     $scope.updateMessages = function(){
         chatService.getConversationById ($scope.currentChatId).get().then(function (e) {
@@ -56,7 +53,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
             }
 
-
             $scope.currentConversation = e;
 
             $timeout($scope.updateMessages , 1000);
@@ -64,8 +60,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     };
 
     $scope.updateMessages();
-
-
 
     $scope.addMessageToConversation = function(){
         chatService.addMessageToConversation ($scope.currentChatId , $scope.messageToConversation).then(function(e){

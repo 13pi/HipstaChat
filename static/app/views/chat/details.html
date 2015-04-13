@@ -1,25 +1,52 @@
 <section class="page-form-ele page">
-
-
     <br>
+    <div class="row">
+        <div class="col-md-6">
 
-        <div class="row">
-            <div class="col-md-6">
-
-        <section class="panel panel-default">
-            <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b>  </b>  </div>
-            <div class="panel-body text-center">
-
+            <section class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b> </b></div>
                 <div class="panel-body text-center">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button class="btn btn-success" ng-click="addMessageToConversation()">Отправить</button>
+                    <div class="panel-body text-center">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-success" ng-click="addMessageToConversation()">Отправить</button>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <textarea ng-model="messageToConversation"></textarea>
+                            </div>
                         </div>
 
 
-                        <div class="col-md-6">
-                            <textarea ng-model="messageToConversation"></textarea>
+                    </div>
+                    <br><br>
+
+                </div>
+            </section>
+
+
+            <section class="panel panel-default" ng-repeat="mess in currentConversation.messages">
+                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b> </b></div>
+                <div class="panel-body text-center">
+
+                    <div class="panel-body text-center">
+
+                        <div class="panel-body text-center">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    От userId: {{mess.userId}}
+                                </div>
+
+                                <div class="col-md-6">
+                                    {{mess.message}}
+                                </div>
+
+                            </div>
+
                         </div>
 
 
@@ -27,81 +54,13 @@
 
 
                 </div>
-
-
-                <br><br>
-
-
-
-
-
-
-                <!-- /.col-lg-12 -->
-
-        <!-- /.row -->
-
-                </div>
-
             </section>
 
 
+        </div>
 
 
-
-
-
-                <section class="panel panel-default" ng-repeat="mess in currentConversation.messages">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b>  </b>  </div>
-                    <div class="panel-body text-center">
-
-                        <div class="panel-body text-center">
-
-                            <div class="panel-body text-center" >
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        От userId: {{mess.userId}}
-                                    </div>
-
-
-                                    <div class="col-md-6">
-                                        {{mess.message}}
-                                    </div>
-
-
-                                </div>
-
-
-
-                            </div>
-
-
-                            </div>
-
-
-                        </div>
-                    </section>
-
-
-
-
-
-
-
-
-                </div>
-
-            <!--</div>-->
-
-
-
-
-
-
-
-</div>
-
-
+    </div>
 
 
 </section>
