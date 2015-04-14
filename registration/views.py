@@ -66,7 +66,7 @@ class RegistrationView(_RequestPassingFormView):
     form_class = RegistrationFormUniqueEmail
     http_method_names = ['get', 'post', 'head', 'options', 'trace']
     success_url = None
-    template_name = 'registration/templates/registration_form.html'
+    template_name = 'registration/registration_form.html'
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -85,7 +85,7 @@ class RegistrationView(_RequestPassingFormView):
         # success_url may be a simple string, or a tuple providing the
         # full argument set for redirect(). Attempting to unpack it
         # tells us which one it is.
-        return render_to_response('registration/templates/registration_complete.html',
+        return render_to_response('registration/registration_complete.html',
                                   {'activation_key': new_user.registrationprofile_set.get().activation_key})
         try:
             to, args, kwargs = success_url
@@ -117,7 +117,7 @@ class ActivationView(TemplateView):
 
     """
     http_method_names = ['get']
-    template_name = 'registration/templates/activate.html'
+    template_name = 'registration/activate.html'
 
     def get(self, request, *args, **kwargs):
         activated_user = self.activate(request, *args, **kwargs)

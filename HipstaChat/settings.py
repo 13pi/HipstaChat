@@ -15,7 +15,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 key = 'key-f31e536136714f5134c5f133579addc7'
 sandbox = 'sandbox50f958596328413ba57a57bfeb12eb27.mailgun.org'
 request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(sandbox)
-USE_LOCAL_ADDRESS=0
+IFDEBUG=0
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 

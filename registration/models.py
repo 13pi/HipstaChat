@@ -285,15 +285,15 @@ class RegistrationProfile(models.Model):
             'site': site,
         })
         subject = getattr(settings, 'REGISTRATION_EMAIL_SUBJECT_PREFIX', '') + \
-                  render_to_string('registration/templates/activation_email_subject.txt', ctx_dict)
+                  render_to_string('registration/activation_email_subject.txt', ctx_dict)
         # Email subject *must not* contain newlines
         subject = ''.join(subject.splitlines())
 
-        message_txt = render_to_string('registration/templates/activation_email.txt', ctx_dict)
+        message_txt = render_to_string('registration/activation_email.txt', ctx_dict)
         email_message = EmailMultiAlternatives(subject, message_txt, settings.DEFAULT_FROM_EMAIL, [self.user.email])
 
         try:
-            message_html = render_to_string('registration/templates/activation_email.html', ctx_dict)
+            message_html = render_to_string('registration/activation_email.html', ctx_dict)
         except TemplateDoesNotExist:
             message_html = None
 
