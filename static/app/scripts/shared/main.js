@@ -5,8 +5,6 @@
         .controller('AppCtrl', [
         '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular',
         function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular) {
-            var $window;
-            $window = $(window);
             $scope.main = {
                 brand: 'HipstaChat',
                 name: 'Lisa Doe'
@@ -61,30 +59,6 @@
             };
 ////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
-            $rootScope.hasRole = function (role){
-                if (typeof  $rootScope.currentUser == "undefined" ) return false;
-                if ($rootScope.currentUser.roles == null || typeof $rootScope.currentUser.roles  == "undefined" ||typeof $rootScope.currentUser.roles == "undefined" ) return false;
-
-                var arrayLength = $rootScope.currentUser.roles.length;
-                for (var i = 0; i < arrayLength; i++) {
-                    if ($rootScope.currentUser.roles[i].name == role) {
-                        return true;
-                    }
-                }
-            };
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
             $scope.admin = {
                 layout: 'wide',
                 menu: 'vertical',
@@ -134,28 +108,17 @@
 
         .controller('NavCtrl', [
         '$scope', 'filterFilter', 'userInfo', function ($scope, filterFilter, userInfo) {
-
-
-
-
         }
     ])
 
-
         .controller(
         'DashboardCtrl', ['$scope', 'Restangular', '$http', 'configurationService', '$rootScope',
-
-
-            '$compile','$injector','$timeout'  ,'logger','chatService',
-
+        '$compile','$injector','$timeout'  ,'logger','chatService',
             function ($scope, Restangular, $http, configurationService, $rootScope,
-
-                        $compile, $injector, $timeout,   logger , chatService) {
+                      $compile, $injector, $timeout,   logger , chatService) {
 
  ///////////////////////////////////// WEATHER START /////////////////////////////////////
         console.log("----- Dashboard ctrl start");
-
-
 
                 $scope.editProfileMode = false;
 
@@ -188,10 +151,8 @@
                     })
                 };
 
-
                 $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
                 $scope.getAccountListFullResultPromise.then(function(e){
-
                     $scope.getAccountListFullResult = e.response;
                 });
 
@@ -203,13 +164,10 @@
                 };
 
 
-
                 $scope.addNewRoom = function(){
-
                   chatService.addNewRoom($scope.newRomName).then(function(e){
                       logger.logSuccess("Новая комната добавлена!");
                   })
-
                 };
 
 
@@ -221,23 +179,7 @@
                     $scope.editProfileMode = false;
                 };
 
-              //  $scope.startNewConversationTelephoneNumber = "7";
-              //
-              //  $scope.startNewConversation = function(){
-              //      chatService.startNewByTelephoneNumber($scope.startNewConversationTelephoneNumber).then(function (e) {
-              //          $scope.allConversations.push (e);
-              //      });
-              //
-              //  logger.logSuccess("Добавлено");
-              //
-              //  };
-              //
-              //$scope.allConversations =   chatService.getAllConversations().getList().$object;
-
-
 
 
         }]);
-
-//}).call(this);
 

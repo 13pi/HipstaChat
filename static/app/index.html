@@ -2,7 +2,7 @@
 <!--[if lt IE 8]>
 <html class="no-js lt-ie8"  > <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js"  data-ng-app="app"  > <!--<![endif]-->
+<html class="no-js"  data-ng-app="app"   > <!--<![endif]-->
 
 <!-- manifest="cache.manifest" -->
 
@@ -12,8 +12,6 @@
 
     <meta name="description" content="Responsive Admin Web App">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" initial-scale=1.0, user-scalable=no">
-
-
 
     <link href="styles/please-wait.css" rel="stylesheet">
 
@@ -29,8 +27,6 @@
     <link rel="stylesheet" href="styles/github.min.css">
     <link rel="stylesheet" href="dist/angular-busy.min.css"/>
     <link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
-
-
     <link rel="stylesheet" href="//rawgithub.com/mgcrea/bootstrap-additions/master/dist/bootstrap-additions.min.css">
 
     <style>
@@ -43,9 +39,6 @@
 
     <title ng-bind="'CHAT CHK &mdash; ' + title"></title>
 
-
-
-
 </head>
 
 
@@ -57,8 +50,6 @@
       data-off-canvas-nav
       data-ng-controller="AppCtrl"
       data-ng-class=" {'layout-boxed': admin.layout === 'boxed' } "
-
-
         >
 
 
@@ -93,7 +84,7 @@
 <script type="text/javascript" src="js/please-wait.js"></script>
 <script type="text/javascript">
     window.loading_screen = window.pleaseWait({
-        logo: "http://chat.hbakaev.ru/static/img/logo.png",
+        logo: "/static/img/logo.png",
         backgroundColor: '#16A086',
         loadingHtml: '<div class="spinner"> <div class="rect1"></div> <div class="rect2"></div> <div class="rect3"></div> <div class="rect4"></div> <div class="rect5"></div> </div>'
 
@@ -103,10 +94,7 @@
 
 
 
-    <div id="app-status-ul"> </div>
-
-
-
+<div id="app-status-ul"> </div>
 
 
 
@@ -130,8 +118,8 @@
 
 
 <script src="bower_components/angular-formstamp/formstamp.js"></script>
-    <script src="dist/ui-bootstrap.js"></script>
-    <script src="dist/ui-bootstrap-tpls.js"></script>
+<script src="dist/ui-bootstrap.js"></script>
+<script src="dist/ui-bootstrap-tpls.js"></script>
 
 
 <script src="bower_components/underscore/underscore-min.js"></script>
@@ -145,7 +133,7 @@
 
 
 <script src="scripts/Login/LoginCtrl.js"></script>
-    <script src="scripts/Chat/ChatDetailsCtrl.js"></script>
+<script src="scripts/Chat/ChatDetailsCtrl.js"></script>
 
 
 <script type="text/javascript" src="bower_components/angular/angular.js"></script>
@@ -169,23 +157,14 @@
 <script src="scripts/Form/FormDirective.js"></script>
 <script src="scripts/Form/FormCtrl.js"></script>
 <script src="scripts/Form/FormValidation.js"></script>
- <script src="scripts/UI/Map.js"></script>
+<script src="scripts/UI/Map.js"></script>
 
 
 <script src="scripts/Page/PageCtrl.js"></script>
 
 <script src="dist/angular-busy.js"></script>
 
-
-
-
-
-
-
-<script src='bower_components/satellizer/satellizer.js'></script>
-
-
-
+<!--<script src='bower_components/satellizer/satellizer.js'></script>-->
 
 
 <script src='bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
