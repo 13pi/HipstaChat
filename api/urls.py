@@ -1,6 +1,6 @@
 from django.conf.urls import patterns
 
-from api.views import MyProfile, User, UserSearch, ContactList, Rooms, Messages, ContactListDetailed
+from api.views import MyProfile, User, UserSearch, ContactList, Rooms, Messages, ContactListDetailed, Notifications
 
 
 urlpatterns = patterns('',
@@ -16,4 +16,6 @@ urlpatterns = patterns('',
                        (r'^messages/(?P<pk>\d+)/$', Messages.as_view()),
                        (r'^messages/(?P<pk>\d+)/(?P<since>\d+)/$', Messages.as_view()),
                        (r'^messages/(?P<pk>\d+)/(?P<since>\d+)/(?P<count>\d+)/$', Messages.as_view()),
+                       (r'^notifications/$', Notifications.as_view()),
+                       (r'^notifications/((?P<pk>\d+))/$$', Notifications.as_view()),
 )

@@ -11,7 +11,7 @@ from HipstaChat import models
 from HipstaChat.models import HCUser
 from api.decorators import auth_required, payload_required
 from api.utils import api_response, user_in_room
-from chat.models import Room, Message
+from chat.models import Room, Message, Notification
 
 
 class APIView(View):
@@ -156,8 +156,12 @@ class ContactList(APIView):
 
         other = get_object_or_404(HCUser, pk=parsed['userid'])
 
+        Notification.send(other, 5, request.user.pk)
+
         request.user.contact_owner_id.contacts.add(other)
         request.user.contact_owner_id.save()
+
+
 
         return api_response({"response": "ok"})
 
@@ -169,8 +173,12 @@ class ContactList(APIView):
             print(abr)
             return api_response({"error:": "user with such id does not in contact list"}, status=403)
 
+
         request.user.contact_owner_id.contacts.remove(abr)
         request.user.contact_owner_id.save()
+
+        Notification.send(contact, 6, request.user.pk)
+
         return api_response({"response": "ok"})
 
 
@@ -228,6 +236,9 @@ class Rooms(APIView):
         room.members.add(request.user, *members)
         room.save()
 
+        for member in members:
+            Notification.send(member, 1, room.pk)
+
         return api_response({
             "response": "ok",
             "id": room.pk
@@ -243,16 +254,26 @@ class Rooms(APIView):
         if not room.owner.pk == request.user.pk:
             return self.access_denied_error()
 
-        if 'name' in parsed:
-            room.name = parsed['name']
 
         if 'addMembers' in parsed:
             new_users = HCUser.objects.filter(pk__in=parsed['addMembers'])
             room.members.add(*new_users)
 
+            for user in new_users:
+                Notification.send(user, 1, room.pk)
+
         if 'dismissMembers' in parsed:
             delete_users = HCUser.objects.filter(pk__in=parsed['dismissMembers'])
             room.members.remove(*delete_users)
+
+            for user in delete_users:
+                Notification.send(user, 2, room.pk)
+
+        if 'name' in parsed:
+            room.name = parsed['name']
+
+        for user in room.members.exclude(pk=request.user.pk):
+            Notification.send(user, 4, room.pk)
 
         room.save()
         return api_response({"response": "ok"})
@@ -268,6 +289,10 @@ class Rooms(APIView):
                                 }, status=403)
 
         room.members.remove(request.user)
+
+        for member in room.members.all():
+            Notification.send(member, 4, room.pk)
+
 
         if not room.members.all().exists():
             room.delete()
@@ -302,6 +327,10 @@ class Messages(APIView):
         message = Message.objects.create(sender=request.user, content=parsed['text'], receiver=room)
         message.save()
 
+        for user in room.members.exclude(pk=request.user.pk):
+            Notification.send(user, type=0, details=message.pk)
+
+
         return api_response({"response": "ok", "id": message.pk})
 
     @auth_required
@@ -326,6 +355,37 @@ class Messages(APIView):
             ]
         })
 
+class Notifications(APIView):
+
+    methods = ['GET', 'DELETE']
+
+    @auth_required
+    def get(self, request, pk=None):
+        if pk:
+            notifications = Notification.objects.filter(pk=pk)
+            if notifications.get().user != request.user:
+                return self.access_denied_error()
+        else:
+            notifications = Notification.objects.filter(user=request.user)
+
+        serialized = [n.serialize() for n in notifications]
+        notifications.update(shown=True)
+
+        return api_response({
+            "response": "ok",
+            "notifications": serialized
+        })
+
+    def delete(self, request, pk):
+        notification = get_object_or_404(Notification, pk=pk)
+
+        if notification.user != request.user:
+            return self.access_denied_error()
+
+        notification.delete()
+        return api_response({
+            "response": "ok"
+        })
 
 
 
