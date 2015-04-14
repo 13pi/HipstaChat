@@ -13,5 +13,7 @@ urlpatterns = patterns('',
                        (r'^contactListWithDetails/$', ContactListDetailed.as_view()),
                        (r'^room/$', Rooms.as_view()),
                        (r'^room/(?P<pk>\d+)/$', Rooms.as_view()),
-                       (r'^messages', Messages.as_view()),
+                       (r'^messages/(?P<pk>\d+)/$', Messages.as_view()),
+                       (r'^messages/(?P<pk>\d+)/(?P<since>\d+)/$', Messages.as_view()),
+                       (r'^messages/(?P<pk>\d+)/(?P<since>\d+)/(?P<count>\d+)/$', Messages.as_view()),
 )

@@ -1,16 +1,17 @@
 # Create your views here.
 import json
-from django.core.exceptions import ObjectDoesNotExist
+from json import loads
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from HipstaChat import models
 
 from HipstaChat.models import HCUser
 from api.decorators import auth_required, payload_required
-from api.utils import api_response
-from chat.models import Room
+from api.utils import api_response, user_in_room
+from chat.models import Room, Message
 
 
 class APIView(View):
@@ -46,6 +47,12 @@ class APIView(View):
         view.cls = cls
         return csrf_exempt(view)
 
+    def access_denied_error(self):
+        return api_response({'error': 'access denied'}, status=403)
+
+    def error_response(self, text):
+        return api_response({'error': text}, status=403)
+
 
 class MyProfile(APIView):
     methods = ['GET', 'PUT']
@@ -60,7 +67,7 @@ class MyProfile(APIView):
         # "lastName": request.user.last_name,
         # "avatarUrl": "костыль",
         # "createdDate": int(request.user.date_joined.timestamp()),
-        #     "lastOnlineDate": int(request.user.last_login.timestamp()),
+        # "lastOnlineDate": int(request.user.last_login.timestamp()),
         #     "active": request.user.is_active,
         #     "emailVerified": request.user.is_active,
         #     "contactListsEmails": "костыль"
@@ -179,21 +186,29 @@ class ContactListDetailed(APIView):
 
 
 class Rooms(APIView):
-    methods = ['GET', 'PUT', 'POST']
+    methods = ['GET', 'PUT', 'POST', 'DELETE']
 
-    @auth_required
-    def get(self, request, pk=None):
-        room = get_object_or_404(Room, pk=pk)
-
-        if not room.members.filter(pk=request.user.pk).exists():
-            return api_response({'error', 'access denied'}, status=403)
-
-        return api_response({
+    def serialize_room(self, room):
+        return {
             'members': [u.pk for u in room.members.all()],
             'name': room.name,
             'id': room.pk,
             'owner': room.owner.email
-        })
+        }
+
+    @auth_required
+    def get(self, request, pk=None):
+
+        if pk is None:
+            return self.get_all_rooms(request)
+
+        room = get_object_or_404(Room, pk=pk)
+
+        if not room.members.filter(pk=request.user.pk).exists():
+            return self.access_denied_error()
+
+        return api_response(self.serialize_room(room))
+
 
     @auth_required
     @payload_required
@@ -201,7 +216,8 @@ class Rooms(APIView):
         parsed = json.loads(request.body.decode())
 
         if 'name' not in parsed:
-            return api_response({'error': 'name required'}, status=403)
+            return self.error_response('name required')
+
         if 'members' in parsed:
             # return api_response({'error': 'member ids required required'}, status=403)
             members = HCUser.objects.filter(pk__in=parsed['members'])
@@ -217,14 +233,15 @@ class Rooms(APIView):
             "id": room.pk
         })
 
+
     @auth_required
     @payload_required
     def post(self, request, pk):
         parsed = json.loads(request.body.decode())
         room = get_object_or_404(Room, pk=pk)
 
-        if not room.members.filter(pk=request.user.pk).exists():
-            return api_response({'error', 'access denied'}, status=403)
+        if not room.owner.pk == request.user.pk:
+            return self.access_denied_error()
 
         if 'name' in parsed:
             room.name = parsed['name']
@@ -240,6 +257,77 @@ class Rooms(APIView):
         room.save()
         return api_response({"response": "ok"})
 
+    @auth_required
+    def delete(self, request, pk):
+
+        room = get_object_or_404(Room, pk=pk)
+
+        if not room.members.filter(pk=request.user.pk).exists():
+            return api_response({
+                                    "error": "you are not member of that room"
+                                }, status=403)
+
+        room.members.remove(request.user)
+
+        if not room.members.all().exists():
+            room.delete()
+
+        return api_response({
+            "response": "ok"
+        })
+
+    def get_all_rooms(self, request):
+        rooms = Room.objects.filter(members__id=request.user.pk)
+        return api_response([
+            self.serialize_room(r) for r in rooms
+        ])
+
 
 class Messages(APIView):
-    pass
+    methods = ['GET', 'PUT']
+
+    @auth_required
+    @payload_required
+    def put(self, request, pk):
+        parsed = loads(request.body.decode())
+
+        room = get_object_or_404(Room, pk=pk)
+
+        if not user_in_room(room, request.user):
+            return self.access_denied_error()
+
+        if not 'text' in parsed:
+            return self.error_response('text required')
+
+        message = Message.objects.create(sender=request.user, content=parsed['text'], receiver=room)
+        message.save()
+
+        return api_response({"response": "ok", "id": message.pk})
+
+    @auth_required
+    def get(self, request, pk, since=None, count=None):
+
+        room = get_object_or_404(Room, pk=pk)
+
+        if not user_in_room(room, request.user):
+            return self.access_denied_error()
+
+        if not since:
+            messages = Message.objects.filter(receiver=room).order_by('-id')[:20]
+        elif not count:
+            messages = Message.objects.filter(receiver=room).exclude(pk__lte=since).order_by('-id')[:20]
+        else:
+            messages = Message.objects.filter(receiver=room).exclude(pk__gte=since).order_by('-id')[:int(count)]
+
+        return api_response({
+            "response": "ok",
+            "messages": [
+                m.serialize() for m in messages
+            ]
+        })
+
+
+
+
+
+

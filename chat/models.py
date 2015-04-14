@@ -17,6 +17,14 @@ class Message(Model):
     send_date = DateTimeField(auto_now_add=True)
     content = TextField(blank=True)
 
+    def serialize(self):
+        return {
+            "id": self.pk,
+            "room": self.receiver.pk,
+            "date": self.send_date.timestamp(),
+            "text": self.content
+        }
+
 
 class ContactList(Model):
     owner = OneToOneField('HipstaChat.HCUser', related_name='contact_owner_id', primary_key=True)
