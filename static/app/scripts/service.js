@@ -183,23 +183,93 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     return Restangular.one("searchUser/").customPOST(a);
                 };
 
-
-                this.addNewRoom = function (newSalesFunnel) {
-                    var a = {};
-                    a.name = newSalesFunnel;
-                    return Restangular.one("room/").customPOST(a);
-                };
-
-
                 this.getUserById = function (userId) {
                     return Restangular.one("user/" + userId + "/");
                 };
 
                 this.getAccountListFull = function () {
-
                     return Restangular.one("contactListWithDetails/");
-
                 };
+
+
+                //{
+                //    "id": 2,
+                //    "name": "roomName2",
+                //    "owner": "ya@nbakaev.ru",
+                //    "members": [
+                //    1
+                //]
+                //}
+
+                this.getRoomById = function (id) {
+                    return Restangular.one("contactListWithDetails/"+id+"/").get();
+                };
+
+                //{
+                //    "id": 2,
+                //    "response": "ok"
+                //}
+
+                this.addNewRoom = function (room) {
+                    var a = {};
+                    a.name = room;
+                    return Restangular.one("room/").customPUT(a);
+                };
+
+                this.leaveRoom = function (room) {
+                    return Restangular.one("room/"+room).customDELETE();
+                };
+
+
+                this.getAllMessagesByRoomId = function (id) {
+                    return Restangular.one("messages/"+id+"/").get();
+                };
+
+
+                this.addNewMessage = function (roomId, messageText) {
+                    var a = {};
+                    a.text = messageText;
+                    return Restangular.one("messages/"+roomId+"/").customPUT(a);
+                };
+
+        this.deleteFromContactList = function (id) {
+            return Restangular.one("contactList/"+id).customDELETE();
+        };
+        //{{ur}}/api/contactList/3
+
+
+                    //[
+                    //    {
+                    //        "id": 1,
+                    //        "name": "roomName",
+                    //        "owner": "ya@nbakaev.ru",
+                    //        "members": [
+                    //            1
+                    //        ]
+                    //    }
+                    //]
+                this.getAllRooms = function () {
+                    return Restangular.all("room/").getList();
+                };
+
+
+
+                this.deleteMemberFromChat = function (roomId, userId) {
+                    var a = {};
+                    a.dismissMembers = [userId];
+                    return Restangular.one("room/"+roomId+"/").customPOST(a);
+                };
+
+                this.addMembeToChat = function (roomId, userId) {
+                    var a = {};
+                    a.addMembers = [userId];
+                    return Restangular.one("room/"+roomId+"/").customPOST(a);
+                };
+
+
+
+
+
 
             })
 

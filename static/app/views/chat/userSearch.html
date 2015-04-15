@@ -5,7 +5,7 @@
         <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Поиск по ФИО</div>
         <div class="panel-body text-center">
 
-            <input type="text" ng-change="searchUserByData()" ng-model="searchData">
+            <input type="text" ng-change="searchUserByData()" ng-model="searchData" class="form-control">
 
             <!--{{searchResult}}-->
 
@@ -24,8 +24,20 @@
                     <td class="col-md-1">{{$index+1}}</td>
                     <td> {{project.name}}</td>
                     <td>
-                        <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист
-                        </button>
+
+                        <div ng-if="!isInContactList(project.id)">
+                            <button ng-click="addToContactListfoo(project.id)" class="btn btn-success">
+                                В контакт
+                                лист
+                            </button>
+                        </div>
+
+                        <div ng-if="isInContactList(project.id)">
+                            <button disabled ng-click="addToContactListfoo(project.id)" class="btn btn-success">
+                                уже в контакт листе
+                            </button>
+                        </div>
+
                     </td>
                 </tr>
 
@@ -50,7 +62,7 @@
         <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Поиск по Email или ID</div>
         <div class="panel-body text-center">
 
-            <input type="text" ng-change="searchUserByEmail()" ng-model="searchDataEmail">
+            <input type="text" ng-change="searchUserByEmail()" ng-model="searchDataEmail" class="form-control">
 
             <!--{{searchResultEmail}}-->
 
@@ -71,9 +83,15 @@
                         {{searchResultEmail.nickName}}
                     </td>
                     <td>
-                        <button ng-click="addToContactListfoo(searchResultEmail.id)" class="btn btn-success"> В контакт
-                            лист
-                        </button>
+
+
+                            <button ng-click="addToContactListfoo(searchResultEmail.id)" class="btn btn-success">
+                                В контакт
+                                лист
+                            </button>
+
+
+
                     </td>
                 </tr>
 
