@@ -255,7 +255,7 @@ class Rooms(APIView):
             return self.access_denied_error()
 
 
-        if 'addMembers' in pased:
+        if 'addMembers' in parsed:
             new_users = HCUser.objects.filter(pk__in=parsed['addMembers'])
             room.members.add(*new_users)
 
