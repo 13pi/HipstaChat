@@ -46,13 +46,41 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.messageToConversation = "";
 
 
+   chatService.getRoomById ($scope.currentRoomId).then(function (e) {
+        $scope.newRoomName = e.name;
+       $scope.currentRoom = e;
+   });
 
     $scope.addMessageToConversation = function () {
         chatService.addNewMessage ( $scope.currentRoomId, $scope.messageToConversation).then(function (e) {
             logger.logSuccess("Сообщение отправлено!");
             $scope.updateMessagesData ();
+            $scope.messageToConversation = "";
         } )
     };
+
+
+    $scope.alreadyInChatFilter = function(obj){
+        for (var i=0; i <  $scope.currentRoom.members.length ;i++){
+            if (obj.id ==  $scope.currentRoom.members[i]) return false;
+        }
+        return true;
+
+    };
+
+
+    $scope.interval = 3000;
+
+    setInterval($scope.updateMessagesData, $scope.interval);
+
+    //$scope.updateMessagesDataWithInterval = function () {
+    //    $timeout($scope.updateMessagesData() , $scope.interval);
+    //};
+
+    //$timeout($scope.updateMessagesDataWithInterval() , $scope.interval);
+
+
+    //$scope.updateMessagesDataWithInterval();
 
     $scope.updateMessagesData ();
 
@@ -65,9 +93,19 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     };
 
 
+
+
     $scope.deleteMemberFromChat = function (userId) {
         chatService.deleteMemberFromChat($scope.currentRoomId, userId).then(function (e) {
             logger.logSuccess("Пользователь удален из чата!");
+        } )
+    };
+
+
+    $scope.changeRoomName = function () {
+        var userId = $scope.newRoomName;
+        chatService.changeRoomName($scope.currentRoomId, userId).then(function (e) {
+            logger.logSuccess("Название изменено на: " + userId);
         } )
     };
 

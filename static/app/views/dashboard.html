@@ -10,12 +10,12 @@
                                 <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Аватар</div>
                                 <div class="panel-body text-center">
 
-                                    <div ng-if="!currentUser.avatarUrl || currentUser.avatarUrl != ''">
+                                    <div ng-if="currentUser.avatarUrl || currentUser.avatarUrl != ''">
                                         <img src="{{currentUser.avatarUrl}}" class="img-responsive img-thumbnail">
                                     </div>
 
-                                    <div ng-if="currentUser.avatarUrl || currentUser.avatarUrl == ''">
-                                        <img src="images/no-avatar.png" class="img-responsive img-thumbnail">
+                                    <div ng-if="!currentUser.avatarUrl || currentUser.avatarUrl == ''">
+                                        <img src="images/no-avatar.png" class="img-responsive img-thumbnail" width="250" height="250">
                                     </div>
 
 
@@ -174,6 +174,7 @@
                                         <thead>
                                         <tr>
                                             <th>№</th>
+                                            <th>Последний раз заходил</th>
                                             <th>Название</th>
                                             <th>Действие</th>
                                         </tr>
@@ -181,8 +182,16 @@
                                         <tbody>
                                         <tr ng-repeat="project in getAccountListFullResult">
                                             <td class="col-md-1">{{$index+1}}</td>
+
                                             <td>
-                                                 <a href="#/user/details/{{project.id}}"> {{project.firstName}} {{project.lastName}} (  {{resolveUser(project.id).nickName}} ) </a>
+                                                {{timeConverter(project.lastOnlineDate)}}
+                                            </td>
+
+                                            <td>
+                                                 <a href="#/user/details/{{project.id}}">
+                                                     {{printUser(project)}}
+                                                     <!--{{project.firstName}} {{project.lastName}} (  {{resolveUser(project.id).nickName}} )-->
+                                                 </a>
                                             </td>
                                                 <td>
                                                     <button ng-click="deleteFromContactList(project.id)" class="btn btn-danger"> убрать</button>
@@ -257,8 +266,10 @@
                                         <thead>
                                         <tr>
 
-                                            <!--<th>Название</th>-->
-                                            <!--<th>Действие</th>-->
+                                            <th>№</th>
+                                            <th>Название</th>
+                                            <th>Владелец</th>
+                                            <th>Участники</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -276,20 +287,28 @@
                                             <!--//]-->
 
                                             <td>{{room.id}}</td>
-                                            <td> <a href="#/room/details/{{room.id}}"> {{room.name}} </a>  </td>
+                                            <td class="success"> <a href="#/room/details/{{room.id}}"> {{room.name}} </a>  </td>
                                             <td>
 
-                                                <button type="button" class="btn btn-success" data-animation="am-fade-and-slide-top"
-                                                        content-template="templates/userModal.html" bs-modal="room.owner">
-                                                    {{resolveUser(room.owner).nickName}}
-                                                </button>
+                                                <a href="#/user/details/{{resolveUser(room.owner).id}}">
+                                                    {{printUser(resolveUser(room.owner))}}
+                                                </a>
+                                                <!--<button type="button" class="btn btn-success" data-animation="am-fade-and-slide-top"-->
+                                                        <!--content-template="templates/userModal.html" bs-modal="room.owner">-->
+
+                                                    <!--{{printUser(resolveUser(room.owner))}}-->
+
+                                                <!--</button>-->
                                                 <!--{{ }}-->
 
 
                                             </td>
                                             <td>
                                                 <div ng-repeat="member in room.members">
-                                                   <a href="#/user/details/{{member}}"> {{resolveUser(member).nickName}} </a>
+                                                   <a href="#/user/details/{{member}}">
+                                                       {{printUser(resolveUser(member))}}
+
+                                                   </a>
                                                     <br/>
                                                 </div>
                                             </td>

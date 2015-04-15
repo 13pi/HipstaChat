@@ -95,6 +95,11 @@
             };
 
 
+            $rootScope.printUser = function (user) {
+                if (user.firstName || user.lastName ) return user.firstName + " " + user.lastName;
+                return user.nickName;
+            };
+
 ////////////////////////////////////////////////////////////////////////////////
             $rootScope.isDebugMode = function () {
                 return localStorageService.get('debugMode') == "true";

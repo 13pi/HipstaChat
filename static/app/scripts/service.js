@@ -202,7 +202,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 //}
 
                 this.getRoomById = function (id) {
-                    return Restangular.one("contactListWithDetails/"+id+"/").get();
+                    return Restangular.one("room/"+id+"/").get();
                 };
 
                 //{
@@ -267,6 +267,11 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
 
+                this.changeRoomName = function (roomId, newName) {
+                    var a = {};
+                    a.name = newName;
+                    return Restangular.one("room/"+roomId+"/").customPOST(a);
+                };
 
 
 

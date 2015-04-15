@@ -3,97 +3,231 @@
     <div class="row">
         <div class="col-md-6">
 
-            <section class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b> </b></div>
-                <div class="panel-body text-center">
-
-                    <div class="panel-body text-center">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button class="btn btn-success" ng-click="addMessageToConversation()">Отправить</button>
-                            </div>
+            <div ng-if="isDebugMode()">
+                {{currentRoomMessages}}
+            </div>
 
 
-                            <div class="col-md-6">
-                                <textarea ng-model="messageToConversation" class="form-control textarea-fill-all-parent"></textarea>
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                       История сообщений
+                    </div>
+                    <div class="panel-body">
+
+                        <div ng-if="currentRoomMessages.length == 0">
+                            <div class="callout callout-warning">
+                                <h4>сообщений нет</h4>
+                                <p>будьте первыми!</p>
                             </div>
                         </div>
 
+                        <ul class="media-list">
 
+                            <li class="media" ng-repeat="mess in currentRoomMessages">
+
+                                <div class="media-body">
+
+                                    <div class="media">
+                                        <a class="pull-left" href="#">
+                                            <div ng-if="resolveUser(mess.sender).avatarUrl != ''">
+                                                <img class="media-object img-circle " width="70" height="70" src="{{resolveUser(mess.sender).avatarUrl}}" />
+
+                                            </div>
+
+                                            <div ng-if="resolveUser(mess.sender).avatarUrl == ''">
+                                                <img class="media-object img-circle  " src="assets/img/user.png" />
+                                            </div>
+                                        </a>
+                                        <div class="media-body" >
+                                            {{mess.text}}
+                                            <br />
+                                            <small class="text-muted">  {{ printUser ( resolveUser(mess.sender) ) }}  | {{  timeConverter( mess.date )}}</small>
+                                            <hr />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>
+
+                        </ul>
                     </div>
 
-                    <br><br>
 
 
-                    {{getAccountListFullResult}}
+                    <div class="panel-footer">
+                        <div class="input-group">
 
-                    <table class="table table-bordered table-stripped"  >
-                        <thead>
-                        <tr>
-                            <th>№</th>
-                            <th>Имя</th>
-                            <th>Добавить</th>
-                            <th>Удалить</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr ng-repeat="project in getAccountListFullResult">
-                                <td  class="col-md-1" >{{$index+1}}</td>
-                                <!--<td > {{project.id}} </td>-->
-                                <td > {{project.firstName}}  {{project.lastName}} (  {{ project.nickName}}  )  </td>
-                                <td>  <button ng-click="addMemberToChat(project.id)" class="btn btn-success"> добавить в чат</button>    </td>
-                                <td>  <button ng-click="deleteMemberFromChat(project.id)" class="btn btn-danger"> удалить</button>    </td>
-                            </tr>
-
-
-                        </tbody>
-                        </table>
-
-
-
-
-
+                            <textarea ng-model="messageToConversation" class="form-control textarea-fill-all-parent" placeholder="введите сообщение"></textarea>
+                            <!--<input type="text" class="form-control"  />-->
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info btn-lg" ng-click="addMessageToConversation()" style="padding: 5px;">Отправить</button>
+                                        <!--<button class="btn btn-info" type="button">SEND</button>-->
+                                    </span>
+                        </div>
+                    </div>
                 </div>
-            </section>
-
-            {{currentRoomMessages}}
+            </div>
 
 
-            <section class="panel panel-default" ng-repeat="mess in currentRoomMessages">
-                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b> </b></div>
-                <div class="panel-body text-center">
+        </div>
 
 
+
+
+        <div class="col-md-6">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Участники
+                        </div>
+                        <div class="panel-body">
+                            <ul class="media-list">
+
+                                <li class="media" ng-repeat="member in currentRoom.members">
+
+                                    <div class="media-body">
+
+                                        <div class="media">
+                                            <a class="pull-left" href="#">
+
+                                                <div ng-if="resolveUser(member).avatarUrl != ''">
+                                                    <img class="media-object img-circle " width="70" height="70" src="{{resolveUser(member).avatarUrl}}" />
+
+                                                </div>
+
+                                                <div ng-if="resolveUser(member).avatarUrl == ''">
+                                                    <img class="media-object img-circle  " src="assets/img/user.png" />
+                                                </div>
+
+                                            </a>
+                                            <div class="media-body" >
+                                                <h5>
+                                                    <!--От Id: {{mess.sender}}-->
+                                                    <!--{{  timeConverter( mess.date )}}-->
+
+                                                    {{member.id}}
+                                                </h5>
+
+                                                <small class="text-muted">
+                                                    {{printUser(resolveUser(member)) }}
+                                                </small>
+
+                                                <br />
+                                                <small class="text-muted">    {{  timeConverter(resolveUser(member).lastOnlineDate )}}</small>
+                                                <hr />
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-8">
+                    <section class="panel panel-primary">
+                        <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Настройки <b> </b></div>
                         <div class="panel-body text-center">
 
-                            <div class="row">
+                            <div class="panel-body text-center">
 
-                                <div class="col-md-1">
-                                  {{mess.id}}
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Название комнаты
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <input type="text"   ng-model="newRoomName" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <button ng-click="changeRoomName()" class="btn btn-success"> сменить название</button>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-4">
-                                    От Id: {{mess.sender}}
+
+                                <hr/>
+
+
+                                <div class="col-md-12"></div>
+
+
+                                <div class="col-md-6">
+                                    Владелец
                                 </div>
 
-                                <div class="col-md-7">
-                                    {{mess.text}}
+                                <div class="col-md-6">
+                                    <a href="#/user/details/{{currentRoom.owner}}"> (   {{printUser(resolveUser(currentRoom.owner)) }}  ) </a>
+                                </div>
+                                <br/>
+                                <hr/>
+                                <br/> <br/>
+
+
+                                <div ng-if="isDebugMode()">
+                                    {{getAccountListFullResult}}
                                 </div>
 
-                                <div class="col-md-7">
-                                    <!--{{ mess.date | date}}-->
-                                    {{  timeConverter( mess.date )}}
+                                <table class="table table-bordered table-stripped"  >
+                                    <thead>
+                                    <tr>
+                                        <th>№</th>
+                                        <th>Имя</th>
+                                        <th>Добавить</th>
+                                        <th>выгнать</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                    <tr ng-repeat="project in getAccountListFullResult | filter:alreadyInChatFilter as filteredContactList">
+                                        <td  class="col-md-1" >{{$index+1}}</td>
+                                        <!--<td > {{project.id}} </td>-->
+                                        <td >
+                                            {{printUser(project) }}
+                                            <!--{{project.firstName}}  {{project.lastName}} (  {{ project.nickName}}  )-->
+                                        </td>
+                                        <td>  <button ng-click="addMemberToChat(project.id)" class="btn btn-success"> добавить в чат</button>    </td>
+                                        <td>  <button ng-click="deleteMemberFromChat(project.id)" class="btn btn-danger"> выгнать </button>    </td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+
+
+                                <div ng-if="filteredContactList.length == 0">
+                                    <div class="callout callout-warning">
+                                        <h4>людей из контакт листа нет</h4>
+                                        <p>все люди из вашего контакт-листа уже в этом чате!</p>
+                                    </div>
                                 </div>
+
+
+
+
 
                             </div>
 
                         </div>
-
-
+                    </section>
                 </div>
-            </section>
+
+            </div>
+
+
+
+
+
+            </div>
 
 
         </div>
