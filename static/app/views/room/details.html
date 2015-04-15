@@ -1,0 +1,107 @@
+<section class="page-form-ele page">
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+
+            <section class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b> </b></div>
+                <div class="panel-body text-center">
+
+                    <div class="panel-body text-center">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-success" ng-click="addMessageToConversation()">Отправить</button>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <textarea ng-model="messageToConversation" class="form-control textarea-fill-all-parent"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <br><br>
+
+
+                    {{getAccountListFullResult}}
+
+                    <table class="table table-bordered table-stripped"  >
+                        <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Имя</th>
+                            <th>Добавить</th>
+                            <th>Удалить</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="project in getAccountListFullResult">
+                                <td  class="col-md-1" >{{$index+1}}</td>
+                                <!--<td > {{project.id}} </td>-->
+                                <td > {{project.firstName}}  {{project.lastName}} (  {{ project.nickName}}  )  </td>
+                                <td>  <button ng-click="addMemberToChat(project.id)" class="btn btn-success"> добавить в чат</button>    </td>
+                                <td>  <button ng-click="deleteMemberFromChat(project.id)" class="btn btn-danger"> удалить</button>    </td>
+                            </tr>
+
+
+                        </tbody>
+                        </table>
+
+
+
+
+
+                </div>
+            </section>
+
+            {{currentRoomMessages}}
+
+
+            <section class="panel panel-default" ng-repeat="mess in currentRoomMessages">
+                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Сообщения <b> </b></div>
+                <div class="panel-body text-center">
+
+
+                        <div class="panel-body text-center">
+
+                            <div class="row">
+
+                                <div class="col-md-1">
+                                  {{mess.id}}
+                                </div>
+
+                                <div class="col-md-4">
+                                    От Id: {{mess.sender}}
+                                </div>
+
+                                <div class="col-md-7">
+                                    {{mess.text}}
+                                </div>
+
+                                <div class="col-md-7">
+                                    <!--{{ mess.date | date}}-->
+                                    {{  timeConverter( mess.date )}}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                </div>
+            </section>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+

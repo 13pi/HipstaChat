@@ -1,0 +1,57 @@
+<section class="page-form-ele page">
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+
+            <section class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Пользователь  <b> {{resolveUser(currentUserId).nickName}} </b></div>
+                <div class="panel-body text-center">
+
+
+                    <table class="table table-bordered table-stripped   ">
+
+                        <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Email</th>
+                            <th>Ник</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr  >
+                            <td>{{resolveUser(currentUserId).firstName}}</td>
+                            <td>{{resolveUser(currentUserId).lastName}}</td>
+                            <td>{{resolveUser(currentUserId).email}}</td>
+                            <td>{{resolveUser(currentUserId).nickName}}</td>
+                            <!--<td>{{resolveUser(room.owner).firstName}}</td>-->
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                   <!--{{resolveUser(currentUserId)}}-->
+
+
+
+
+                </div>
+            </section>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+

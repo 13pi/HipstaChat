@@ -3,8 +3,8 @@
     angular.module('app.controllers', [])
 
         .controller('AppCtrl', [
-        '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular',
-        function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular) {
+        '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular','chatService','$q',
+        function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular, chatService, $q) {
             $scope.main = {
                 brand: 'HipstaChat',
                 name: 'Lisa Doe'
@@ -47,6 +47,53 @@
                     $rootScope.currentUser = myaccount;
                 });
             }
+
+
+            $rootScope.allResolvedUsers = new Array ();
+
+            $rootScope.resolveUser = function (id){
+                var stringed = id.toString();
+                if (!$rootScope.allResolvedUsers[ stringed ]){
+                    $rootScope.allResolvedUsers[ stringed ] = {};
+                  var chatServicePromise = chatService.getUserById(id).get().then(function (e) {
+                       $rootScope.allResolvedUsers[ stringed ] = e;
+                      return e;
+                   });
+
+                }else{
+                    return  $rootScope.allResolvedUsers[ stringed ] ;
+                }
+
+
+            };
+
+
+            $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
+            $scope.getAccountListFullResultPromise.then(function(e){
+                $rootScope.getAccountListFullResult = e.response;
+            });
+
+
+            $rootScope.isInContactList = function (id){
+                for (var i=0; i < $rootScope.getAccountListFullResult.length; i++){
+                    if ($rootScope.getAccountListFullResult[i].id == id) return true;
+                }
+                return false;
+            };
+
+            $rootScope.timeConverter =  function (UNIX_timestamp){
+                var a = new Date(UNIX_timestamp*1000);
+                var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                var year = a.getFullYear();
+                var month = months[a.getMonth()];
+                var date = a.getDate();
+                var hour = a.getHours();
+                var min = a.getMinutes();
+                var sec = a.getSeconds();
+                var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+                return time;
+            };
+
 
 ////////////////////////////////////////////////////////////////////////////////
             $rootScope.isDebugMode = function () {
@@ -112,7 +159,7 @@
     ])
 
         .controller(
-        'DashboardCtrl', ['$scope', 'Restangular', '$http', 'configurationService', '$rootScope',
+        'DashboardCtrl', ['$scope',  'Restangular', '$http', 'configurationService', '$rootScope',
         '$compile','$injector','$timeout'  ,'logger','chatService',
             function ($scope, Restangular, $http, configurationService, $rootScope,
                       $compile, $injector, $timeout,   logger , chatService) {
@@ -151,15 +198,22 @@
                     })
                 };
 
-                $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
-                $scope.getAccountListFullResultPromise.then(function(e){
-                    $scope.getAccountListFullResult = e.response;
-                });
+                $rootScope.getAccountListFullResult = [];
+
+                $scope.getContactList = function () {
+                    $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
+                    $scope.getAccountListFullResultPromise.then(function(e){
+                        $rootScope.getAccountListFullResult = e.response;
+                    });
+                };
+
+                $scope.getContactList();
 
 
                 $scope.addToContactListfoo = function(c){
                     chatService.addToContactList (c).then(function(e){
                         logger.logSuccess("Добавлен новый в контакт лист");
+                        $scope.getContactList();
                     })
                 };
 
@@ -167,6 +221,9 @@
                 $scope.addNewRoom = function(){
                   chatService.addNewRoom($scope.newRomName).then(function(e){
                       logger.logSuccess("Новая комната добавлена!");
+                      /// обновить комнаты с сервера
+                      $scope.allRooms = chatService.getAllRooms().$object;
+
                   })
                 };
 
@@ -178,6 +235,32 @@
                 $scope.changeEditModeOff = function(){
                     $scope.editProfileMode = false;
                 };
+
+
+                $scope.leaveRoom = function (roomId) {
+                    chatService.leaveRoom(roomId).then(function(e){
+                        logger.logSuccess("Вы покинули комнату!");
+                        $scope.allRooms = chatService.getAllRooms().$object;
+                    })
+                };
+
+
+
+
+                $scope.deleteFromContactList = function (id) {
+                    chatService.deleteFromContactList ( id).then(function (e) {
+                        logger.logSuccess("Удален успешно из контакт-листа!");
+                        $scope.getContactList();
+                    });
+                };
+
+
+
+                $scope.allRooms = chatService.getAllRooms().$object;
+
+
+
+
 
 
 

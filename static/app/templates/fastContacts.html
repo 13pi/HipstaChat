@@ -2,14 +2,22 @@
     <thead>
     <tr>
         <th>№</th>
-        <th>Название</th>
+        <th>Имя</th>
         <!--<th>Действие</th>-->
     </tr>
     </thead>
     <tbody>
+
+    <div ng-if="getAccountListFullResult.length == 0">
+        <div class="callout callout-warning">
+            <h4>в контакт листе никого нет</h4>
+            <p>добаьте людей в контакт-лист через <a href="#/chat/userSearch">поиск</a> </p>
+        </div>
+    </div>
+
     <tr ng-repeat="project in getAccountListFullResult">
         <td  class="col-md-1" >{{$index+1}}</td>
-        <td > {{project.firstName}}  {{project.lastName}} (  {{project.nickName}}  )  </td>
+        <td > {{project.firstName}}  {{project.lastName}} (  {{resolveUser(project.id).nickName}}  )  </td>
         <!--<td>  <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист</button>    </td>-->
     </tr>
 

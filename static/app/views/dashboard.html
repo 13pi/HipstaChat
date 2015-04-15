@@ -9,7 +9,16 @@
                             <section class="panel panel-default">
                                 <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Аватар</div>
                                 <div class="panel-body text-center">
-                                    <img src="{{currentUser.avatarUrl}}" class="img-responsive img-thumbnail">
+
+                                    <div ng-if="!currentUser.avatarUrl || currentUser.avatarUrl != ''">
+                                        <img src="{{currentUser.avatarUrl}}" class="img-responsive img-thumbnail">
+                                    </div>
+
+                                    <div ng-if="currentUser.avatarUrl || currentUser.avatarUrl == ''">
+                                        <img src="images/no-avatar.png" class="img-responsive img-thumbnail">
+                                    </div>
+
+
 
                                     <br>
 
@@ -166,19 +175,30 @@
                                         <tr>
                                             <th>№</th>
                                             <th>Название</th>
-                                            <!--<th>Действие</th>-->
+                                            <th>Действие</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr ng-repeat="project in getAccountListFullResult">
                                             <td class="col-md-1">{{$index+1}}</td>
-                                            <td> {{project.firstName}} {{project.lastName}} ( {{project.nickName}} )
+                                            <td>
+                                                 <a href="#/user/details/{{project.id}}"> {{project.firstName}} {{project.lastName}} (  {{resolveUser(project.id).nickName}} ) </a>
                                             </td>
-                                            <!--<td>  <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист</button>    </td>-->
+                                                <td>
+                                                    <button ng-click="deleteFromContactList(project.id)" class="btn btn-danger"> убрать</button>
+                                                </td>
+                                                <!--<td>  <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист</button>    </td>-->
                                         </tr>
 
                                         </tbody>
                                     </table>
+
+                                    <div ng-if="getAccountListFullResult.length == 0">
+                                        <div class="callout callout-warning">
+                                            <h4>в контакт листе никого нет</h4>
+                                            <p>добаьте людей в контакт-лист через <a href="#/chat/userSearch">поиск</a> </p>
+                                        </div>
+                                    </div>
 
 
                                 </div>
@@ -193,7 +213,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <section class="panel panel-default">
-                                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Комнаты</div>
+                                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Новая комната</div>
                                 <div class="panel-body text-center">
 
 
@@ -217,10 +237,86 @@
 
                             </section>
                         </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <section class="panel panel-default">
+                                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Существующие комнаты</div>
+                                <div class="panel-body text-center">
+
+                                    <div ng-if="allRooms.length == 0">
+                                        <div class="callout callout-warning">
+                                            <h4>комнат нет</h4>
+                                            <p>вас нет ни в отной комнате</p>
+                                        </div>
+                                    </div>
+
+                                    <table class="table table-bordered table-stripped" ng-if="allRooms.length > 0">
+                                        <thead>
+                                        <tr>
+
+                                            <!--<th>Название</th>-->
+                                            <!--<th>Действие</th>-->
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="room in allRooms">
+
+                                            <!--//[-->
+                                            <!--//    {-->
+                                            <!--//        "id": 1,-->
+                                            <!--//        "name": "roomName",-->
+                                            <!--//        "owner": "ya@nbakaev.ru",-->
+                                            <!--//        "members": [-->
+                                            <!--//            1-->
+                                            <!--//        ]-->
+                                            <!--//    }-->
+                                            <!--//]-->
+
+                                            <td>{{room.id}}</td>
+                                            <td> <a href="#/room/details/{{room.id}}"> {{room.name}} </a>  </td>
+                                            <td>
+
+                                                <button type="button" class="btn btn-success" data-animation="am-fade-and-slide-top"
+                                                        content-template="templates/userModal.html" bs-modal="room.owner">
+                                                    {{resolveUser(room.owner).nickName}}
+                                                </button>
+                                                <!--{{ }}-->
+
+
+                                            </td>
+                                            <td>
+                                                <div ng-repeat="member in room.members">
+                                                   <a href="#/user/details/{{member}}"> {{resolveUser(member).nickName}} </a>
+                                                    <br/>
+                                                </div>
+                                            </td>
+
+
+                                            <td> <button class="btn btn-danger" ng-click="leaveRoom(room.id)">покинуть</button> </td>
+
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+                        <!--{{allRooms}}-->
+
+
+
+                                </div>
+
+                            </section>
+                        </div>
 
 
                     </div>
 
+
+                    <!--КОМНАТЫ-->
 
                 </div>
 
