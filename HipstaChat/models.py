@@ -71,8 +71,8 @@ class HCUser(AbstractBaseUser, PermissionsMixin):
             "firstName": self.first_name,
             "lastName": self.last_name,
             "avatarUrl": self.avatar,
-            'createdDate': int(self.date_joined.timestamp()),
-            'lastOnlineDate': int(self.last_login.timestamp()),
+            'createdDate': self.date_joined.timestamp(),
+            'lastOnlineDate': self.last_login.timestamp(),
             'emailVerified': True,
         }
 
