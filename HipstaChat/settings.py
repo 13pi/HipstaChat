@@ -15,7 +15,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 key = 'key-f31e536136714f5134c5f133579addc7'
 sandbox = 'sandbox50f958596328413ba57a57bfeb12eb27.mailgun.org'
 request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(sandbox)
-IFDEBUG=0
+
+ACTIVATION_HOSTNAME='127.0.0.1'
+USE_SANDBOX_MAIL = True
+SEND_ACTIVATION_EMAIL = False   
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -38,7 +42,6 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
-SEND_ACTIVATION_EMAIL = False
 
 
 # Application definition

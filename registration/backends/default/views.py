@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 import requests
+from HipstaChat.settings import SEND_ACTIVATION_EMAIL
 from registration.send import send_invite
 from registration import signals
 from registration.models import RegistrationProfile
@@ -92,7 +93,11 @@ class RegistrationView(BaseRegistrationView):
             request=request,
         )
 
-        send_invite(email,returned_key)
+        if SEND_ACTIVATION_EMAIL:
+            send_invite(email,returned_key)
+        else:
+            RegistrationProfile.objects.activate_user(returned_key)
+
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,
                                      request=request)

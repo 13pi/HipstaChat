@@ -32,7 +32,7 @@ class HCUserManager(BaseUserManager):
 
 
 class HCUser(AbstractBaseUser, PermissionsMixin):
-    alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', message='Only aphanumeric characters are allowed.')
+    alphanumeric = RegexValidator(r'^[0-9a-zA-Z_@.-]*$', message='Only aphanumeric characters are allowed.')
 
     username = CharField(unique=False, max_length=20, validators=[alphanumeric])
     email = EmailField(unique=True, max_length=255, verbose_name='email address')

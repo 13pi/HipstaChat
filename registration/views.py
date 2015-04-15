@@ -6,6 +6,7 @@ Views which allow users to create and activate accounts.
 from django.shortcuts import redirect, render, render_to_response
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from HipstaChat.settings import SEND_ACTIVATION_EMAIL
 
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -86,7 +87,8 @@ class RegistrationView(_RequestPassingFormView):
         # full argument set for redirect(). Attempting to unpack it
         # tells us which one it is.
         return render_to_response('registration/registration_complete.html',
-                                  {'activation_key': new_user.registrationprofile_set.get().activation_key})
+                                  {'activation_key': new_user.registrationprofile_set.get().activation_key,
+                                   'send_email': SEND_ACTIVATION_EMAIL})
         try:
             to, args, kwargs = success_url
             return redirect(to, *args, **kwargs)
