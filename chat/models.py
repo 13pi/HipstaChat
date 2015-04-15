@@ -23,7 +23,8 @@ class Message(Model):
             "id": self.pk,
             "room": self.receiver.pk,
             "date": self.send_date.timestamp(),
-            "text": self.content
+            "text": self.content,
+            "sender": self.sender.pk,
         }
 
 
