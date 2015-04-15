@@ -232,7 +232,9 @@ class Rooms(APIView):
 
         if 'members' in parsed:
             # return api_response({'error': 'member ids required required'}, status=403)
-            members = HCUser.objects.filter(pk__in=parsed['members'])
+            members = HCUser.objects\
+                .filter(pk__in=parsed['members'])\
+                .filter(pk__in=request.user.contact_owner_id.contacts.values_list('id', flat=True))
         else:
             members = []
 
@@ -260,7 +262,9 @@ class Rooms(APIView):
 
 
         if 'addMembers' in parsed:
-            new_users = HCUser.objects.filter(pk__in=parsed['addMembers'])
+            new_users = HCUser.objects\
+                .filter(pk__in=parsed['addMembers'])\
+                .filter(pk__in=request.user.contact_owner_id.contacts.values_list('id', flat=True))
             room.members.add(*new_users)
 
             for user in new_users:
