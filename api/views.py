@@ -126,13 +126,17 @@ class UserSearch(APIView):
         obj = {
             "response": []
         }
+        if text == "":
+            return api_response({"response": []})
 
         query = HCUser.objects.filter(
-            Q(first_name__istartswith=first) | Q(last_name__istartswith=first),
-            Q(first_name__istartswith=last) | Q(last_name__istartswith=last)
+            (Q(first_name__istartswith=first) & Q(last_name__istartswith=last)) |
+            (Q(first_name__istartswith=last) & Q(last_name__istartswith=first)) |
+            Q(username__icontains=text)
         )
 
-        obj["response"] += [{"name": user.get_full_name(), "id": user.pk} for user in query]
+        obj["response"] += [{"name": user.get_full_name(), "id": user.pk, "username": user.username} for user in query]
+
         return api_response(obj)
 
 
