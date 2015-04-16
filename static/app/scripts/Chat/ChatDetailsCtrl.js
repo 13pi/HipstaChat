@@ -61,7 +61,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.membersColumn = 12;
 
     $scope.reverseBool = false;
-
     $scope.enterSendBtn = true;
 
     $scope.appendDiffHistory =  function(){
@@ -78,25 +77,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.updateMessagesData  = function () {
-
-
-        //var aToast = ngToast.create({
-        //    className: 'warning',
-        //    content:  $sce.trustAsHtml(' Another <br/> <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист </button>' +
-        //    '   <button ng-click="addToContactListfoo(project.id)" class="btn btn-danger"> нахер </button> ' +
-        //    ''),
-        //    timeout :100000,
-        //    compileContent: true,
-        //    //dismissButton : true
-        //    dismissButtonHtml : " <button class='btn'> 232 </button>"
-        //
-        //});
-
-        //ngToast.create('a toast message...');
-
-
-
-        $scope.currentRoomMessagesPromise   = chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
+        chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
             if ($scope.postsInHistory.length > 0){
                 $scope.currentRoomMessages = $scope.currentRoomMessages.concat (  $scope.appendDiffHistory () );
@@ -137,8 +118,16 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     };
 
 
+
     $scope.interval = 3000;
-    setInterval($scope.updateMessagesData, $scope.interval);
+   $scope.refreshMessages =  setInterval($scope.updateMessagesData, $scope.interval);
+
+    //// Убираем обновление после ухода со страницы
+    $rootScope.$on("$locationChangeStart", function () {
+        console.info("Уход из комнаты: " + $scope.currentRoom.name + " с ID: " + $scope.currentRoom.id)
+        clearInterval($scope.refreshMessages);
+    });
+
 
     $scope.updateMessagesData ();
 

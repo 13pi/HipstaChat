@@ -55,6 +55,10 @@
 
             $rootScope.allNotificationToasts = [];
 
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
             $rootScope.allResolvedUsers = new Array ();
 
             $rootScope.resolveUser = function (id){
@@ -73,7 +77,8 @@
 
 
             };
-
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
             $rootScope.allRooms = [];
             chatService.getAllRooms().then(function (e) {
                 $rootScope.allRooms =  e;
@@ -87,7 +92,8 @@
                 }
                 return;
             };
-
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
             $rootScope.getContactList = function () {
                chatService.getAccountListFull().get().then(function(e){
@@ -129,32 +135,10 @@
 //////////////// NOTIFICATIONS  /////////////////////
             $rootScope.allNotifications = [];
 
-            //$rootScope.newNotficationsResolve =  function(){
-            //    var bIds = {};
-            //    $rootScope.allNotifications.forEach(function(obj){
-            //        bIds[obj.id] = obj;
-            //    });
-            //
-            //    return $rootScope.oldNotifications.filter(function(obj){
-            //        return !(obj.id in bIds);
-            //    });
-            //
-            //};
-
             $rootScope.getNotificationsFromServers = function () {
                 chatService.getNotifications ().get().then(function (e) {
-                    //$rootScope.oldNotifications = $rootScope.allNotifications.slice();
-                    //
-                    //console.log( "OLD notif");
-                    //console.log( $rootScope.oldNotifications);
-                    //
-                    //$rootScope.newNotificationsArray = [];
-                    //$rootScope.newNotificationsArray = $rootScope.newNotficationsResolve();
-                    //console.log( "new notif");
-                    //console.log( $rootScope.newNotificationsArray);
 
                     $rootScope.allNotifications = e.notifications;
-
 
                     for (var i=0; i < $rootScope.allNotifications.length; i++ ){
                         if ($rootScope.allNotifications[i].shown) continue;
