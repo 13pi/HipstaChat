@@ -77,6 +77,34 @@
         }
         ])
 
+    .filter('reverseCus', function() {
+        return function(items, revBoolVal) {
+            //console.log(revBoolVal.revBoolVal);
+            if (revBoolVal.revBoolVal){
+                return items.slice().reverse();
+            }else{
+                return items;
+
+            }
+
+        };
+    })
+
+        .directive('ngEnter', function() {
+            return function(scope, element, attrs) {
+                element.bind("keydown keypress", function(event) {
+                    if(event.which === 13) {
+                        scope.$apply(function(){
+                            scope.$eval(attrs.ngEnter, {'event': event});
+                        });
+
+                        event.preventDefault();
+                    }
+                });
+            };
+        });
+
+
     
 
 }).call(this)

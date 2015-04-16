@@ -165,7 +165,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
             })
 
 
-            .service('chatService', function (Restangular, localStorageService, $http, configurationService) {
+            .service('chatService', function (Restangular, localStorageService, $http, configurationService, $rootScope, ngToast) {
 
                 this.updateMyProfile = function (newSalesFunnel) {
                     return Restangular.one("myaccount").customPUT(newSalesFunnel);
@@ -191,6 +191,23 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     return Restangular.one("contactListWithDetails/");
                 };
 
+
+
+                this.getNotifications = function () {
+                    return Restangular.one("notifications/");
+                };
+
+
+                this.deleteNotificationById = function (id) {
+                    console.log($rootScope.allNotificationToasts);
+                    for (var i=0; i < $rootScope.allNotificationToasts; i++){
+                        if ($rootScope.allNotificationToasts[i].id == id){
+                            ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
+                        }
+                    }
+
+                    return Restangular.one("notifications/"+id).customDELETE();
+                };
 
                 //{
                 //    "id": 2,

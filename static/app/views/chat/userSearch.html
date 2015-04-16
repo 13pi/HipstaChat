@@ -26,14 +26,20 @@
                 <tbody>
                 <tr ng-repeat="project in searchResult">
                     <td class="col-md-1">{{$index+1}}</td>
-                    <td> {{project.name}}</td>
+                    <td>
+                        <!--{{project}}-->
+
+                        <a href="#/user/details/{{project.id}}">
+                            {{ project.name}} |   {{ project.username}}
+                            </a>
+
+
+                        <!--{{project.name}}-->
+                    </td>
                     <td>
 
                         <div ng-if="!isInContactList(project.id) && currentUser.id != project.id">
                             <button ng-click="addToContactListfoo(project.id)" class="btn btn-success">
-                                В контакт
-                                лист
-                            </button><button ng-click="addToContactListfoo(project.id)" class="btn btn-success">
                                 В контакт
                                 лист
                             </button>
@@ -96,6 +102,7 @@
 
                     <td> {{searchResultEmail.firstName}} {{searchResultEmail.lastName}} |
                         {{searchResultEmail.nickName}}
+
                     </td>
                     <td>
 

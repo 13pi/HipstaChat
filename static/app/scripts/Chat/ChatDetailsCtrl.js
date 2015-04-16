@@ -39,9 +39,30 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.postsInHistory = [];
 
 
+    $scope.deleteNotificationsFromThisRoom = function () {
+        for (var i=0; i < $rootScope.allNotifications.length; i++){
+            console.log($rootScope.allNotifications[i].type + " | " + $scope.currentRoomId);
+
+            if ( ($rootScope.allNotifications[i].type == 0
+                || $rootScope.allNotifications[i].type == 1
+                || $rootScope.allNotifications[i].type == 2
+                || $rootScope.allNotifications[i].type == 3
+                || $rootScope.allNotifications[i].type == 4 )
+                && $rootScope.allNotifications[i].details == $scope.currentRoomId ){
+                console.log(1);
+                chatService.deleteNotificationById ($rootScope.allNotifications[i].id)
+            }
+        }
+    };
+
+    $scope.deleteNotificationsFromThisRoom();
+
     $scope.messengesColumn = 12;
     $scope.membersColumn = 12;
 
+    $scope.reverseBool = false;
+
+    $scope.enterSendBtn = true;
 
     $scope.appendDiffHistory =  function(){
         var bIds = {};
@@ -119,12 +140,15 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.interval = 3000;
     setInterval($scope.updateMessagesData, $scope.interval);
 
-
     $scope.updateMessagesData ();
 
 
     $scope.getFromHistory = function () {
-        var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
+        if (!$scope.revBoolVal){
+            var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
+        }else{
+            var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
+        }
         chatService.getAllMessagesByRoomIdInHistory($scope.currentRoomId, elel, 20).then(function(e){
             $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(e.messages);
             $scope.postsInHistory = $scope.postsInHistory.concat (e.messages);
@@ -159,52 +183,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
             logger.logSuccess("Название изменено на: " + userId);
         } )
     };
-
-    /////////////////////////////////
-    //    $scope.diffDocs = function( obj3333 ) {
-    //        var a = $scope.currentConversation.messages;
-    //        var bIds = {};
-    //        a.forEach(function (obj) {
-    //            bIds[obj.id] = obj;
-    //        });
-    //
-    //        return obj3333.filter(function (obj) {
-    //            return !(obj.id in bIds);
-    //        });
-    //
-    //    };
-    ////////////////////
-
-
-    //$scope.updateMessages = function(){
-    //    chatService.getConversationById ($scope.currentChatId).get().then(function (e) {
-    //
-    //        var r = $scope.diffDocs(e.messages);
-    //
-    //        if (r.length > 0){
-    //            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-    //        }
-    //
-    //        for (var i=0; i < r.length; i++){
-    //            logger.logSuccess("Новое сообщение! " + r[i].message)
-    //
-    //        }
-    //
-    //        $scope.currentConversation = e;
-    //
-    //        $timeout($scope.updateMessages , 1000);
-    //    })
-    //};
-    //
-    //$scope.updateMessages();
-    //
-    //$scope.addMessageToConversation = function(){
-    //    chatService.addMessageToConversation ($scope.currentChatId , $scope.messageToConversation).then(function(e){
-    //        $scope.currentConversation.messages.push(e);
-    //    });
-    //  logger.logSuccess("Отправлено");
-    //
-    //};
 
 
 };

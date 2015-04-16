@@ -4,23 +4,37 @@
             <div>
                 <div data-ng-controller="DashboardCtrl">
 
-                    <!--<div class="callout callout-warning">-->
-                        <!--<h4>SOME NOTIFICATION</h4>-->
-                        <!--<p>-->
-                            <!--ававававав-->
-                            <!--<button ng-click="changeEditModeOn()" class="btn btn-success">-->
-                                <!--да-->
-                            <!--</button>-->
+                    <div class="conversationWrap">
+                       У Вас {{allNotifications.length}} уведолмений
+                        <div class="callout callout-warning" ng-repeat="notification in allNotifications">
+                            <h4> [ {{notification.id}} ]
+                                {{getNotificationTypePretty(notification.type)}}
 
-                            <!--<button ng-click="changeEditModeOn()" class="btn btn-danger">-->
-                                <!--нет-->
-                            <!--</button>-->
+                            </h4>
+                            <p>
+                                <div ng-if="getRoomByRoomId(notification.details).id">
+                             в комнате <a href="#/room/details/{{notification.details}}" >{{getRoomByRoomId(notification.details).name}}</a>
+                        </div>
 
-                            <!--<button ng-click="changeEditModeOn()" class="btn btn-warning">-->
-                                <!--удлаить-->
-                            <!--</button>-->
-                        <!--</p>-->
-                    <!--</div>-->
+                                <!--<button ng-click="changeEditModeOn()" class="btn btn-success">-->
+                                    <!--да-->
+                                <!--</button>-->
+
+                                <!--<button ng-click="changeEditModeOn()" class="btn btn-danger">-->
+                                    <!--нет-->
+                                <!--</button>-->
+
+                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                    удалить
+                                </button>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <br/><br/>
+
+
 
 
 

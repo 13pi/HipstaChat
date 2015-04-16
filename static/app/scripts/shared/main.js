@@ -3,8 +3,8 @@
     angular.module('app.controllers', [])
 
         .controller('AppCtrl', [
-        '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular','chatService','$q',
-        function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular, chatService, $q) {
+        '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular','chatService','$q','logger','$sce','ngToast',
+        function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular, chatService, $q, logger, $sce, ngToast) {
             $scope.main = {
                 brand: 'HipstaChat',
                 name: 'Lisa Doe'
@@ -28,6 +28,9 @@
                 }
             ];
 
+            // scrollbar in chats messages
+            $rootScope.useScrollable = true;
+
 
             console.log("AppCtrl - header");
 
@@ -49,6 +52,9 @@
             }
 
 
+
+            $rootScope.allNotificationToasts = [];
+
             $rootScope.allResolvedUsers = new Array ();
 
             $rootScope.resolveUser = function (id){
@@ -68,14 +74,29 @@
 
             };
 
-
-            $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
-            $scope.getAccountListFullResultPromise.then(function(e){
-                $rootScope.getAccountListFullResult = e.response;
+            $rootScope.allRooms = [];
+            chatService.getAllRooms().then(function (e) {
+                $rootScope.allRooms =  e;
             });
 
 
-            $rootScope.useScrollable = true;
+            $scope.getRoomByRoomId = function (id) {
+                if (!id) return;
+                for (var i =0; i < $rootScope.allRooms.length; i++){
+                    if ($rootScope.allRooms[i].id == id) return $rootScope.allRooms[i];
+                }
+                return;
+            };
+
+
+            $rootScope.getContactList = function () {
+               chatService.getAccountListFull().get().then(function(e){
+                    $rootScope.getAccountListFullResult = e.response;
+                });
+            };
+            $rootScope.getContactList();
+
+
 
             $rootScope.isInContactList = function (id){
                 for (var i=0; i < $rootScope.getAccountListFullResult.length; i++){
@@ -103,6 +124,112 @@
                 if (user.firstName || user.lastName ) return user.firstName + " " + user.lastName;
                 return user.nickName;
             };
+
+
+//////////////// NOTIFICATIONS  /////////////////////
+            $rootScope.allNotifications = [];
+
+            //$rootScope.newNotficationsResolve =  function(){
+            //    var bIds = {};
+            //    $rootScope.allNotifications.forEach(function(obj){
+            //        bIds[obj.id] = obj;
+            //    });
+            //
+            //    return $rootScope.oldNotifications.filter(function(obj){
+            //        return !(obj.id in bIds);
+            //    });
+            //
+            //};
+
+            $rootScope.getNotificationsFromServers = function () {
+                chatService.getNotifications ().get().then(function (e) {
+                    //$rootScope.oldNotifications = $rootScope.allNotifications.slice();
+                    //
+                    //console.log( "OLD notif");
+                    //console.log( $rootScope.oldNotifications);
+                    //
+                    //$rootScope.newNotificationsArray = [];
+                    //$rootScope.newNotificationsArray = $rootScope.newNotficationsResolve();
+                    //console.log( "new notif");
+                    //console.log( $rootScope.newNotificationsArray);
+
+                    $rootScope.allNotifications = e.notifications;
+
+
+                    for (var i=0; i < $rootScope.allNotifications.length; i++ ){
+                        if ($rootScope.allNotifications[i].shown) continue;
+                        var aToast = ngToast.create({
+                            className: 'warning',
+                            content:  $sce.trustAsHtml(' Уведомление <br/>  <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
+                            '  ' +
+                            ''),
+                            timeout :100000,
+                            compileContent: true,
+                            //dismissButton : true
+                            dismissButtonHtml : " <button class='btn'> ОК </button>"
+
+                        });
+                        var id = $rootScope.allNotifications[i].id;
+                        $rootScope.allNotificationToasts.push ( {id : id, obj: aToast } );
+                    }
+
+                    console.info("Взяты уведомления с сервера: " + $rootScope.allNotifications.length + " .шт");
+
+
+
+
+                });
+            };
+
+
+            $rootScope.getNotificationsFromServers();
+
+            $scope.interval = 3000;
+            setInterval($scope.getNotificationsFromServers, $scope.interval);
+//////////////// NOTIFICATIONS  /////////////////////
+
+
+
+            $rootScope.getNotificationTypePretty = function (code) {
+                switch (code) {
+
+                    case 0:
+                        return "новое сообщение";
+
+                    case 1:
+                        return "добавлен в комнату";
+
+                    case 2:
+                        return "удален из комнаты";
+
+                    case 3:
+                        return "какие-то изменения в комнате";
+
+                    case 4:
+                        return "добавлен в контакт лист";
+
+                    case 5:
+                        return "удалён из контакт листа";
+
+                    case 6:
+                        return "новое сообщение";
+
+                    case 7:
+                        return "добавление в контакт-лист отклонено";
+
+
+                }
+            };
+
+            $rootScope.deleteNotificationById = function (id) {
+              chatService.deleteNotificationById ( id).then(function (e) {
+                  logger.logSuccess("Уведолмение удалено!");
+                  $rootScope.getNotificationsFromServers ();
+              })
+            };
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
             $rootScope.isDebugMode = function () {
@@ -209,14 +336,7 @@
 
                 $rootScope.getAccountListFullResult = [];
 
-                $scope.getContactList = function () {
-                    $scope.getAccountListFullResultPromise = chatService.getAccountListFull().get();
-                    $scope.getAccountListFullResultPromise.then(function(e){
-                        $rootScope.getAccountListFullResult = e.response;
-                    });
-                };
 
-                $scope.getContactList();
 
 
                 $scope.addToContactListfoo = function(c){
@@ -231,7 +351,7 @@
                   chatService.addNewRoom($scope.newRomName).then(function(e){
                       logger.logSuccess("Новая комната добавлена!");
                       /// обновить комнаты с сервера
-                      $scope.allRooms = chatService.getAllRooms().$object;
+                      $rootScope.allRooms = chatService.getAllRooms().$object;
 
                   })
                 };
@@ -249,7 +369,7 @@
                 $scope.leaveRoom = function (roomId) {
                     chatService.leaveRoom(roomId).then(function(e){
                         logger.logSuccess("Вы покинули комнату!");
-                        $scope.allRooms = chatService.getAllRooms().$object;
+                        $rootScope.allRooms = chatService.getAllRooms().$object;
                     })
                 };
 
@@ -265,7 +385,6 @@
 
 
 
-                $scope.allRooms = chatService.getAllRooms().$object;
 
 
 
