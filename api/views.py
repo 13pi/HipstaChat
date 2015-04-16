@@ -135,7 +135,7 @@ class UserSearch(APIView):
             Q(username__icontains=text)
         )
 
-        obj["response"] += [{"name": user.get_full_name(), "id": user.pk, "username": user.username} for user in query]
+        obj["response"] += [{"name": user.get_full_name(), "id": user.pk, "nickName": user.username} for user in query]
 
         return api_response(obj)
 
@@ -211,7 +211,7 @@ class ContactListDetailed(APIView):
 
     @auth_required
     def get(self, request):
-        fields = ['id', 'email', 'avatarUrl', 'lastName', 'firstName', 'lastOnlineDate']
+        fields = ['id', 'email', 'avatarUrl', 'lastName', 'firstName', 'lastOnlineDate', 'nickName']
         return api_response({
             "response": [contact.serialize(fields=fields) for contact in request.user.contact_owner_id.contacts.all()]
         })
@@ -354,7 +354,7 @@ class Messages(APIView):
         message.save()
 
         for user in room.members.exclude(pk=request.user.pk):
-            Notification.send(user, type=0, details=message.pk)
+            Notification.send(user, type=0, details=pk)
 
         return api_response({"response": "ok", "id": message.pk})
 
