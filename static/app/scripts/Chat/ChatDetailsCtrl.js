@@ -31,25 +31,71 @@ function UserDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 }
 
 function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localStorageService, configurationService,  $location,  logger
-                        , chatService, $timeout
+                        , chatService, $timeout, ngToast , $sce
 ) {
     $scope.currentRoomId = $route.current.params.id;
 
     $scope.currentRoomMessages = [];
+    $scope.postsInHistory = [];
+
+
+    $scope.messengesColumn = 12;
+    $scope.membersColumn = 12;
+
+
+    $scope.appendDiffHistory =  function(){
+        var bIds = {};
+        $scope.currentRoomMessages.forEach(function(obj){
+            bIds[obj.id] = obj;
+        });
+
+        return $scope.postsInHistory.filter(function(obj){
+            return !(obj.id in bIds);
+        });
+
+    };
+
 
     $scope.updateMessagesData  = function () {
+
+
+        var aToast = ngToast.create({
+            className: 'warning',
+            content:  $sce.trustAsHtml(' Another <br/> <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист </button>' +
+            '   <button ng-click="addToContactListfoo(project.id)" class="btn btn-danger"> нахер </button> ' +
+            ''),
+            timeout :100000,
+            compileContent: true,
+            //dismissButton : true
+            dismissButtonHtml : " <button class='btn'> 232 </button>"
+
+        });
+
+        //ngToast.create('a toast message...');
+
+
+
         $scope.currentRoomMessagesPromise   = chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
+            if ($scope.postsInHistory.length > 0){
+                $scope.currentRoomMessages = $scope.currentRoomMessages.concat (  $scope.appendDiffHistory () );
+            }
+
         })
     };
 
     $scope.messageToConversation = "";
 
 
-   chatService.getRoomById ($scope.currentRoomId).then(function (e) {
-        $scope.newRoomName = e.name;
-       $scope.currentRoom = e;
-   });
+
+    $scope.updateRoom = function(){
+        chatService.getRoomById ($scope.currentRoomId).then(function (e) {
+            $scope.newRoomName = e.name;
+            $scope.currentRoom = e;
+        });
+    };
+
+    $scope.updateRoom();
 
     $scope.addMessageToConversation = function () {
         chatService.addNewMessage ( $scope.currentRoomId, $scope.messageToConversation).then(function (e) {
@@ -70,25 +116,27 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.interval = 3000;
-
     setInterval($scope.updateMessagesData, $scope.interval);
 
-    //$scope.updateMessagesDataWithInterval = function () {
-    //    $timeout($scope.updateMessagesData() , $scope.interval);
-    //};
-
-    //$timeout($scope.updateMessagesDataWithInterval() , $scope.interval);
-
-
-    //$scope.updateMessagesDataWithInterval();
 
     $scope.updateMessagesData ();
+
+
+    $scope.getFromHistory = function () {
+        var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
+        chatService.getAllMessagesByRoomIdInHistory($scope.currentRoomId, elel, 20).then(function(e){
+            $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(e.messages);
+            $scope.postsInHistory = $scope.postsInHistory.concat (e.messages);
+        })
+    };
 
 
 
     $scope.addMemberToChat = function (userId) {
         chatService.addMembeToChat($scope.currentRoomId, userId).then(function (e) {
             logger.logSuccess("Пользователь добавлен в чат!");
+            $scope.updateRoom();
+
         } )
     };
 
@@ -98,6 +146,8 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.deleteMemberFromChat = function (userId) {
         chatService.deleteMemberFromChat($scope.currentRoomId, userId).then(function (e) {
             logger.logSuccess("Пользователь удален из чата!");
+            $scope.updateRoom();
+
         } )
     };
 
