@@ -68,7 +68,7 @@ class MyProfile(APIView):
         # "avatarUrl": "костыль",
         # "createdDate": int(request.user.date_joined.timestamp()),
         # "lastOnlineDate": int(request.user.last_login.timestamp()),
-        #     "active": request.user.is_active,
+        # "active": request.user.is_active,
         #     "emailVerified": request.user.is_active,
         #     "contactListsEmails": "костыль"
         # })
@@ -165,8 +165,6 @@ class ContactList(APIView):
         request.user.contact_owner_id.contacts.add(other)
         request.user.contact_owner_id.save()
 
-
-
         return api_response({"response": "ok"})
 
     @auth_required
@@ -177,6 +175,9 @@ class ContactList(APIView):
             print(abr)
             return api_response({"error:": "user with such id does not in contact list"}, status=403)
 
+        other_cl = models.ContactList.objects.get(owner__pk=abr)
+        other_cl.contacts.remove(request.user)
+        other_cl.save()
 
         request.user.contact_owner_id.contacts.remove(abr)
         request.user.contact_owner_id.save()
@@ -184,6 +185,25 @@ class ContactList(APIView):
         Notification.send(contact, 6, request.user.pk)
 
         return api_response({"response": "ok"})
+
+
+class RejectAuthorization(APIView):
+    methods = ['POST']
+
+    @auth_required
+    def post(self, request, pk):
+        if request.user.contact_owner_id.contacts.filter(pk=pk).exists():
+            self.access_denied_error()
+
+        cl = models.ContactList.objects.get(owner__pk=pk)
+        cl.contacts.remove(request.user)
+        cl.save()
+
+        Notification.send(request.user, 7, request.user.pk)
+
+        return api_response({
+            "response": "ok"
+        })
 
 
 class ContactListDetailed(APIView):
@@ -232,8 +252,8 @@ class Rooms(APIView):
 
         if 'members' in parsed:
             # return api_response({'error': 'member ids required required'}, status=403)
-            members = HCUser.objects\
-                .filter(pk__in=parsed['members'])\
+            members = HCUser.objects \
+                .filter(pk__in=parsed['members']) \
                 .filter(pk__in=request.user.contact_owner_id.contacts.values_list('id', flat=True))
         else:
             members = []
@@ -260,10 +280,9 @@ class Rooms(APIView):
         if not room.owner.pk == request.user.pk:
             return self.access_denied_error()
 
-
         if 'addMembers' in parsed:
-            new_users = HCUser.objects\
-                .filter(pk__in=parsed['addMembers'])\
+            new_users = HCUser.objects \
+                .filter(pk__in=parsed['addMembers']) \
                 .filter(pk__in=request.user.contact_owner_id.contacts.values_list('id', flat=True))
             room.members.add(*new_users)
 
@@ -301,7 +320,6 @@ class Rooms(APIView):
         for member in room.members.all():
             Notification.send(member, 4, room.pk)
 
-
         if not room.members.all().exists():
             room.delete()
 
@@ -338,7 +356,6 @@ class Messages(APIView):
         for user in room.members.exclude(pk=request.user.pk):
             Notification.send(user, type=0, details=message.pk)
 
-
         return api_response({"response": "ok", "id": message.pk})
 
     @auth_required
@@ -363,8 +380,8 @@ class Messages(APIView):
             ]
         })
 
-class Notifications(APIView):
 
+class Notifications(APIView):
     methods = ['GET', 'DELETE']
 
     @auth_required
