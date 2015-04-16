@@ -16,6 +16,7 @@
         'mgcrea.ngStrap',
 
         'app.services',
+        'ngToast',
         //'satellizer',
 
         'app.login',

@@ -59,17 +59,17 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.updateMessagesData  = function () {
 
 
-        var aToast = ngToast.create({
-            className: 'warning',
-            content:  $sce.trustAsHtml(' Another <br/> <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист </button>' +
-            '   <button ng-click="addToContactListfoo(project.id)" class="btn btn-danger"> нахер </button> ' +
-            ''),
-            timeout :100000,
-            compileContent: true,
-            //dismissButton : true
-            dismissButtonHtml : " <button class='btn'> 232 </button>"
-
-        });
+        //var aToast = ngToast.create({
+        //    className: 'warning',
+        //    content:  $sce.trustAsHtml(' Another <br/> <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист </button>' +
+        //    '   <button ng-click="addToContactListfoo(project.id)" class="btn btn-danger"> нахер </button> ' +
+        //    ''),
+        //    timeout :100000,
+        //    compileContent: true,
+        //    //dismissButton : true
+        //    dismissButtonHtml : " <button class='btn'> 232 </button>"
+        //
+        //});
 
         //ngToast.create('a toast message...');
 
@@ -107,6 +107,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.alreadyInChatFilter = function(obj){
+        if (!$scope.currentRoom) return true;
         for (var i=0; i <  $scope.currentRoom.members.length ;i++){
             if (obj.id ==  $scope.currentRoom.members[i]) return false;
         }

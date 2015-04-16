@@ -221,9 +221,16 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
 
+
+        //messages/6/21/20 по-идее
+
                 this.getAllMessagesByRoomId = function (id) {
                     return Restangular.one("messages/"+id+"/").get();
                 };
+
+        this.getAllMessagesByRoomIdInHistory = function (id, startId, how) {
+            return Restangular.one("messages/"+id+"/"+startId+"/"+how+"/").get();
+        };
 
 
                 this.addNewMessage = function (roomId, messageText) {

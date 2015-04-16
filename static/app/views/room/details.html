@@ -1,6 +1,6 @@
 <style>
 
-    .conversation-wrap
+    .conversationWrap
     {
         box-shadow: -2px 0 3px #ddd;
         padding:0;
@@ -159,6 +159,8 @@
             </div>
 
 
+
+
             <div class="col-md-12">
 
                 <!--<div class="row">-->
@@ -184,7 +186,8 @@
 
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                       История сообщений
+                       История сообщений | <label class="ui-checkbox">
+                        <input name="checkbox1" type="checkbox" ng-model="useScrollable"><span> Использовать scrollbar </span></label>
                     </div>
                     <div class="panel-body">
 
@@ -195,7 +198,7 @@
                             </div>
                         </div>
 
-                        <ul class="media-list conversation-wrap">
+                        <ul class="media-list " ng-class="{'conversationWrap' : useScrollable }">
 
                             <li class="media" ng-repeat="mess in currentRoomMessages">
 

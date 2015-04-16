@@ -52,6 +52,7 @@
             $rootScope.allResolvedUsers = new Array ();
 
             $rootScope.resolveUser = function (id){
+                if (!id) return;
                 var stringed = id.toString();
                 if (!$rootScope.allResolvedUsers[ stringed ]){
                     $rootScope.allResolvedUsers[ stringed ] = {};
@@ -73,6 +74,8 @@
                 $rootScope.getAccountListFullResult = e.response;
             });
 
+
+            $rootScope.useScrollable = true;
 
             $rootScope.isInContactList = function (id){
                 for (var i=0; i < $rootScope.getAccountListFullResult.length; i++){
@@ -96,6 +99,7 @@
 
 
             $rootScope.printUser = function (user) {
+                if (!user) return;
                 if (user.firstName || user.lastName ) return user.firstName + " " + user.lastName;
                 return user.nickName;
             };
