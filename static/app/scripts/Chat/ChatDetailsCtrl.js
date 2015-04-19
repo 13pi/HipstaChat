@@ -76,6 +76,10 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     };
 
 
+    jQuery("#btnSendMsg").height(  jQuery("#textareaWithMsg").height()  );
+
+    
+
     $scope.updateMessagesData  = function () {
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
