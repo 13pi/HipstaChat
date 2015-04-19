@@ -31,7 +31,7 @@ function UserDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 }
 
 function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localStorageService, configurationService,  $location,  logger
-                        , chatService, $timeout, ngToast , $sce
+                        , chatService, $timeout, ngToast , $sce, $aside
 ) {
     $scope.currentRoomId = $route.current.params.id;
 
@@ -89,6 +89,13 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.messageToConversation = "";
 
 
+    //$scope.scope  = $scope;
+
+    var myOtherAside = $aside({scope: $scope, html:true,placement:"right", show:false, contentTemplate: 'templates/roomSettings.html'});
+    // Show when some event occurs (use $promise property to ensure the template has been loaded)
+    //myOtherAside.$promise.then(function() {
+    //    myOtherAside.show();
+    //});
 
     $scope.updateRoom = function(){
         chatService.getRoomById ($scope.currentRoomId).then(function (e) {

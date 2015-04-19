@@ -3,8 +3,8 @@
     angular.module('app.controllers', [])
 
         .controller('AppCtrl', [
-        '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular','chatService','$q','logger','$sce','ngToast',
-        function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular, chatService, $q, logger, $sce, ngToast) {
+        '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular','chatService','$q','logger','$sce','ngToast','favicoService',
+        function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular, chatService, $q, logger, $sce, ngToast, favicoService) {
             $scope.main = {
                 brand: 'HipstaChat',
                 name: 'Lisa Doe'
@@ -139,6 +139,9 @@
                 chatService.getNotifications ().get().then(function (e) {
 
                     $rootScope.allNotifications = e.notifications;
+
+                    favicoService.badge($rootScope.allNotifications.length);
+
 
                     for (var i=0; i < $rootScope.allNotifications.length; i++ ){
                         if ($rootScope.allNotifications[i].shown) continue;

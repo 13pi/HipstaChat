@@ -1,7 +1,7 @@
 <section class="page-form-ele page">
 
 
-    <section class="panel panel-default">
+    <section class="panel panel-primary">
         <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Поиск по ФИО</div>
         <div class="panel-body text-center">
 
@@ -40,7 +40,7 @@
 
                         <div ng-if="!isInContactList(project.id) && currentUser.id != project.id">
                             <button ng-click="addToContactListfoo(project.id)" class="btn btn-success">
-                                В контакт
+                                <i class="fa fa-user-plus"></i>  В контакт
                                 лист
                             </button>
                         </div>
@@ -77,7 +77,7 @@
     </section>
 
 
-    <section class="panel panel-default">
+    <section class="panel panel-primary">
         <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Поиск по Email или ID</div>
         <div class="panel-body text-center">
 
