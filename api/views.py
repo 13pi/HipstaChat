@@ -69,8 +69,8 @@ class MyProfile(APIView):
         # "createdDate": int(request.user.date_joined.timestamp()),
         # "lastOnlineDate": int(request.user.last_login.timestamp()),
         # "active": request.user.is_active,
-        #     "emailVerified": request.user.is_active,
-        #     "contactListsEmails": "костыль"
+        # "emailVerified": request.user.is_active,
+        # "contactListsEmails": "костыль"
         # })
         return api_response(request.user.serialize())
 
@@ -130,9 +130,9 @@ class UserSearch(APIView):
             return api_response({"response": []})
 
         query = HCUser.objects.filter(
-            (Q(first_name__istartswith=first) & Q(last_name__istartswith=last)) |
-            (Q(first_name__istartswith=last) & Q(last_name__istartswith=first)) |
-            Q(username__icontains=text)
+            (Q(first_name__startswith=first) & Q(last_name__startswith=last)) |
+            (Q(first_name__startswith=last) & Q(last_name__startswith=first)) |
+            Q(username__contains=text)
         )
 
         obj["response"] += [{"name": user.get_full_name(), "id": user.pk, "nickName": user.username} for user in query]
@@ -160,10 +160,26 @@ class ContactList(APIView):
 
         other = get_object_or_404(HCUser, pk=parsed['userid'])
 
-        Notification.send(other, 5, request.user.pk)
-
         request.user.contact_owner_id.contacts.add(other)
         request.user.contact_owner_id.save()
+
+        if not other.contact_owner_id.contacts.filter(pk=request.user.pk).exists():
+
+            Notification.send(other, 5, request.user.pk, more_details={
+                "isAuthorizationRequest": True
+            })
+        else:
+            room = Room.objects.create(owner=request.user, name="%s %s ЛС" % (request.user.username, other.username))
+            room.members.add(request.user, other)
+
+            Notification.send(other, 5, request.user.pk, more_details={
+                "isAuthorizationRequest": False,
+                "roomId": room.pk,
+                })
+            return api_response({"response": "ok",
+                                 "roomId": room.pk})
+
+
 
         return api_response({"response": "ok"})
 
@@ -211,7 +227,7 @@ class ContactListDetailed(APIView):
 
     @auth_required
     def get(self, request):
-        fields = ['id', 'email', 'avatarUrl', 'lastName', 'firstName', 'lastOnlineDate', 'nickName']
+        fields = ['id', 'email', 'avatarUrl', 'lastName', 'firstName', 'lastOnlineDate', 'nickName', 'online']
         return api_response({
             "response": [contact.serialize(fields=fields) for contact in request.user.contact_owner_id.contacts.all()]
         })
@@ -354,7 +370,10 @@ class Messages(APIView):
         message.save()
 
         for user in room.members.exclude(pk=request.user.pk):
-            Notification.send(user, type=0, details=pk)
+            Notification.send(user, type=0, details=room.pk, more_details={
+                "text": parsed['text'],
+                "message_id": message.pk,
+            })
 
         return api_response({"response": "ok", "id": message.pk})
 
@@ -378,6 +397,22 @@ class Messages(APIView):
             "messages": [
                 m.serialize() for m in messages
             ]
+        })
+
+
+class MessagesById(APIView):
+    methods = ['GET']
+
+    @auth_required
+    def get(self, request, pk):
+        message = get_object_or_404(Message, pk=pk)
+
+        if not message.receiver.members.filter(pk=request.user.pk).exists():
+            self.access_denied_error()
+
+        return api_response({
+            "response": "ok",
+            "message": message.serialize()
         })
 
 

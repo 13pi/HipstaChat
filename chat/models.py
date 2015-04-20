@@ -1,3 +1,4 @@
+from json import dumps
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -37,19 +38,23 @@ class Notification(Model):
     shown = BooleanField(default=False)
     type = IntegerField()
     details = IntegerField(blank=True)
+    more_details = TextField(null=True)
+
 
     def serialize(self):
         return {
             "id": self.pk,
             "type": self.type,
             "shown": self.shown,
-            "details": self.details
+            "details": self.details,
+            "more_details": self.more_details
         }
 
     @classmethod
-    def send(cls, user, type, details=None):
+    def send(cls, user, type, details=None, more_details=None):
         cls.objects.create(
             user=user,
             type=type,
-            details=details
+            details=details,
+            more_details=dumps(more_details)
         )

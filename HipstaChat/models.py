@@ -1,7 +1,9 @@
+import datetime
 from django.contrib.auth.models import User, AbstractUser, BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
-from django.db.models.fields import URLField, EmailField, CharField, DateTimeField, BooleanField
+from django.db.models.fields import URLField, EmailField, CharField, DateTimeField, BooleanField, TextField
 from django.db import models
+from django.utils import timezone
 
 from chat.models import ContactList
 
@@ -41,6 +43,8 @@ class HCUser(AbstractBaseUser, PermissionsMixin):
     date_joined = DateTimeField(auto_now_add=True)
     is_active = BooleanField(default=True, null=False)
     is_staff = BooleanField(default=False, null=False)
+    settings = TextField(null=True, blank=True)
+    last_action = DateTimeField(default=timezone.now)
 
     avatar = URLField(blank=True)
     # contact_list = OneToOneField('chat.ContactList')
@@ -72,8 +76,9 @@ class HCUser(AbstractBaseUser, PermissionsMixin):
             "lastName": self.last_name,
             "avatarUrl": self.avatar,
             'createdDate': self.date_joined.timestamp(),
-            'lastOnlineDate': self.last_login.timestamp(),
+            'lastOnlineDate': self.last_action.timestamp(),
             'emailVerified': True,
+            'online': datetime.datetime.now().replace(tzinfo=None) - self.last_action.replace(tzinfo=None) < datetime.timedelta(minutes=15)
         }
 
         if fields:

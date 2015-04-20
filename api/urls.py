@@ -1,7 +1,7 @@
 from django.conf.urls import patterns
 
 from api.views import MyProfile, User, UserSearch, ContactList, Rooms, Messages, ContactListDetailed, Notifications, \
-    RejectAuthorization
+    RejectAuthorization, MessagesById
 
 
 urlpatterns = patterns('',
@@ -15,10 +15,12 @@ urlpatterns = patterns('',
                        (r'^room/$', Rooms.as_view()),
                        (r'^room/(?P<pk>\d+)/$', Rooms.as_view()),
                        (r'^messages/(?P<pk>\d+)/$', Messages.as_view()),
+                       (r'^messagesById/(?P<pk>\d+)/$', MessagesById.as_view()),
                        (r'^messages/(?P<pk>\d+)/(?P<since>\d+)/$', Messages.as_view()),
                        (r'^messages/(?P<pk>\d+)/(?P<since>\d+)/(?P<count>\d+)/$', Messages.as_view()),
                        (r'^notifications/$', Notifications.as_view()),
                        (r'^notifications/((?P<pk>\d+))/$$', Notifications.as_view()),
                        (r'^rejectauth/(?P<pk>\d+)/$', RejectAuthorization.as_view()),
+
 
 )
