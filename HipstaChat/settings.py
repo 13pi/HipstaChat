@@ -31,7 +31,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 ACCOUNT_ACTIVATION_DAYS = 2  # кол-во дней для хранения кода активации
 
 # для отправки кода активации
@@ -102,6 +102,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '../static_content/static'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
