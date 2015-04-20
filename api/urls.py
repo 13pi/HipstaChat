@@ -1,7 +1,7 @@
 from django.conf.urls import patterns
 
 from api.views import MyProfile, User, UserSearch, ContactList, Rooms, Messages, ContactListDetailed, Notifications, \
-    RejectAuthorization, MessagesById
+    RejectAuthorization, MessagesById, AccountSettings
 
 
 urlpatterns = patterns('',
@@ -21,6 +21,5 @@ urlpatterns = patterns('',
                        (r'^notifications/$', Notifications.as_view()),
                        (r'^notifications/((?P<pk>\d+))/$$', Notifications.as_view()),
                        (r'^rejectauth/(?P<pk>\d+)/$', RejectAuthorization.as_view()),
-
-
+                       (r'accountSettings/$', AccountSettings.as_view()),
 )

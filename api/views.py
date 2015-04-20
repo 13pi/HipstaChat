@@ -10,7 +10,7 @@ from HipstaChat import models
 
 from HipstaChat.models import HCUser
 from api.decorators import auth_required, payload_required
-from api.utils import api_response, user_in_room
+from api.utils import api_response, user_in_room, users_are_friends
 from chat.models import Room, Message, Notification
 
 
@@ -228,8 +228,13 @@ class ContactListDetailed(APIView):
     @auth_required
     def get(self, request):
         fields = ['id', 'email', 'avatarUrl', 'lastName', 'firstName', 'lastOnlineDate', 'nickName', 'online']
+        contacts_all_ = [contact.serialize(fields=fields) for contact in request.user.contact_owner_id.contacts.all()]
+
+        for cl in contacts_all_:
+            cl["isAuthorized"] = users_are_friends(request.user, HCUser.objects.get(pk=cl["id"]))
+
         return api_response({
-            "response": [contact.serialize(fields=fields) for contact in request.user.contact_owner_id.contacts.all()]
+            "response": contacts_all_
         })
 
 
@@ -447,6 +452,29 @@ class Notifications(APIView):
             "response": "ok"
         })
 
+
+class AccountSettings(APIView):
+    methods = ['GET', 'POST']
+
+    @auth_required
+    def get(self, request):
+        return api_response({
+            "data": request.user.settings or ""
+        })
+
+    @auth_required
+    def post(self, request):
+        parsed = json.loads(request.body.decode())
+
+        if "data" not in parsed:
+            self.error_response("data should be in payload")
+
+        request.user.settings = parsed['data']
+        request.user.save()
+
+        return api_response({
+            "response": "ok"
+        })
 
 
 

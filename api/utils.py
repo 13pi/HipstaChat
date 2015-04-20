@@ -21,7 +21,13 @@ def api_response(data=None, status=None, headers=None, content_type=None):
         response.content = dumps(data)
     return response
 
+
 def user_in_room(room, user):
     return room.members.filter(pk=user.pk).exists
+
+
+def users_are_friends(first, other):
+    return first.contact_owner_id.contacts.filter(pk=other.pk).exists() and other.contact_owner_id.contacts.filter(
+        pk=first.pk).exists()
 
 
