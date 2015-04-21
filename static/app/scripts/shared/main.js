@@ -95,6 +95,19 @@
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
+
+            $rootScope.getAvatarUrlByUser = function (user) {
+                if (!user) return "images/no-avatar.png";
+              if (user.avatarUrl != '' &&  typeof user.avatarUrl != "undefined" &&  user.avatarUrl !=null){
+                  return user.avatarUrl;
+              }
+
+                return "images/no-avatar.png";
+            };
+
+
+            $rootScope.getAccountListFullResult = [];
+
             $rootScope.getContactList = function () {
                chatService.getAccountListFull().get().then(function(e){
                     $rootScope.getAccountListFullResult = e.response;
@@ -142,20 +155,63 @@
 
                     favicoService.badge($rootScope.allNotifications.length);
 
+                    if ($rootScope.allNotifications.length == 0){
+                        $rootScope.title = 'HipstaChat';
+                    }else{
+                        $rootScope.title = "( "+ $rootScope.allNotifications.length + " ) HipstaChat";
+                    }
 
                     for (var i=0; i < $rootScope.allNotifications.length; i++ ){
                         if ($rootScope.allNotifications[i].shown) continue;
-                        var aToast = ngToast.create({
-                            className: 'warning',
-                            content:  $sce.trustAsHtml(' Уведомление <br/>  <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
-                            '  ' +
-                            ''),
-                            timeout :100000,
-                            compileContent: true,
-                            //dismissButton : true
-                            dismissButtonHtml : " <button class='btn'> ОК </button>"
 
-                        });
+                        var aToast;
+
+                        switch ($rootScope.allNotifications[i].type){
+                            case 0:
+
+                              var more_details =   JSON.parse( $rootScope.allNotifications[i].more_details );
+
+                                var text = more_details.text;
+                                var messageId = more_details.message_id;
+
+
+                                chatService.getMessageById(messageId).get().then(function (e) {
+
+                                    console.warn(e);
+                                    aToast = ngToast.create({
+                                        className: 'warning',
+                                        content:  $sce.trustAsHtml(' Новое сообщение <br/> <strong> '+ text +' </strong> <br/><br/> <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
+                                        '  ' +
+                                        ''),
+                                        timeout :100000,
+                                        compileContent: true,
+                                        //dismissButton : true
+                                        dismissButtonHtml : " <button class='btn'> ОК </button>"
+
+                                    });
+
+                                });
+
+
+                                break;
+
+                            default:
+
+                                aToast = ngToast.create({
+                                    className: 'warning',
+                                    content:  $sce.trustAsHtml(' Уведомление <br/>  <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
+                                    '  ' +
+                                    ''),
+                                    timeout :100000,
+                                    compileContent: true,
+                                    //dismissButton : true
+                                    dismissButtonHtml : " <button class='btn'> ОК </button>"
+
+                                });
+
+                        }
+
+
                         var id = $rootScope.allNotifications[i].id;
                         $rootScope.allNotificationToasts.push ( {id : id, obj: aToast } );
                     }
@@ -321,7 +377,6 @@
                     })
                 };
 
-                $rootScope.getAccountListFullResult = [];
 
 
 

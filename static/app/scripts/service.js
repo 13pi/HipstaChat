@@ -206,6 +206,11 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     return Restangular.one("user/" + userId + "/");
                 };
 
+
+                this.getMessageById = function (id) {
+                    return Restangular.one("messagesByID/" + id );
+                };
+
                 this.getAccountListFull = function () {
                     return Restangular.one("contactListWithDetails/");
                 };

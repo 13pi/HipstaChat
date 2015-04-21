@@ -1,0 +1,79 @@
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Участники
+                            </div>
+                            <div class="panel-body">
+                                <ul class="media-list">
+
+                                    <li class="media" ng-repeat="member in currentRoom.members">
+
+                                        <div class="media-body">
+
+                                            <div class="media">
+                                                <a class="pull-left" href="#">
+
+                                                    <div ng-if="resolveUser(member).avatarUrl != ''">
+                                                        <img class="media-object img-circle " width="70" height="70" src="{{resolveUser(member).avatarUrl}}" />
+
+                                                    </div>
+
+                                                    <div ng-if="resolveUser(member).avatarUrl == ''">
+                                                        <img class="media-object img-circle  " src="assets/img/user.png" />
+                                                    </div>
+
+                                                </a>
+                                                <div class="media-body" >
+                                                    <h5>
+                                                        <!--От Id: {{mess.sender}}-->
+                                                        <!--{{  timeConverter( mess.date )}}-->
+
+                                                        {{member.id}}
+                                                    </h5>
+
+                                                    <small class="text-muted">
+                                                        {{printUser(resolveUser(member)) }}
+                                                    </small>
+
+                                                    <br />
+                                                    <small class="text-muted">    {{  timeConverter(resolveUser(member).lastOnlineDate )}}</small>
+
+                                                    <button ng-click="deleteMemberFromChat(member)" class="btn btn-danger btn-sm"> выгнать </button>
+                                                    <hr />
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+                        <style>
+
+                            .modal-backdrop.am-fade {
+                                opacity: .5;
+                                transition: opacity .15s linear;
+                            &.ng-enter {
+                                 opacity: 0;
+                            &.ng-enter-active {
+                                 opacity: .5;
+                             }
+                            }
+                            &.ng-leave {
+                                 opacity: .5;
+                            &.ng-leave-active {
+                                 opacity: 0;
+                             }
+                            }
+                            }
+                        </style>

@@ -54,14 +54,8 @@
                                 <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Аватар</div>
                                 <div class="panel-body text-center">
 
-                                    <div ng-if="currentUser.avatarUrl || currentUser.avatarUrl != ''">
-                                        <img src="{{currentUser.avatarUrl}}" class="img-responsive img-thumbnail">
-                                    </div>
 
-                                    <div ng-if="!currentUser.avatarUrl || currentUser.avatarUrl == ''">
-                                        <img src="images/no-avatar.png" class="img-responsive img-thumbnail" width="250" height="250">
-                                    </div>
-
+                                    <img class="  img-rounded" align="center" height="250" width="250"   ng-src="{{getAvatarUrlByUser(currentUser)}}" />
 
 
                                     <br>

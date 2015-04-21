@@ -31,7 +31,7 @@ function UserDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 }
 
 function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localStorageService, configurationService,  $location,  logger
-                        , chatService, $timeout, ngToast , $sce, $aside
+                        , chatService, $timeout, ngToast , $sce, $aside, $modal
 ) {
     $scope.currentRoomId = $route.current.params.id;
 
@@ -39,6 +39,14 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.postsInHistory = [];
 
 
+    $scope.messengesColumn = 12;
+    $scope.membersColumn = 12;
+
+    $scope.reverseBool = true;
+    $scope.enterSendBtn = true;
+
+
+    $scope.updatedMessagesTimes = 0;
     $scope.deleteNotificationsFromThisRoom = function () {
         for (var i=0; i < $rootScope.allNotifications.length; i++){
             console.log($rootScope.allNotifications[i].type + " | " + $scope.currentRoomId);
@@ -57,11 +65,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     $scope.deleteNotificationsFromThisRoom();
 
-    $scope.messengesColumn = 12;
-    $scope.membersColumn = 12;
-
-    $scope.reverseBool = false;
-    $scope.enterSendBtn = true;
 
     $scope.appendDiffHistory =  function(){
         var bIds = {};
@@ -83,17 +86,57 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.updateMessagesData  = function () {
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
+            //var myDiv = document.getElementById('messageConversationBox');
+            //var myDiv = $("#messageConversationBox");
+            //myDiv.scrollTop = myDiv.scrollHeight;
+
+            if ( $scope.updatedMessagesTimes < 2){
+                if (!$("#messageConversationBox")){
+                    $scope.updatedMessagesTimes --;
+                }
+
+            //.scrollTop() - -current coll heidht
+              console.warn (   $("#messageConversationBox").scrollTop($("#messageConversationBox")[0].scrollHeight) );
+            }
+
             if ($scope.postsInHistory.length > 0){
+
+                //if ($scope.appendDiffHistory().length > 0){
+                //    logger.logSuccess("Новые сообщения из истории");
+                //}
+
                 $scope.currentRoomMessages = $scope.currentRoomMessages.concat (  $scope.appendDiffHistory () );
             }
 
+
+
+            $scope.updatedMessagesTimes ++;
         })
     };
 
     $scope.messageToConversation = "";
 
 
-    //$scope.scope  = $scope;
+    $scope.getHistoryMessageWhenScrolling = function () {
+        //$("#messageConversationBox")[0].scrollHeight
+        if ($scope.updatedMessagesTimes < 2) return;
+        if ($("#messageConversationBox").scrollTop() == 0  ){
+
+            $scope.prevScrollHeight = $("#messageConversationBox")[0].scrollHeight;
+            $scope.getFromHistory();
+            $("#messageConversationBox").scrollTop($scope.prevScrollHeight) ;
+        }
+
+    };
+
+    //$scope.interval = 3000;
+    $scope.refreshistoryMsg =  setInterval($scope.getHistoryMessageWhenScrolling, 1000);
+
+    $scope.currentParticipants = $modal({scope: $scope, html:true,placement:"center ", show:false, contentTemplate: 'templates/chatMembers.html'});
+
+    $scope.showCurrentParticipantsModal = function() {
+        $scope.currentParticipants.$promise.then( $scope.currentParticipants.show);
+    };
 
     var myOtherAside = $aside({scope: $scope, html:true,placement:"right", show:false, contentTemplate: 'templates/roomSettings.html'});
     // Show when some event occurs (use $promise property to ensure the template has been loaded)
