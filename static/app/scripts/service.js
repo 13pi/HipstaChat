@@ -132,11 +132,9 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 this.getOnlineStatus();
 
 
-                console.log("API: " + this.getOnlineStatusResulted().connectedToApiServer);
-                console.log("------------------------------");
-                console.log("STATIC: " + this.getOnlineStatusResulted().connectedToStaticServer);
-
-
+                console.info("API: " + this.getOnlineStatusResulted().connectedToApiServer);
+                console.info("------------------------------");
+                console.info("STATIC: " + this.getOnlineStatusResulted().connectedToStaticServer);
             })
 
 
@@ -163,11 +161,11 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
 
-                    this.uploadAvatar = function (avatarBase64) {
-                        var a = {};
-                        a.data = avatarBase64;
-                        return Restangular.one("searchUser/").customPOST(a);
-                    };
+                 this.uploadAvatar = function (avatarBase64) {
+                     var a = {};
+                     a.data = avatarBase64;
+                     return Restangular.one("searchUser/").customPOST(a);
+                 };
 
                 this.getUserById = function (userId) {
                     return Restangular.one("user/" + userId + "/");
@@ -183,20 +181,20 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
 
-
                 this.getNotifications = function () {
                     return Restangular.one("notifications/");
                 };
 
 
+                // Delete from server and delete Notification Toasts
                 this.deleteNotificationById = function (id) {
                     console.log($rootScope.allNotificationToasts);
-                    for (var i=0; i < $rootScope.allNotificationToasts; i++){
+                    for (var i=0; i < $rootScope.allNotificationToasts.length; i++){
                         if ($rootScope.allNotificationToasts[i].id == id){
                             ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
+                            return Restangular.one("notifications/"+id).customDELETE();
                         }
                     }
-                    return Restangular.one("notifications/"+id).customDELETE();
                 };
 
                 this.getRoomById = function (id) {

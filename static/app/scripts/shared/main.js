@@ -28,15 +28,21 @@
 
 
             console.log("AppCtrl - header");
+
+            //START: some local variables
             $rootScope.allNotificationToasts = [];
             $rootScope.allResolvedUsers = new Array ();
             $rootScope.allRooms = [];
             $rootScope.getAccountListFullResult = [];
             $rootScope.allNotifications = [];
+            // Interval, when we will pull notifications from the server
+            $scope.interval = 3000;
 
             // scrollbar in chats messages
             $rootScope.useScrollable = true;
+            //END: some local variables
 
+            // return new time and thow in header it
             function fireDigestEverySecond() {
                 $scope.getDatetime = new Date;
                 $timeout(fireDigestEverySecond , 1000);
@@ -45,8 +51,6 @@
 
 
             $scope.configuration = configurationService.getOnlineStatusResulted();
-
-
             if (configurationService.getOnlineStatusResulted().connectedToApiServer) {
                 userInfo.getCurrentUser().then(function (myaccount) {
                     $rootScope.currentUser = myaccount;
@@ -56,6 +60,8 @@
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
+            // Get user info from local cache (MAP) or if it not exist
+            // get him from the server
             $rootScope.resolveUser = function (id){
                 if (!id) return;
                 var stringed = id.toString();
@@ -72,8 +78,7 @@
 
 
             };
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+            // Get all rooms of current user
             chatService.getAllRooms().then(function (e) {
                 $rootScope.allRooms =  e;
             });
@@ -90,6 +95,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 
+            // Return URL of user avatar
             $rootScope.getAvatarUrlByUser = function (user) {
                 if (!user) return "images/no-avatar.png";
               if (user.avatarUrl != '' &&  typeof user.avatarUrl != "undefined" &&  user.avatarUrl !=null){
@@ -109,6 +115,7 @@
             $rootScope.getContactList();
 ///////////////////////////////////////////////////////////////////////////
 
+            // Return TRUE if requested user is in contact list o current user
             $rootScope.isInContactList = function (id){
                 for (var i=0; i < $rootScope.getAccountListFullResult.length; i++){
                     if ($rootScope.getAccountListFullResult[i].id == id) return true;
@@ -116,6 +123,7 @@
                 return false;
             };
 
+            // From unix time to JS
             $rootScope.timeConverter =  function (UNIX_timestamp){
                 var a = new Date(UNIX_timestamp*1000);
                 var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -130,6 +138,7 @@
             };
 
 
+            // This function return printable name (view) of requested user object
             $rootScope.printUser = function (user) {
                 if (!user) return;
                 if (user.firstName || user.lastName ) return user.firstName + " " + user.lastName;
@@ -137,13 +146,13 @@
             };
 
 
-//////////////// NOTIFICATIONS  /////////////////////
 
+            // Get all notifications from the server
             $rootScope.getNotificationsFromServers = function () {
                 chatService.getNotifications ().get().then(function (e) {
-
                     $rootScope.allNotifications = e.notifications;
 
+                    ///////// START: Show count of notification on title and favicon
                     favicoService.badge($rootScope.allNotifications.length);
 
                     if ($rootScope.allNotifications.length == 0){
@@ -151,77 +160,77 @@
                     }else{
                         $rootScope.title = "( "+ $rootScope.allNotifications.length + " ) HipstaChat";
                     }
+                    ///////// END: Show count of notification on title and favicon
+
 
                     for (var i=0; i < $rootScope.allNotifications.length; i++ ){
                         if ($rootScope.allNotifications[i].shown) continue;
 
-                        var aToast;
-
                         switch ($rootScope.allNotifications[i].type){
+                         /////////////////START: We have new message notification //////////////
                             case 0:
-
-                              var more_details =   JSON.parse( $rootScope.allNotifications[i].more_details );
-
+                                var more_details =   JSON.parse( $rootScope.allNotifications[i].more_details );
                                 var text = more_details.text;
                                 var messageId = more_details.message_id;
 
+                                (function () {
+                                    var notificationId = $rootScope.allNotifications[i].id;
 
-                                chatService.getMessageById(messageId).get().then(function (e) {
+                                    chatService.getMessageById(messageId).get().then(function (e) {
                                         var msg = e.message;
 
-                                    console.warn(e);
-                                    aToast = ngToast.create({
-                                        className: 'warning',
-                                        content:  $sce.trustAsHtml('' +
-                                        ' <div class="row"> <div class="col-md-4"> <img class="  img-rounded" align="center" height="70" width="70"   src="'+$rootScope.getAvatarUrlByUser($rootScope.resolveUser(msg.sender)) +'" /> <br/> ' +
-                                        '</div>' +
-                                        ' <div class="col-md-8">' +
-                                        ' Сообщение: '+ $rootScope.printUser( $rootScope.resolveUser(msg.sender) ) +'  <br/>' +
-                                        '  <strong> '+ msg.text +' </strong> </div>  </div>' +
-                                        ' <small class="text-muted pull-right ">   '+ $rootScope.timeConverter( msg.date ) +' </small> <br/>' +
-                                        ' <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
-                                        '  ' +
-                                        ''),
-                                        timeout :100000,
-                                        compileContent: true,
-                                        //dismissButton : true
-                                        dismissButtonHtml : " <button class='btn'> ОК </button>"
+                                        console.warn(e);
+                                        var aToast = ngToast.create({
+                                            className: 'warning',
+                                            content:  $sce.trustAsHtml('' +
+                                            ' <div class="row"> <div class="col-md-4"> <img class="  img-rounded" align="center" height="70" width="70"   src="'+$rootScope.getAvatarUrlByUser($rootScope.resolveUser(msg.sender)) +'" /> <br/> ' +
+                                            '</div>' +
+                                            ' <div class="col-md-8">' +
+                                            ' Сообщение: '+ $rootScope.printUser( $rootScope.resolveUser(msg.sender) ) +'  <br/>' +
+                                            '  <strong> '+ msg.text +' </strong> </div>  </div>' +
+                                            ' <small class="text-muted pull-right ">   '+ $rootScope.timeConverter( msg.date ) +' </small> <br/>' +
+                                            ' <button ng-click="deleteNotificationById('+notificationId+')" class="btn btn-warning"> удалить  </button>' +
+                                            '  ' +
+                                            ''),
+                                            timeout :1000000,
+                                            compileContent: true,
+                                            //dismissButton : true
+                                            dismissButtonHtml : " <button class='btn'> ОК </button>"
 
+                                        });
+                                        $rootScope.allNotificationToasts.push ( {id : notificationId, obj: aToast } );
                                     });
-
-                                });
-
+                                })();
 
                                 break;
+                            /////////////////END: We have new message notification //////////////
+
 
                             default:
 
-                                aToast = ngToast.create({
-                                    className: 'warning',
-                                    content:  $sce.trustAsHtml(' Уведомление <br/>  <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
-                                    '  ' +
-                                    ''),
-                                    timeout :100000,
-                                    compileContent: true,
-                                    //dismissButton : true
-                                    dismissButtonHtml : " <button class='btn'> ОК </button>"
-
-                                });
+                                //aToast = ngToast.create({
+                                //    className: 'warning',
+                                //    content:  $sce.trustAsHtml(' Уведомление <br/>  <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
+                                //    '  ' +
+                                //    ''),
+                                //    timeout :100000,
+                                //    compileContent: true,
+                                //    //dismissButton : true
+                                //    dismissButtonHtml : " <button class='btn'> ОК </button>"
+                                //
+                                //});
 
                         }
 
-                        var id = $rootScope.allNotifications[i].id;
-                        $rootScope.allNotificationToasts.push ( {id : id, obj: aToast } );
+                        //$rootScope.allNotificationToasts.push ( {id : $rootScope.allNotifications[i].id, obj: aToast } );
                     }
 
                     console.info("Взяты уведомления с сервера: " + $rootScope.allNotifications.length + " .шт");
                 });
             };
 
-
             $rootScope.getNotificationsFromServers();
 
-            $scope.interval = 3000;
             setInterval($scope.getNotificationsFromServers, $scope.interval);
 //////////////// NOTIFICATIONS  /////////////////////
 
@@ -237,20 +246,20 @@
                     case 2:
                         return "удален из комнаты";
 
-                    case 3:
+                    case 4:
                         return "какие-то изменения в комнате";
 
-                    case 4:
+                    case 5:
                         return "добавлен в контакт лист";
 
-                    case 5:
+                    case 6:
                         return "удалён из контакт листа";
 
-                    case 6:
-                        return "новое сообщение";
-
-                    case 7:
-                        return "добавление в контакт-лист отклонено";
+                    //case 6:
+                    //    return "новое сообщение";
+                    //
+                    //case 7:
+                    //    return "добавление в контакт-лист отклонено";
 
 
                 }
@@ -337,12 +346,11 @@
                       $compile, $injector, $timeout,   logger , chatService) {
 
  ///////////////////////////////////// WEATHER START /////////////////////////////////////
-        console.log("----- Dashboard ctrl start");
+        console.info("Dashboard ctrl start");
 
                 $scope.editProfileMode = false;
                 $scope.myContactList=  [];
                 $scope.searchDataEmail = "";
-                $scope.searchResultEmail = {};
                 $scope.searchResult = [];
 
                 $scope.updateMyProfile = function(){
@@ -360,12 +368,6 @@
                 };
 
 
-                $scope.searchUserByEmail = function (){
-                    $scope.searchResultEmail = {};
-                    chatService.getUserById($scope.searchDataEmail).get().then(function(e){
-                        $scope.searchResultEmail = e;
-                    })
-                };
 
                 $scope.addToContactListfoo = function(c){
                     chatService.addToContactList (c).then(function(e){
@@ -385,6 +387,7 @@
                 };
 
 
+                // Are we editing current user?
                 $scope.changeEditModeOn = function(){
                       $scope.editProfileMode = true;
                 };
