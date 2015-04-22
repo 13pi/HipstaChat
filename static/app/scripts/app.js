@@ -33,7 +33,8 @@
                 'pages/404',
                 'pages/403',
                 'pages/500',
-                'pages/503'
+                'pages/503',
+                'system/debug'
             ];
 
 

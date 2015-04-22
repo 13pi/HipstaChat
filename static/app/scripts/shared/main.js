@@ -89,7 +89,11 @@
                 for (var i =0; i < $rootScope.allRooms.length; i++){
                     if ($rootScope.allRooms[i].id == id) return $rootScope.allRooms[i];
                 }
-                return;
+
+                //chatService.getAllRooms().then(function (e) {
+                //    $rootScope.allRooms =  e;
+                //});
+
             };
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -108,6 +112,39 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
+
+            $rootScope.addToContactListfoo = function(c){
+                chatService.addToContactList (c).then(function(e){
+                    logger.logSuccess("Добавлен новый в контакт лист");
+                    $scope.getContactList();
+                })
+            };
+
+            $rootScope.addToContactListfooAndDeleteNotification = function(c, notificationId){
+                chatService.addToContactList (c).then(function(e){
+                    logger.logSuccess("Добавлен новый в контакт лист");
+                    $scope.getContactList();
+                    $rootScope.deleteNotificationById(notificationId);
+
+                })
+            };
+
+
+            // legacy
+            $rootScope.addToContactList = $rootScope.addToContactListfoo;
+
+
+            $rootScope.rejectAuthorisation = function (a) {
+                logger.logSuccess("Заявка отклонена!");
+               chatService.rejectAuthorisation(a);
+            } ;
+
+
+            $rootScope.rejectAuthorisationAndDeleteNotification = function (a, notificationId) {
+                logger.logSuccess("Заявка отклонена!");
+                $rootScope.deleteNotificationById(notificationId);
+                chatService.rejectAuthorisation(a);
+            } ;
 
 
             $rootScope.getLastDateUser = function ( date ) {
@@ -162,6 +199,9 @@
                 chatService.getNotifications ().get().then(function (e) {
                     $rootScope.allNotifications = e.notifications;
 
+
+
+
                     ///////// START: Show count of notification on title and favicon
                     favicoService.badge($rootScope.allNotifications.length);
 
@@ -174,7 +214,12 @@
 
 
                     for (var i=0; i < $rootScope.allNotifications.length; i++ ){
+
+                        $rootScope.allNotifications[i].more_detailed = JSON.parse( $rootScope.allNotifications[i].more_details );
+
+
                         if ($rootScope.allNotifications[i].shown) continue;
+
 
                         switch ($rootScope.allNotifications[i].type){
                          /////////////////START: We have new message notification //////////////
@@ -225,16 +270,12 @@
 
                                 // если нам пришел запрос (нас кто-то добавил в контакт лист)
                                 if (more_details.isAuthorizationRequest) {
-
-
-
                                     //var text = more_details.text;
                                     //var messageId = more_details.message_id;
                                     //{"isAuthorizationRequest": true}
                                     (function () {
                                         var notificationId = $rootScope.allNotifications[i].id;
                                         var requestedUserId = $rootScope.allNotifications[i].details;
-
 
                                         chatService.getUserById(requestedUserId).get().then(function (ee) {
                                             var user = ee;
@@ -243,18 +284,18 @@
                                             var aToast = ngToast.create({
                                                 className: 'warning',
                                                 content: $sce.trustAsHtml('' +
-                                                ' <div class="row"> <div class="col-md-4"> <img class="  img-rounded" align="center" height="70" width="70"   src="' + $rootScope.getAvatarUrlByUser($rootScope.resolveUser(requestedUserId)) + '" /> <br/> ' +
+                                                ' <div class="row"> <div class="col-md-4"> <img class="  img-rounded" align="center" height="70" width="70"   src="' + $rootScope.getAvatarUrlByUser(user) + '" /> <br/> ' +
                                                 '</div>' +
                                                 ' <div class="col-md-8">' +
                                                 ' Вас добавили в контакт-лист:    <br/>' +
-                                                '  <strong> ' + $rootScope.printUser($rootScope.resolveUser(requestedUserId)) + ' </strong> </div>  </div>' +
+                                                '  <strong> ' + $rootScope.printUser(user) + ' </strong> </div>  </div>' +
                                                 //' <small class="text-muted pull-right ">   ' + $rootScope.timeConverter(msg.date) + ' </small> <br/>' +
                                                 '  <div class="row"> <div class="col-md-6"> <a href="#/user/details/' + requestedUserId + '"> профиль  </a> ' +
                                                 '</div> <div class="col-md-6"> <button ng-click="deleteNotificationById(' + notificationId + ')" class="btn btn-warning"> [ X ]  </button>' +
                                                 '  </div></div>  <div class="row"> ' +
-                                                '<div class="col-md-6"> <button ng-click="deleteNotificationById(' + notificationId + ')" class="btn btn-success"> Добавить  </button>   ' +
+                                                //'<div class="col-md-6"> <button ng-click="$rootScope.addToContactListfoo('+requestedUserId+')  " class="btn btn-success"> Добавить  </button>   ' +
                                                 '</div>' +
-                                                '<div class="col-md-6"> <button ng-click="deleteNotificationById(' + notificationId + ')" class="btn btn-danger"> Отколнить  </button>   ' +
+                                                //'<div class="col-md-6"> <button ng-click="$rootScope.rejectAuthorisation('+requestedUserId+')  " class="btn btn-danger"> Отколнить  </button>   ' +
                                                 '</div>' +
                                                 ''),
                                                 timeout: 1000000,
@@ -295,6 +336,8 @@
             };
 
             $rootScope.getNotificationsFromServers();
+
+
 
             setInterval($scope.getNotificationsFromServers, $scope.interval);
 //////////////// NOTIFICATIONS  /////////////////////
@@ -434,12 +477,7 @@
 
 
 
-                $scope.addToContactListfoo = function(c){
-                    chatService.addToContactList (c).then(function(e){
-                        logger.logSuccess("Добавлен новый в контакт лист");
-                        $scope.getContactList();
-                    })
-                };
+
 
 
                 $scope.addNewRoom = function(){

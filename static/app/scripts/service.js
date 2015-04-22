@@ -162,6 +162,11 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
 
+                this.rejectAuthorisation = function (userId) {
+                    return Restangular.one("rejectauth/"+userId+"/").customPOST({});
+                };
+
+
                  this.uploadAvatar = function (avatarBase64) {
                      var a = {};
                      a.data = avatarBase64;
@@ -193,9 +198,10 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     for (var i=0; i < $rootScope.allNotificationToasts.length; i++){
                         if ($rootScope.allNotificationToasts[i].id == id){
                             ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
-                            return Restangular.one("notifications/"+id+"/").customDELETE();
                         }
                     }
+                    return Restangular.one("notifications/"+id+"/").customDELETE();
+
                 };
 
                 this.getRoomById = function (id) {
