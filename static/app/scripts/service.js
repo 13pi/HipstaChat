@@ -8,7 +8,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
 
         var myAccount = {};
         this.getCurrentUser = function () {
-            var abc = myAccount.allInfo = Restangular.one('myaccount').get();
+            var abc = myAccount.allInfo = Restangular.one('myaccount/').get();
             abc.then(function (e) {
                 abc = e;
             });
@@ -91,11 +91,8 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                         console.log("Address: " + apiURL);
                     }
 
-                    if (location.host == "hipstachat.ru"){
-                        var apiURL = "https://hipstachat.ru/api/";
-                    }else{
+
                         var apiURL = "/api/";
-                    }
 
                     printSD();
                     return apiURL;
@@ -148,10 +145,8 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
 
             .service('chatService', function (Restangular, localStorageService, $http, configurationService, $rootScope, ngToast) {
 
-
-
                 this.updateMyProfile = function (newSalesFunnel) {
-                    return Restangular.one("myaccount").customPUT(newSalesFunnel);
+                    return Restangular.one("myaccount/").customPUT(newSalesFunnel);
                 };
 
                 this.addToContactList = function (a) {
@@ -179,7 +174,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
 
 
                 this.getMessageById = function (id) {
-                    return Restangular.one("messagesById/" + id );
+                    return Restangular.one("messagesById/" + id +"/");
                 };
 
                 this.getAccountListFull = function () {
@@ -198,7 +193,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     for (var i=0; i < $rootScope.allNotificationToasts.length; i++){
                         if ($rootScope.allNotificationToasts[i].id == id){
                             ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
-                            return Restangular.one("notifications/"+id).customDELETE();
+                            return Restangular.one("notifications/"+id+"/").customDELETE();
                         }
                     }
                 };
@@ -214,7 +209,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
                 this.leaveRoom = function (room) {
-                    return Restangular.one("room/"+room).customDELETE();
+                    return Restangular.one("room/"+room+"/").customDELETE();
                 };
 
                 this.getAllMessagesByRoomId = function (id) {
@@ -233,7 +228,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                 };
 
                 this.deleteFromContactList = function (id) {
-                    return Restangular.one("contactList/"+id).customDELETE();
+                    return Restangular.one("contactList/"+id+"/").customDELETE();
                 };
 
                 this.getAllRooms = function () {

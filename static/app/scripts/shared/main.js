@@ -29,12 +29,6 @@
 
             console.log("AppCtrl - header");
 
-
-            if (location.host == "hipstachat.ru") {
-                Restangular.setBaseUrl("https://hipstachat.ru/api/");
-            }
-
-
             //START: some local variables
             $rootScope.allNotificationToasts = [];
             $rootScope.allResolvedUsers = new Array ();
@@ -165,8 +159,6 @@
 
             // Get all notifications from the server
             $rootScope.getNotificationsFromServers = function () {
-
-
                 chatService.getNotifications ().get().then(function (e) {
                     $rootScope.allNotifications = e.notifications;
 
@@ -193,10 +185,6 @@
 
                                 (function () {
                                     var notificationId = $rootScope.allNotifications[i].id;
-
-                                    if (location.host == "hipstachat.ru") {
-                                        Restangular.setBaseUrl("https://hipstachat.ru/api/");
-                                    }
 
                                     chatService.getMessageById(messageId).get().then(function (e) {
                                         var msg = e.message;
@@ -247,9 +235,6 @@
                                         var notificationId = $rootScope.allNotifications[i].id;
                                         var requestedUserId = $rootScope.allNotifications[i].details;
 
-                                        if (location.host == "hipstachat.ru") {
-                                            Restangular.setBaseUrl("https://hipstachat.ru/api/");
-                                        }
 
                                         chatService.getUserById(requestedUserId).get().then(function (ee) {
                                             var user = ee;
@@ -346,9 +331,6 @@
             };
 
             $rootScope.deleteNotificationById = function (id) {
-                if (location.host == "hipstachat.ru") {
-                    Restangular.setBaseUrl("https://hipstachat.ru/api/");
-                }
               chatService.deleteNotificationById ( id).then(function (e) {
                   logger.logSuccess("Уведолмение удалено!");
                   $rootScope.getNotificationsFromServers ();
