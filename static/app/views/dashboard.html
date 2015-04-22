@@ -8,9 +8,9 @@
                         <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> У Вас
                             {{allNotifications.length}} уведолмений
 
-                            <button ng-click="deleteAllNotifications()" class="btn btn-warning">
+                            <a ng-click="deleteAllNotifications()"  >
                                 удалить все
-                            </button>
+                            </a>
 
                         </div>
 
@@ -20,36 +20,218 @@
 
                                 <div class="callout callout-warning" ng-repeat="notification in allNotifications">
 
-                                    {{notification}}
+                                    <div ng-if="isDebugMode()">
+                                        {{notification}}
+                                    </div>
 
-                                        <div ng-if="notification.type == 6">
 
+
+                                        <div ng-if="notification.type == 5 && notification.more_detailed.isAuthorizationRequest  ">
                                             <div class="row">
+
+                                                <div class="col-md-2">
+                                                    <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                        [ OK ]
+                                                    </button>
+                                                </div>
+
                                                 <div class="co-md-6">
                                                     {{getNotificationTypePretty(notification.type)}} пользователя
                                                     <a href="#/user/details/{{notification.details}}"> {{printUser(resolveUser(notification.details))}}</a>
                                                 </div>
 
-                                                <div class="col-md-6">
-                                                    <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
-                                                        удалить уведмоление
+
+                                            </div>
+                                            <br/>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <button ng-click="addToContactListfooAndDeleteNotification(notification.details, notification.id)" class="btn btn-success">
+                                                        Добавить в свой контакт-лист {{printUser(resolveUser(notification.details))}}
                                                     </button>
                                                 </div>
 
+                                                <div class="col-md-4">
+                                                    <button ng-click="rejectAuthorisationAndDeleteNotification(notification.details,notification.id )" class="btn btn-danger">
+                                                        Отконить заявку {{printUser(resolveUser(notification.details))}}
+                                                    </button>
+                                                 </div>
                                             </div>
 
+                                        </div>
+
+
+
+                                    <div ng-if="notification.type == 5 && !notification.more_detailed.isAuthorizationRequest ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                               вас успешно добавили в контакт-лист
+                                                <a href="#/user/details/{{notification.details}}">{{printUser(resolveUser(notification.details))}}</a>
+
+                                            </div>
 
                                         </div>
+                                        <br/>
+                                    </div>
+
+
+
+                                    <div ng-if="notification.type == 6 ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                                вас удалили из контакт-листа
+                                                <a href="#/user/details/{{notification.details}}">{{printUser(resolveUser(notification.details))}}</a>
+
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div ng-if="notification.type == 0 ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                                новое сообщение в
+                                                <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>
+
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div ng-if="notification.type == 1 ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                                вас добавили в комнату
+                                                <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>
+
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div ng-if="notification.type == 4 ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                               изменения в комнате
+                                                <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>
+
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div ng-if="notification.type == 2 ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                               вас удалили из комнаты
+                                                <div ng-if="getRoomByRoomId(notification.details)">
+                                                    <b>{{getRoomByRoomId(notification.details).name}}
+                                                    </b>
+                                                </div>
+                                                <!--<a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>-->
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div ng-if="notification.type == 7 ">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                                    [ OK ]
+                                                </button>
+                                            </div>
+
+                                            <div class="co-md-6">
+                                               заявка на добавление в контакт-лист отклонена
+                                                <a href="#/user/details/{{notification.details}}">{{printUser(resolveUser(notification.details))}}</a>
+
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+                                    <!--<div ng-if="notification.type == 5">-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="co-md-6">-->
+                                                <!--{{getNotificationTypePretty(notification.type)}} пользователя-->
+                                                <!--<a href="#/user/details/{{notification.details}}"> {{printUser(resolveUser(notification.details))}}</a>-->
+                                            <!--</div>-->
+
+                                            <!--<div class="col-md-6">-->
+                                                <!--<button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">-->
+                                                    <!--удалить уведмоление-->
+                                                <!--</button>-->
+                                            <!--</div>-->
+
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+
+
+
                                         <!--[ {{notification.id}} ]-->
-
-
                                     <!--</h4>-->
 
                                     <p>
 
-                                    <div ng-if="getRoomByRoomId(notification.details).id">
-                                        в комнате <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>
-                                    </div>
+                                    <!--<div ng-if="getRoomByRoomId(notification.details).id">-->
+                                        <!--в комнате <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>-->
+                                    <!--</div>-->
 
 
                                     </p>
@@ -116,6 +298,9 @@
                                 </div>
                                 <div class="panel-body text-center">
 
+                                    <div ng-if="isDebugMode()">
+                                        {{currentUser | json}}
+                                    </div>
 
                                     <div class="row">
 
@@ -233,6 +418,10 @@
                                 </div>
                                 <div class="panel-body text-center">
 
+                                    <div ng-if="isDebugMode()">
+                                        {{getAccountListFullResult | json}}
+                                    </div>
+
                                     <table class="table table-bordered table-stripped"
                                            ng-if="getAccountListFullResult.length > 0  ">
                                         <thead>
@@ -249,7 +438,7 @@
 
                                             <td>
                                                 <a href="#/user/details/{{project.id}}">
-                                                    <i class="fa fa-circle-o-notch" style="color: green;"></i>
+                                                    <!--<i class="fa fa-circle-o-notch" style="color: green;"></i>-->
 
                                                                 <img class="  img-rounded  " width="30" height="30"
                                                                      ng-src="{{getAvatarUrlByUser(resolveUser(project.id))}}"/>
@@ -329,6 +518,11 @@
                                     комнаты ( {{allRooms.length}} )
                                 </div>
                                 <div class="panel-body text-center">
+
+
+                                    <div ng-if="isDebugMode()">
+                                        {{allRooms | json}}
+                                    </div>
 
                                     <div ng-if="allRooms.length == 0">
                                         <div class="callout callout-warning">
