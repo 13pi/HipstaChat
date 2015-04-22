@@ -29,6 +29,9 @@
 
             console.log("AppCtrl - header");
 
+            Restangular.setBaseUrl(configurationService.returnAPIhost());
+
+
             //START: some local variables
             $rootScope.allNotificationToasts = [];
             $rootScope.allResolvedUsers = new Array ();
