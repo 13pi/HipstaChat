@@ -78,14 +78,21 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     jQuery("#btnSendMsg").height(  jQuery("#textareaWithMsg").height()  );
 
-
-
-
     //max-height
     $scope.updateMessagesData  = function () {
 
         if ($scope.updatedMessagesTimes < 2){
-            jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()-30+"px");
+            if (window.screen.height == 768 && window.screen.width == 1024){
+                jQuery("#messageConversationBox").css("max-height",  ( window.screen.height -  $(".top-nav").height()-30) / 1.5 +"px");
+            }else{
+                if (window.screen.height == 1080 && window.screen.width == 1920){
+                jQuery("#messageConversationBox").css("max-height",  ( window.screen.height -  $(".top-nav").height()-30) / 1.5 +"px");
+                 }else{
+                    jQuery("#messageConversationBox").css("max-height",  "400px");
+                }
+            }
+
+            //jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()-30+"px");
         }
 
 

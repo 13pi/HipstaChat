@@ -42,7 +42,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                         // ERROR INTERCEPT
                         if (response.status === 401) {
                             //$location.path('login/login');
-                            window.location = "http://hipstachat.tk/accounts/login/";
+                            window.location = "https://hipstachat.ru/accounts/login/";
                             console.log("Response 401");
                         }
 
