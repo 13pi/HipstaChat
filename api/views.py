@@ -169,7 +169,8 @@ class ContactList(APIView):
                 "isAuthorizationRequest": True
             })
         else:
-            room = Room.objects.create(owner=request.user, name="%s %s ЛС" % (request.user.username, other.username))
+            room = Room.objects.create(owner=request.user, name="%s %s ЛС" % (request.user.username, other.username),
+                                       private_message=True)
             room.members.add(request.user, other)
 
             Notification.send(other, 5, request.user.pk, more_details={
@@ -246,7 +247,8 @@ class Rooms(APIView):
             'members': [u.pk for u in room.members.all()],
             'name': room.name,
             'id': room.pk,
-            'owner': room.owner.email
+            'owner': room.owner.email,
+            'pm': room.private_message,
         }
 
     @auth_required
