@@ -209,14 +209,15 @@ class RejectAuthorization(APIView):
 
     @auth_required
     def post(self, request, pk):
-        if request.user.contact_owner_id.contacts.filter(pk=pk).exists():
+        contacts_filter = request.user.contact_owner_id.contacts.filter(pk=pk)
+        if contacts_filter.exists():
             self.access_denied_error()
 
         cl = models.ContactList.objects.get(owner__pk=pk)
         cl.contacts.remove(request.user)
         cl.save()
 
-        Notification.send(request.user, 7, request.user.pk)
+        Notification.send(HCUser.objects.get(pk=pk), 7, request.user.pk)
 
         return api_response({
             "response": "ok"
