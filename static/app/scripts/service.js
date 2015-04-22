@@ -170,7 +170,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                  this.uploadAvatar = function (avatarBase64) {
                      var a = {};
                      a.data = avatarBase64;
-                     return Restangular.one("searchUser/").customPOST(a);
+                     return Restangular.one("uploadAvatar/").customPOST(a);
                  };
 
                 this.getUserById = function (userId) {
