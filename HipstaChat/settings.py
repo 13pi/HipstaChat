@@ -12,37 +12,14 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-key = 'key-f31e536136714f5134c5f133579addc7'
-sandbox = 'sandbox50f958596328413ba57a57bfeb12eb27.mailgun.org'
-request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(sandbox)
 
-ACTIVATION_HOSTNAME='127.0.0.1'
-USE_SANDBOX_MAIL = True
-SEND_ACTIVATION_EMAIL = False   
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1+ve&bt^i%)r!-5_*c@feqrgs*&1#hc@0228im&6ee06g=ws-y'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-ACCOUNT_ACTIVATION_DAYS = 2  # кол-во дней для хранения кода активации
-
-# для отправки кода активации
-AUTH_USER_EMAIL_UNIQUE = True
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 8000
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'info@google.ru'
-
+ACCOUNT_ACTIVATION_DAYS = 30  # кол-во дней для хранения кода активации
 
 # Application definition
 
@@ -71,18 +48,9 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'HipstaChat.urls'
 
+AUTH_USER_EMAIL_UNIQUE = True
+
 WSGI_APPLICATION = 'HipstaChat.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -102,7 +70,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '../static_content/static'
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, '../static_content/static')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../static_content/media')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
@@ -118,3 +89,5 @@ AUTH_USER_MODEL = 'HipstaChat.HCUser'
 # 'HipstaChat.custom_auth.HCUserModelBackend',
 #     'django.contrib.auth.backends.ModelBackend'
 # )
+
+from .settings_local import *

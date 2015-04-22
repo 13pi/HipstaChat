@@ -6,3 +6,5 @@ __pycache__
 */migrations
 *.pyc
 >>>>>>> Admin
+
+HipstaChat/settings_local.py
