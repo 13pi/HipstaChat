@@ -78,9 +78,24 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     jQuery("#btnSendMsg").height(  jQuery("#textareaWithMsg").height()  );
 
+
+
+
+    //max-height
     $scope.updateMessagesData  = function () {
+
+        if ($scope.updatedMessagesTimes < 2){
+            jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()-30+"px");
+        }
+
+
+
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
+
+            //jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()+"px");
+
+
             if ( $scope.updatedMessagesTimes < 2){
                 if (!$("#messageConversationBox")){
                     $scope.updatedMessagesTimes --;
