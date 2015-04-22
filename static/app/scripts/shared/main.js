@@ -343,7 +343,7 @@
                 for (var i=0; i < $rootScope.allNotifications.length; i++){
                     var id = $rootScope.allNotifications[i].id;
                     //chatService.deleteNotificationById (id).then(function (e) { });
-                     Restangular.one("notifications/"+id).customDELETE();
+                     Restangular.one("notifications/"+id+"/").customDELETE();
 
                 }
                     logger.logSuccess("Все уведомления удалены!");
