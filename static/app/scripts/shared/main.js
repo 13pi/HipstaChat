@@ -84,7 +84,7 @@
             });
 
 
-            $scope.getRoomByRoomId = function (id) {
+            $rootScope.getRoomByRoomId = function (id) {
                 if (!id) return;
                 for (var i =0; i < $rootScope.allRooms.length; i++){
                     if ($rootScope.allRooms[i].id == id) return $rootScope.allRooms[i];
@@ -107,6 +107,16 @@
 
 
 ///////////////////////////////////////////////////////////////////////////
+
+
+
+            $rootScope.getLastDateUser = function ( date ) {
+                // минут назад // minutes before
+                    var res = Math.round(( new Date() - new Date(date))) / 1000 /60  ;
+                    res = res.toFixed(3);
+                    return  res;
+            };
+
             $rootScope.getContactList = function () {
                chatService.getAccountListFull().get().then(function(e){
                     $rootScope.getAccountListFullResult = e.response;
@@ -179,6 +189,8 @@
                                     chatService.getMessageById(messageId).get().then(function (e) {
                                         var msg = e.message;
 
+                                        var room =  $rootScope.getRoomByRoomId(msg.room);
+
                                         console.warn(e);
                                         var aToast = ngToast.create({
                                             className: 'warning',
@@ -189,8 +201,9 @@
                                             ' Сообщение: '+ $rootScope.printUser( $rootScope.resolveUser(msg.sender) ) +'  <br/>' +
                                             '  <strong> '+ msg.text +' </strong> </div>  </div>' +
                                             ' <small class="text-muted pull-right ">   '+ $rootScope.timeConverter( msg.date ) +' </small> <br/>' +
-                                            ' <button ng-click="deleteNotificationById('+notificationId+')" class="btn btn-warning"> удалить  </button>' +
-                                            '  ' +
+                                            '  <div class="row"> <div class="col-md-6"> <a href="#/room/details/'+msg.room+'"> '+room.name+'  </a> ' +
+                                            '</div> <div class="col-md-6"> <button ng-click="deleteNotificationById('+notificationId+')" class="btn btn-warning"> [ X ]  </button>' +
+                                            '   ' +
                                             ''),
                                             timeout :1000000,
                                             compileContent: true,

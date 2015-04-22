@@ -1,6 +1,7 @@
 <div class="panel panel-primary ">
+
     <div class="panel-heading">
-        Участники
+        Участники ( {{currentRoom.members.length}} чел. )
     </div>
     <div class="panel-body">
         <ul class="media-list">
@@ -12,15 +13,9 @@
                     <div class="media">
                         <a class="pull-left" href="#">
 
-                            <div ng-if="resolveUser(member).avatarUrl != ''">
-                                <img class="media-object img-circle " width="70" height="70"
-                                     src="{{resolveUser(member).avatarUrl}}"/>
+                            <img class="media-object img-rounded " width="70" height="70"
+                                 ng-src="{{getAvatarUrlByUser(resolveUser(member))}}"/>
 
-                            </div>
-
-                            <div ng-if="resolveUser(member).avatarUrl == ''">
-                                <img class="media-object img-circle  " src="assets/img/user.png"/>
-                            </div>
                         </a>
 
                         <div class="media-body">
@@ -29,14 +24,22 @@
                             </h5>
 
                             <small class="text-muted">
-                                {{printUser(resolveUser(member)) }}
+
+                                <a href="#/user/details/{{resolveUser(member).id}}" target="_blank">
+                                    {{printUser(resolveUser(member)) }}
+                                </a>
+
                             </small>
 
                             <br/>
                             <small class="text-muted"> {{ timeConverter(resolveUser(member).lastOnlineDate )}}</small>
 
-                            <button ng-click="deleteMemberFromChat(member)" class="btn btn-danger btn-sm"> выгнать
-                            </button>
+                            <div ng-show="resolveUser(currentRoom.owner).id == currentUser.id">
+                                <button ng-click="deleteMemberFromChat(member)" class="btn btn-danger btn-sm"> выгнать
+                                </button>
+                            </div>
+
+
                             <hr/>
 
                         </div>

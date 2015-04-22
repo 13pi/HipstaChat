@@ -3,9 +3,9 @@
 
     <div class="row">
 
-        <div class="col-lg-2 col-md-0"></div>
+        <!--<div class="col-lg-2">  </div>-->
 
-        <div class="col-md-{{messengesColumn}} col-lg-8">
+        <div class="col-md-{{messengesColumn}} col-lg-offset-2"></div>
 
             <div ng-if="isDebugMode()">
                 {{currentRoomMessages}}
@@ -13,8 +13,8 @@
 
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    История сообщений ( {{currentRoomMessages.length}} ) |
-                    <button class="btn btn-primary" ng-click="showRoomSettings()">Настройки</button>
+                    История сообщений ( {{currentRoomMessages.length}} ) | <strong>  {{currentRoom.name}} </strong> |
+                    <a   ng-click="showRoomSettings()">Настройки</a>
                     <br/>
                 </div>
 
@@ -38,10 +38,8 @@
 
                                     <a class="pull-left" href="#">
                                         <!--[ {{$index+1}} ]-->
-
                                         <img class="media-object img-rounded " width="70" height="70"
                                              ng-src="{{getAvatarUrlByUser(resolveUser(mess.sender))}}"/>
-
                                     </a>
 
                                     <small class="text-muted">

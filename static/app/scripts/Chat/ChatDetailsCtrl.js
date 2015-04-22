@@ -93,6 +93,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
             }
             $scope.updatedMessagesTimes ++;
         })
+        $scope.deleteNotificationsFromThisRoom();
     };
 
 
@@ -163,6 +164,11 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.getFromHistory = function () {
+
+        if (!$scope.currentRoomMessages[ $scope.currentRoomMessages.length-1]){
+            return;
+        }
+
         if (!$scope.revBoolVal){
             var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
         }else{
