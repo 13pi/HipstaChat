@@ -250,7 +250,7 @@ class Rooms(APIView):
             'id': room.pk,
             'owner': room.owner.email,
             'pm': room.private_message,
-            'last_message': room.message_set.order_by('-id')[0].pk,
+            'lastMessage': room.message_set.order_by('-id')[0].serialize()
         }
 
     @auth_required
