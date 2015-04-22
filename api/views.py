@@ -246,13 +246,14 @@ class Rooms(APIView):
     methods = ['GET', 'PUT', 'POST', 'DELETE']
 
     def serialize_room(self, room):
+        messages = room.message_set.order_by('-id')
         return {
             'members': [u.pk for u in room.members.all()],
             'name': room.name,
             'id': room.pk,
             'owner': room.owner.email,
             'pm': room.private_message,
-            'lastMessage': room.message_set.order_by('-id')[0].serialize()
+            'lastMessage': messages[0].serialize() if messages.exists() else ''
         }
 
     @auth_required
