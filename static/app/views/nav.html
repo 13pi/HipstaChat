@@ -5,11 +5,10 @@
             overflow-y: scroll;
         }
     }
-
 </style>
 
 
-<div class="nav-wrapper"  data-ng-controller="DashboardCtrl">
+<div class="nav-wrapper"  data-ng-controller="NavCtrl">
     <ul id="nav"
         class="nav  nav2"
         data-slim-scroll
@@ -24,32 +23,22 @@
             <a href="#/chat/userSearch"> <i class="fa fa-dashboard"></i><span data-i18n="Поиск пользователя"></span> </a>
         </li>
 
-        <li class="  admin-section" ng-show="hasRole('ROLE_ADMIN')">
+        <li class="  admin-section" ng-show="false">
             <a  ><i class="fa fa-thumb-tack"></i><span data-i18n="Системная информация"></span></a>
             <ul>
                  <li><a href="#/debug"><i class="fa fa-angle-right"></i><span data-i18n="debug mode"></span></a> </li>
-
             </ul>
         </li>
 
-        <li class="  admin-section"  >
-
-
-            <a href=""> <i class="fa fa-dashboard"></i><span data-i18n="Быстрые Контакты"
-                                                                         content-template="templates/fastContacts.html"
-                                                                        data-placement="right" data-animation="am-slide-right"  data-container="body" bs-aside="getAccountListFullResult"
-                    ></span> </a>
+        <li class="admin-section"  >
+            <a href="">
+                <i class="fa fa-dashboard"></i>
+                <span data-i18n="Быстрые Контакты"
+                                                 content-template="templates/fastContacts.html"
+                                                 data-placement="right" data-animation="am-slide-right"  data-container="body" bs-aside="getAccountListFullResult"
+                    ></span>
+            </a>
         </li>
-
-        <!--<div class="text-center">-->
-            <!--<li class="  admin-section"  >-->
-                <!--<button class="btn" type="button"  content-template="templates/fastContacts.html"-->
-                        <!--data-placement="right" data-animation="am-slide-right"  data-container="body" bs-aside="getAccountListFullResult">-->
-                    <!--Быстрые Контакты-->
-                <!--</button>-->
-                <!--&lt;!&ndash;<a href="#/dashboard"> <i class="fa fa-dashboard"></i><span data-i18n=" "></span> </a>&ndash;&gt;-->
-            <!--</li>-->
-        <!--</div>-->
 
     </ul>
 

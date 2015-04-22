@@ -10,38 +10,28 @@
     <meta charset="utf-8">
     <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 
-    <meta name="description" content="Responsive Admin Web App">
+    <meta name="description" content="HipstaChat.ru">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" initial-scale=1.0, user-scalable=no">
 
-    <link href="styles/please-wait.css" rel="stylesheet">
-
-
+    <link rel="stylesheet" href="styles/please-wait.css"
+            >
     <link rel="stylesheet" href="styles/bootstrap.css">
     <link rel="stylesheet" href="styles/ui.css">
     <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-
 
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="bower_components/angular-formstamp/formstamp.css"/>
-    <link rel="stylesheet" href="styles/github.min.css">
-    <link rel="stylesheet" href="dist/angular-busy.min.css"/>
-    <link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
-    <link rel="stylesheet" href="//rawgithub.com/mgcrea/bootstrap-additions/master/dist/bootstrap-additions.min.css">
+    <link rel="stylesheet" href="styles/bootstrap-additions.min.css">
 
-    <!--<link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css">-->
     <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast-animations.min.css">
     <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css">
     <link rel="stylesheet" href="styles/custom.css">
-    <!--<link rel="stylesheet" href="//rawgithub.com/mgcrea/bootstrap-additions/master/dist/bootstrap-additions.min.css">-->
 
     <link rel="shortcut icon" type="image/png" href="favicon32.ico">
 
+    <script src="bower_components/ngImgCrop/compile/minified/ng-img-crop.css"></script>
 
 
     <title ng-bind="title"></title>
-    <!--<title ng-bind="'CHAT CHK &mdash; ' + title"></title>-->
-
 </head>
 
 
@@ -54,8 +44,6 @@
       data-ng-controller="AppCtrl"
       data-ng-class=" {'layout-boxed': admin.layout === 'boxed' } "
         >
-
-
 
 <toast></toast>
 
@@ -78,10 +66,9 @@
     </aside>
 
     <section data-ng-view
-
-
              id="content"
-             class="content-container {{admin.pageTransition.class}}"></section>
+             class="content-container {{admin.pageTransition.class}}">
+    </section>
 </div>
 
 <script type="text/javascript" src="js/please-wait.js"></script>
@@ -90,14 +77,8 @@
         logo: "/static/img/logo.png",
         backgroundColor: '#16A086',
         loadingHtml: '<div class="spinner"> <div class="rect1"></div> <div class="rect2"></div> <div class="rect3"></div> <div class="rect4"></div> <div class="rect5"></div> </div>'
-
     })
-
 </script>
-
-
-
-<div id="app-status-ul"> </div>
 
 
 <script src="favico.min.js"></script>
@@ -107,82 +88,42 @@
 
 <script src="bower_components/angular/angular.min.js"></script>
 
-
-<script src="bower_components/angular-filter/dist/angular-filter.js"></script>
-
 <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
 
-
 <script src="bower_components/angular-route/angular-route.min.js"></script>
 <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-
-    <script src="bower_components/ngtoast/dist/ngToast.min.js"></script>
-
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-
+<script src="bower_components/ngtoast/dist/ngToast.min.js"></script>
+<script src="bower_components/toastr/toastr.min.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 
 <script src="scripts/app.js"></script>
 
-<!--<script src="scripts/favicoService.js"></script>-->
-
-
-<script src="bower_components/angular-formstamp/formstamp.js"></script>
 <script src="dist/ui-bootstrap.js"></script>
 <script src="dist/ui-bootstrap-tpls.js"></script>
-
 
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script src="bower_components/restangular/dist/restangular.min.js"></script>
 
 <script src="js/base64.min.js"></script>
 <script src="js/angular-local-storage.min.js"></script>
-<script src="js/xeditable.min.js"></script>
 
 <script src="scripts/service.js"></script>
-
-
-<script src="scripts/Login/LoginCtrl.js"></script>
 <script src="scripts/Chat/ChatDetailsCtrl.js"></script>
 
 
-<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+<script src="bower_components/ngImgCrop/compile/minified/ng-img-crop.js"></script>
 
-<script type="text/javascript" src="bower_components/moment/moment.js"></script>
-<script type="text/javascript" src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
-
-<script src="bower_components/toastr/toastr.min.js"></script>
-
-
-
-
+<!--<script type="text/javascript" src="bower_components/moment/moment.js"></script>-->
 
 <script src="scripts/shared/main.js"></script>
 <script src="scripts/shared/directives.js"></script>
 <script src="scripts/shared/localize.js"></script>
 <script src="scripts/shared/Nav.js"></script>
-<script src="scripts/UI/UICtrl.js"></script>
-<script src="scripts/UI/UIDirective.js"></script>
 <script src="scripts/UI/UIService.js"></script>
-<script src="scripts/Form/FormDirective.js"></script>
-<script src="scripts/Form/FormCtrl.js"></script>
-<script src="scripts/Form/FormValidation.js"></script>
-<script src="scripts/UI/Map.js"></script>
-
-
-<script src="scripts/Page/PageCtrl.js"></script>
-
-<script src="dist/angular-busy.js"></script>
-
-<!--<script src='bower_components/satellizer/satellizer.js'></script>-->
-
-
-<script src='bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
-<script src='bower_components/textAngular/dist/textAngular.min.js'></script>
 
 
 <script src="js/jquery.touchSwipe.min.js"></script>
-
     <script type="application/javascript">
         if (screen.width < 980) {
             document.write("<script type='application/javascript' src='js/mobile.js'>");

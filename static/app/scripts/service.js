@@ -1,15 +1,5 @@
 'use strict';
 
-angular.module('app').value('cgBusyDefaults',{
-    message:'Loading',
-    backdrop: false,
-    templateUrl: 'templates/promise.html',
-    delay: 0,
-    minDuration: 700,
-    wrapperClass: 'overlay'
-});
-
-
 angular.module('app.services', ['restangular', 'LocalStorageModule'])
     .service('userInfo', function (Restangular, localStorageService, $http, configurationService,$q) {
         Restangular.setBaseUrl(configurationService.returnAPIhost());
@@ -94,7 +84,6 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
 
                     function printSD() {
                         window.apiServerDefined = true;
-
                         window.loading_screen.finish(); // убираем экран загрузки
 
                         console.log("------------------------------");
@@ -102,10 +91,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                         console.log("Address: " + apiURL);
                     }
 
-                    var apiURL = "";
-
-                    apiURL = "/api/";
-                    //apiURL =  "http://hipstachat.tk/api/";
+                    var apiURL = "/api/";
 
                     printSD();
                     return apiURL;
@@ -127,8 +113,6 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                         r.onreadystatechange = function () {
                             if (this.readyState == 4) asyncProc(this);
                         };
-                    //else
-                    //r.timeout = 4000;  // Reduce default 2mn-like timeout to 4 s if synchronous
 
                     r.open(reqType, address, !(!asyncProc));
                     r.onerror = function () {
@@ -157,30 +141,6 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
 
 
             .service('timeService', function (Restangular, localStorageService, $http) {
-                this.getDayFromTime = function (time) {
-                    return new Date(time).getDate();
-                };
-
-                this.getMonthFromTime = function (time) {
-                    return new Date(time).getMonth() + 1;
-                };
-
-                this.getYearFromTime = function (time) {
-                    return new Date(time).getFullYear();
-                };
-
-                this.getHoursFromTime = function (time) {
-                    return new Date(time).getHours();
-                };
-
-                this.getMinutesFromTime = function (time) {
-                    return new Date(time).getMinutes();
-                };
-
-                this.normalTime = function (time) {
-                    return ( this.getDayFromTime(time) + "." + this.getMonthFromTime(time) + "." + this.getYearFromTime(time) + "  " + this.getHoursFromTime(time) + ":" + this.getMinutesFromTime(time)   )
-                };
-
             })
 
 
@@ -202,13 +162,20 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     return Restangular.one("searchUser/").customPOST(a);
                 };
 
+
+                    this.uploadAvatar = function (avatarBase64) {
+                        var a = {};
+                        a.data = avatarBase64;
+                        return Restangular.one("searchUser/").customPOST(a);
+                    };
+
                 this.getUserById = function (userId) {
                     return Restangular.one("user/" + userId + "/");
                 };
 
 
                 this.getMessageById = function (id) {
-                    return Restangular.one("messagesByID/" + id );
+                    return Restangular.one("messagesById/" + id );
                 };
 
                 this.getAccountListFull = function () {
@@ -229,27 +196,12 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                             ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
                         }
                     }
-
                     return Restangular.one("notifications/"+id).customDELETE();
                 };
-
-                //{
-                //    "id": 2,
-                //    "name": "roomName2",
-                //    "owner": "ya@nbakaev.ru",
-                //    "members": [
-                //    1
-                //]
-                //}
 
                 this.getRoomById = function (id) {
                     return Restangular.one("room/"+id+"/").get();
                 };
-
-                //{
-                //    "id": 2,
-                //    "response": "ok"
-                //}
 
                 this.addNewRoom = function (room) {
                     var a = {};
@@ -261,17 +213,13 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     return Restangular.one("room/"+room).customDELETE();
                 };
 
-
-
-        //messages/6/21/20 по-идее
-
                 this.getAllMessagesByRoomId = function (id) {
                     return Restangular.one("messages/"+id+"/").get();
                 };
 
-        this.getAllMessagesByRoomIdInHistory = function (id, startId, how) {
-            return Restangular.one("messages/"+id+"/"+startId+"/"+how+"/").get();
-        };
+                this.getAllMessagesByRoomIdInHistory = function (id, startId, how) {
+                    return Restangular.one("messages/"+id+"/"+startId+"/"+how+"/").get();
+                };
 
 
                 this.addNewMessage = function (roomId, messageText) {
@@ -280,26 +228,13 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                     return Restangular.one("messages/"+roomId+"/").customPUT(a);
                 };
 
-        this.deleteFromContactList = function (id) {
-            return Restangular.one("contactList/"+id).customDELETE();
-        };
-        //{{ur}}/api/contactList/3
+                this.deleteFromContactList = function (id) {
+                    return Restangular.one("contactList/"+id).customDELETE();
+                };
 
-
-                    //[
-                    //    {
-                    //        "id": 1,
-                    //        "name": "roomName",
-                    //        "owner": "ya@nbakaev.ru",
-                    //        "members": [
-                    //            1
-                    //        ]
-                    //    }
-                    //]
                 this.getAllRooms = function () {
                     return Restangular.all("room/").getList();
                 };
-
 
 
                 this.deleteMemberFromChat = function (roomId, userId) {

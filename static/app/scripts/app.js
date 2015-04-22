@@ -5,42 +5,23 @@
         'ngAnimate',
         'ui.bootstrap',
 
-        'textAngular',
-
         'app.controllers',
         'app.localization',
         'app.nav',
-        'app.ui.ctrls',
         'app.ui.services',
+        'app.chat',
+        'app.services',
 
         'mgcrea.ngStrap',
-
-        'app.services',
         'ngToast',
-        //'satellizer',
-
-        'app.login',
-        'cgBusy',
-
-
-        'app.chat',
-        'formstamp',
-
-        'angular.filter',
-        'ui.bootstrap.datetimepicker'
-
-
+        'ngImgCrop'
     ])
-
 
     .run((['$location', '$rootScope' ,function($location, $rootScope, editableOptions) {
             $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
                 $rootScope.title = current.$$route.title;
             });
-
     }] ) )
-
-
         .config(['$routeProvider',  '$httpProvider', function ($routeProvider, $httpProvider) {
             $httpProvider.interceptors.push('authHttpResponseInterceptor');
             var routes, setRoutes;
@@ -78,19 +59,18 @@
         }
         ])
 
-    .filter('reverseCus', function() {
-        return function(items, revBoolVal) {
-            //console.log(revBoolVal.revBoolVal);
-            if (revBoolVal.revBoolVal){
-                return items.slice().reverse();
-            }else{
-                return items;
+        /// Reverse elements in array filter
+        .filter('reverseCus', function() {
+            return function(items, revBoolVal) {
+                if (revBoolVal.revBoolVal){
+                    return items.slice().reverse();
+                }else{
+                    return items;
+                }
+            };
+        })
 
-            }
-
-        };
-    })
-
+        /// directive to do some action (function) by clicking enter on the page
         .directive('ngEnter', function() {
             return function(scope, element, attrs) {
                 element.bind("keydown keypress", function(event) {
@@ -104,9 +84,6 @@
                 });
             };
         });
-
-
-    
 
 }).call(this)
 

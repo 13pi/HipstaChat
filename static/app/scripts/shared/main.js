@@ -1,13 +1,11 @@
-//(function () {
     'use strict';
     angular.module('app.controllers', [])
-
+    // Main controller
         .controller('AppCtrl', [
         '$scope', '$rootScope', 'userInfo', '$location','configurationService','localStorageService','$timeout','Restangular','chatService','$q','logger','$sce','ngToast','favicoService',
         function ($scope, $rootScope, userInfo, $location,configurationService ,localStorageService,$timeout,Restangular, chatService, $q, logger, $sce, ngToast, favicoService) {
             $scope.main = {
-                brand: 'HipstaChat',
-                name: 'Lisa Doe'
+                brand: 'HipstaChat'
             };
             $scope.pageTransitionOpts = [
                 {
@@ -28,12 +26,16 @@
                 }
             ];
 
-            // scrollbar in chats messages
-            $rootScope.useScrollable = true;
-
 
             console.log("AppCtrl - header");
+            $rootScope.allNotificationToasts = [];
+            $rootScope.allResolvedUsers = new Array ();
+            $rootScope.allRooms = [];
+            $rootScope.getAccountListFullResult = [];
+            $rootScope.allNotifications = [];
 
+            // scrollbar in chats messages
+            $rootScope.useScrollable = true;
 
             function fireDigestEverySecond() {
                 $scope.getDatetime = new Date;
@@ -51,15 +53,8 @@
                 });
             }
 
-
-
-            $rootScope.allNotificationToasts = [];
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-            $rootScope.allResolvedUsers = new Array ();
 
             $rootScope.resolveUser = function (id){
                 if (!id) return;
@@ -79,7 +74,6 @@
             };
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-            $rootScope.allRooms = [];
             chatService.getAllRooms().then(function (e) {
                 $rootScope.allRooms =  e;
             });
@@ -106,16 +100,14 @@
             };
 
 
-            $rootScope.getAccountListFullResult = [];
-
+///////////////////////////////////////////////////////////////////////////
             $rootScope.getContactList = function () {
                chatService.getAccountListFull().get().then(function(e){
                     $rootScope.getAccountListFullResult = e.response;
                 });
             };
             $rootScope.getContactList();
-
-
+///////////////////////////////////////////////////////////////////////////
 
             $rootScope.isInContactList = function (id){
                 for (var i=0; i < $rootScope.getAccountListFullResult.length; i++){
@@ -146,7 +138,6 @@
 
 
 //////////////// NOTIFICATIONS  /////////////////////
-            $rootScope.allNotifications = [];
 
             $rootScope.getNotificationsFromServers = function () {
                 chatService.getNotifications ().get().then(function (e) {
@@ -176,11 +167,19 @@
 
 
                                 chatService.getMessageById(messageId).get().then(function (e) {
+                                        var msg = e.message;
 
                                     console.warn(e);
                                     aToast = ngToast.create({
                                         className: 'warning',
-                                        content:  $sce.trustAsHtml(' Новое сообщение <br/> <strong> '+ text +' </strong> <br/><br/> <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
+                                        content:  $sce.trustAsHtml('' +
+                                        ' <div class="row"> <div class="col-md-4"> <img class="  img-rounded" align="center" height="70" width="70"   src="'+$rootScope.getAvatarUrlByUser($rootScope.resolveUser(msg.sender)) +'" /> <br/> ' +
+                                        '</div>' +
+                                        ' <div class="col-md-8">' +
+                                        ' Сообщение: '+ $rootScope.printUser( $rootScope.resolveUser(msg.sender) ) +'  <br/>' +
+                                        '  <strong> '+ msg.text +' </strong> </div>  </div>' +
+                                        ' <small class="text-muted pull-right ">   '+ $rootScope.timeConverter( msg.date ) +' </small> <br/>' +
+                                        ' <button ng-click="deleteNotificationById(allNotifications[i].id)" class="btn btn-warning"> удалить  </button>' +
                                         '  ' +
                                         ''),
                                         timeout :100000,
@@ -211,16 +210,11 @@
 
                         }
 
-
                         var id = $rootScope.allNotifications[i].id;
                         $rootScope.allNotificationToasts.push ( {id : id, obj: aToast } );
                     }
 
                     console.info("Взяты уведомления с сервера: " + $rootScope.allNotifications.length + " .шт");
-
-
-
-
                 });
             };
 
@@ -230,8 +224,6 @@
             $scope.interval = 3000;
             setInterval($scope.getNotificationsFromServers, $scope.interval);
 //////////////// NOTIFICATIONS  /////////////////////
-
-
 
             $rootScope.getNotificationTypePretty = function (code) {
                 switch (code) {
@@ -272,6 +264,17 @@
             };
 
 
+            $rootScope.deleteAllNotifications = function () {
+
+                for (var i=0; i < $rootScope.allNotifications.length; i++){
+                    var id = $rootScope.allNotifications[i].id;
+                    //chatService.deleteNotificationById (id).then(function (e) { });
+                     Restangular.one("notifications/"+id).customDELETE();
+
+                }
+                    logger.logSuccess("Все уведомления удалены!");
+                    $rootScope.getNotificationsFromServers ();
+            };
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -284,6 +287,8 @@
                 return localStorageService.get('debugMode') == "true";
             };
 ////////////////////////////////////////////////////////////////////////////////
+
+///////////////////// JUST SOME UI FEATURES BELOW  /////////////////////
 
             $scope.admin = {
                 layout: 'wide',
@@ -325,18 +330,6 @@
             };
         }
     ])
-
-        .controller('HeaderCtrl', ['$scope', function ($scope) {
-    }])
-
-        .controller('NavContainerCtrl', ['$scope', function ($scope) {
-    }])
-
-        .controller('NavCtrl', [
-        '$scope', 'filterFilter', 'userInfo', function ($scope, filterFilter, userInfo) {
-        }
-    ])
-
         .controller(
         'DashboardCtrl', ['$scope',  'Restangular', '$http', 'configurationService', '$rootScope',
         '$compile','$injector','$timeout'  ,'logger','chatService',
@@ -347,9 +340,7 @@
         console.log("----- Dashboard ctrl start");
 
                 $scope.editProfileMode = false;
-
                 $scope.myContactList=  [];
-
                 $scope.searchDataEmail = "";
                 $scope.searchResultEmail = {};
                 $scope.searchResult = [];
@@ -360,7 +351,6 @@
                         $scope.editProfileMode = false;
                     })
                 };
-
 
                 $scope.searchUserByData = function (){
                     $scope.searchResult = [];
@@ -376,10 +366,6 @@
                         $scope.searchResultEmail = e;
                     })
                 };
-
-
-
-
 
                 $scope.addToContactListfoo = function(c){
                     chatService.addToContactList (c).then(function(e){
@@ -416,8 +402,6 @@
                 };
 
 
-
-
                 $scope.deleteFromContactList = function (id) {
                     chatService.deleteFromContactList ( id).then(function (e) {
                         logger.logSuccess("Удален успешно из контакт-листа!");
@@ -426,13 +410,40 @@
                 };
 
 
+                $scope.uploadAvatar = function () {
+                  chatService.uploadAvatar ( $scope.myCroppedImage);
+                };
+
+////////////////////// Avatar cropper /////////////////////////
+                $scope.myImage='';
+                $scope.myCroppedImage='';
+
+                var handleFileSelect=function(evt) {
+                    var file=evt.currentTarget.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        $scope.$apply(function($scope){
+                            $scope.myImage=evt.target.result;
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                };
+                angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+
+        }])
 
 
+        .controller('HeaderCtrl', ['$scope', function ($scope) {
+        }])
+
+        .controller('NavContainerCtrl', ['$scope', function ($scope) {
+        }])
+
+        .controller('NavCtrl', [
+            '$scope', 'filterFilter', 'userInfo', function ($scope, filterFilter, userInfo) {
+            }
+        ])
 
 
-
-
-
-
-        }]);
+    ;
 
