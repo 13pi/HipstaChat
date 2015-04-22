@@ -148,6 +148,8 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
 
             .service('chatService', function (Restangular, localStorageService, $http, configurationService, $rootScope, ngToast) {
 
+
+
                 this.updateMyProfile = function (newSalesFunnel) {
                     return Restangular.one("myaccount").customPUT(newSalesFunnel);
                 };
