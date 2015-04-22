@@ -1,14 +1,18 @@
 # Create your views here.
+from base64 import decodebytes
 import json
 from json import loads
+from hashlib import md5
+import os
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
-from HipstaChat import models
 
+from HipstaChat import models
 from HipstaChat.models import HCUser
+from HipstaChat.settings import MEDIA_ROOT, MEDIA_URL
 from api.decorators import auth_required, payload_required
 from api.utils import api_response, user_in_room, users_are_friends
 from chat.models import Room, Message, Notification
@@ -176,11 +180,9 @@ class ContactList(APIView):
             Notification.send(other, 5, request.user.pk, more_details={
                 "isAuthorizationRequest": False,
                 "roomId": room.pk,
-                })
+            })
             return api_response({"response": "ok",
                                  "roomId": room.pk})
-
-
 
         return api_response({"response": "ok"})
 
@@ -479,6 +481,35 @@ class AccountSettings(APIView):
         return api_response({
             "response": "ok"
         })
+
+
+class AvatarUpload(APIView):
+    methods = ['POST']
+
+    @auth_required
+    def post(self, request):
+        parsed = json.loads(request.body.decode())
+
+        if not 'data' in parsed:
+            self.error_response('data should be in request')
+
+        data = parsed['data']
+        image = decodebytes(data[data.find(',') + 1:].encode())
+
+        ava_path = 'avatars/' + md5(request.user.email.encode()).hexdigest() + '.png'
+        path = os.path.join(MEDIA_ROOT, ava_path)
+
+        with open(path, 'wb') as f:
+            f.write(image)
+
+        request.user.avatar = MEDIA_URL + ava_path
+        request.user.save()
+
+        return api_response({"response": "ok"})
+
+
+
+
 
 
 
