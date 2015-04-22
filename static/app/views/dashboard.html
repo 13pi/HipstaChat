@@ -19,32 +19,10 @@
                             <div class="conversationWrap">
 
                                 <div class="callout callout-warning" ng-repeat="notification in allNotifications">
+                                    <h4> [ {{notification.id}} ]
+                                        {{getNotificationTypePretty(notification.type)}}
 
-                                    {{notification}}
-                                    <!--<h4>-->
-
-                                        <div ng-if="notification.type == 6">
-
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    {{getNotificationTypePretty(notification.type)}} пользователя
-                                                    <a href="#/user/details/{{notification.details}}"> {{printUser(resolveUser(notification.details))}}</a>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
-                                                        удалить уведмоление
-                                                    </button>
-                                                </div>
-
-                                            </div>
-
-
-                                        </div>
-                                        <!--[ {{notification.id}} ]-->
-
-
-                                    <!--</h4>-->
+                                    </h4>
 
                                     <p>
 
@@ -52,7 +30,9 @@
                                         в комнате <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>
                                     </div>
 
-
+                                    <button ng-click="deleteNotificationById(notification.id)" class="btn btn-warning">
+                                        удалить
+                                    </button>
                                     </p>
                                 </div>
 
@@ -397,7 +377,7 @@
                                                 <button class="btn btn-danger" ng-click="leaveRoom(room.id)"
                                                         ng-if="resolveUser(room.owner).id == currentUser.id && room.members.length == 1"
                                                         ><i
-                                                        class="fa fa-user-times"></i> удалить <br/> комнату
+                                                        class="fa fa-user-times"></i> удалить комнату
                                                 </button>
 
                                                 <button class="btn btn-danger" ng-click="leaveRoom(room.id)"

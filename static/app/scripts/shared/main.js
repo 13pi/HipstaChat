@@ -29,8 +29,6 @@
 
             console.log("AppCtrl - header");
 
-            Restangular.setBaseUrl(configurationService.returnAPIhost());
-
             //START: some local variables
             $rootScope.allNotificationToasts = [];
             $rootScope.allResolvedUsers = new Array ();
@@ -220,58 +218,6 @@
                                 break;
                             /////////////////END: We have new message notification //////////////
 
-
-                            /////////////////START: We have new message notification //////////////
-                            case 5:
-                                var more_details =   JSON.parse( $rootScope.allNotifications[i].more_details );
-
-                                // если нам пришел запрос (нас кто-то добавил в контакт лист)
-                                if (more_details.isAuthorizationRequest) {
-
-
-
-                                    //var text = more_details.text;
-                                    //var messageId = more_details.message_id;
-                                    //{"isAuthorizationRequest": true}
-                                    (function () {
-                                        var notificationId = $rootScope.allNotifications[i].id;
-                                        var requestedUserId = $rootScope.allNotifications[i].details;
-
-
-                                        chatService.getUserById(requestedUserId).get().then(function (ee) {
-                                            var user = ee;
-                                            //var room =  $rootScope.getRoomByRoomId(msg.room);
-                                            console.warn(ee);
-                                            var aToast = ngToast.create({
-                                                className: 'warning',
-                                                content: $sce.trustAsHtml('' +
-                                                ' <div class="row"> <div class="col-md-4"> <img class="  img-rounded" align="center" height="70" width="70"   src="' + $rootScope.getAvatarUrlByUser($rootScope.resolveUser(requestedUserId)) + '" /> <br/> ' +
-                                                '</div>' +
-                                                ' <div class="col-md-8">' +
-                                                ' Вас добавили в контакт-лист:    <br/>' +
-                                                '  <strong> ' + $rootScope.printUser($rootScope.resolveUser(requestedUserId)) + ' </strong> </div>  </div>' +
-                                                ' <small class="text-muted pull-right ">   ' + $rootScope.timeConverter(msg.date) + ' </small> <br/>' +
-                                                '  <div class="row"> <div class="col-md-6"> <a href="#/user/details/' + requestedUserId + '"> профиль  </a> ' +
-                                                '</div> <div class="col-md-6"> <button ng-click="deleteNotificationById(' + notificationId + ')" class="btn btn-warning"> [ X ]  </button>' +
-                                                '  </div></div>  <div class="row"> ' +
-                                                '<div class="col-md-6"> <button ng-click="deleteNotificationById(' + notificationId + ')" class="btn btn-success"> Добавить  </button>   ' +
-                                                '</div>' +
-                                                '<div class="col-md-6"> <button ng-click="deleteNotificationById(' + notificationId + ')" class="btn btn-danger"> Отколнить  </button>   ' +
-                                                '</div>' +
-                                                ''),
-                                                timeout: 1000000,
-                                                compileContent: true,
-                                                //dismissButton : true
-                                                dismissButtonHtml: " <button class='btn'> ОК </button>"
-
-                                            });
-                                            $rootScope.allNotificationToasts.push({id: notificationId, obj: aToast});
-                                        });
-                                    })();
-                                }
-
-                                break;
-                            /////////////////END: We have new message notification //////////////
 
                             default:
 
