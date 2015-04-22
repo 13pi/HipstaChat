@@ -91,7 +91,11 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
                         console.log("Address: " + apiURL);
                     }
 
-                    var apiURL = "/api/";
+                    if (location.host == "hipstachat.ru"){
+                        var apiURL = "https://hipstachat.ru/api/";
+                    }else{
+                        var apiURL = "/api/";
+                    }
 
                     printSD();
                     return apiURL;
