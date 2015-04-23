@@ -11,15 +11,21 @@
     {#/static/css#}
 
     <meta charset="utf-8">
-    <meta name="author" content="hipstachat.ru">
+    <meta name="keywords" content="HTML5 Template"/>
+    <meta name="description" content="Slander - Responsive HTML5 Landing Page">
+    <meta name="author" content="dkpixels.com">
 
-    <title>HipstaChat.ru</title>
+    <title>Slander - Responsive HTML5 Landing Page</title>
 
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Favicons -->
-    <link rel="shortcut icon" href="/static/app/favicon32.ico">
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/img/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/img/apple-touch-icon-144x144.png">
 
     <!-- Google Webfonts -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic'
@@ -29,12 +35,12 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/static/css/bootstrap.css">
-{#    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">#}
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
-{#    <link rel="stylesheet" href="/static/js/owl-carousel/owl.carousel.css"/>#}
-{#    <link rel="stylesheet" href="/static/js/owl-carousel/owl.theme.css"/>#}
-{#    <link rel="stylesheet" href="/static/css/flexslider.css"/>#}
-{#    <link rel="stylesheet" href="/static/css/prettyphoto.css"/>#}
+    <link rel="stylesheet" href="/static/js/owl-carousel/owl.carousel.css"/>
+    <link rel="stylesheet" href="/static/js/owl-carousel/owl.theme.css"/>
+    <link rel="stylesheet" href="/static/css/flexslider.css"/>
+    <link rel="stylesheet" href="/static/css/prettyphoto.css"/>
 
     <!-- Add custom CSS here -->
     <link href="/static/css/custom.css" rel="stylesheet">
@@ -45,7 +51,7 @@
 	<![endif]-->
 
     <!-- Modernizer -->
-{#    <script src="/static/js/modernizr.custom.js"></script>#}
+    <script src="/static/js/modernizr.custom.js"></script>
 
 
 </head>
@@ -106,53 +112,45 @@
                     <br>
 
                     <p>
-                    {% block header_content %}
+                        {% block header_content %}
 
 
 
 
-                        {% if user.is_authenticated %}
-                            <div class="row">
+                            {% if user.is_authenticated %}
+                                <div class="row">
                                     <div class="col-md-6">
 
                                         <a href="/static/app/index.html" class="btn1 btn-7 btn-7a btn-8">Перейти в приложение</a>
                                     </div>
-                            </div>
-                            {#                        ВЫ АВТОРИЗОВАНЫ#}
+                                </div>
+                                {#                        ВЫ АВТОРИЗОВАНЫ#}
 
-                        {% else %}
-                            {#                            ВЫ НЕ АВТОРИЗОВАНЫ#}
-{#                            <h1>Регистрация</h1>#}
-                            <form method="post" action="/accounts/register/">{% csrf_token %}
-                                <dl class="register">
+                            {% else %}
+                                {#                            ВЫ НЕ АВТОРИЗОВАНЫ#}
+                                <h1>Войти</h1>
+                                <form method="post" action="/accounts/login/">{% csrf_token %}
+                                    <dl class="register">
 
-                                    <div class="row">
-
-
-                                        {% for field in form %}
-                                            <div class="col-md-6">
+                                        <div class="row">
 
 
+                                            {% for field in request.login_form %}
                                                 <dt>{{ field.label_tag }}</dt>
                                                 <dd class="clearfix">{{ field }}
                                                     {% if field.help_text %}
                                                         <div class="clearfix">{{ field.help_text }}</div>{% endif %}
                                                     {% if field.errors %}
-                                                        <div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
-                                                </dd>
-
-                                            </div>
-                                        {% endfor %}
-
-
-                                    </div>
-
-                                </dl>
+                                                        <div class="myerrors clearfix">{{ field.errors }}</div>
+                                                    {% endif %}
+                                                </dd></div>
+                                            {% endfor %}
+                                         </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
 
-                                        <button type="submit" class="btn1 btn-7 btn-7a btn-8"> Зарегистрироваться
+                                        <button type="submit" class="btn1 btn-7 btn-7a btn-8">Войти
                                         </button>
                                     </div>
 
@@ -166,42 +164,31 @@
                                 </div>
 
 
-                            </form>
+                                </form>
 
 
-                        {% endif %}
+                            {% endif %}
 
-                    {#                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis elit nec sem laoreet tempor sit amet a quam. Maecenas commodo lorem ac turpis ornare lacinia.#}
-                    {% endblock %}
+                            {#                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis elit nec sem laoreet tempor sit amet a quam. Maecenas commodo lorem ac turpis ornare lacinia.#}
+                        {% endblock %}
 
-                    </p>
+                </p>
 
-                </div>
             </div>
-            <div class="col-lg-6">
-                <div id="main-slider" class="flexslider">
-                    <ul class="slides">
-                        <li><img src="/static/demo/slide/1.png" alt=""/></li>
-                        <li><img src="/static/demo/slide/2.png" alt=""/></li>
-                    </ul>
-                </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="main-slider" class="flexslider">
+                <ul class="slides">
+                    <li><img src="/static/demo/slide/1.png" alt=""/></li>
+                    <li><img src="/static/demo/slide/2.png" alt=""/></li>
+                </ul>
             </div>
         </div>
     </div>
-    <!-- /.container -->
+</div>
+<!-- /.container -->
 </div>
 <!-- top Content -->
-
-
-
-
-
-
-
-
-
-
-
 
 
 {{ view.request.path }}
@@ -239,10 +226,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="list-inline">
-{#                    <li><a href="./index.html">Home</a></li>#}
-{#                    <li>&sdot;</li>#}
-{#                    <li><a href="#">About</a></li>#}
-{#                    <li>&sdot;</li>#}
+                    <li><a href="./index.html">Home</a></li>
+                    <li>&sdot;</li>
+                    <li><a href="#">About</a></li>
+                    <li>&sdot;</li>
                 </ul>
                 <p class="copyright text-center medium">Copyright &copy; <a href="https://vk.com/pi_2013">13ПИ, HSE</a>
                     2015. All Rights Reserved</p>
@@ -267,13 +254,19 @@
 
 <script type="application/javascript">
 
+
     $(document).ready(function () {
         console.log("ready!");
     });
 
     $(document).ready(function () {
+
+
         $("input").addClass("form-control");
+
+
     })
+
 
 </script>
 
