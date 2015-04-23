@@ -139,7 +139,9 @@ class UserSearch(APIView):
             Q(username__contains=text)
         )
 
-        obj["response"] += [{"name": user.get_full_name(), "id": user.pk, "nickName": user.username} for user in query]
+        obj["response"] += [
+            {"name": user.get_full_name(), "id": user.pk, "nickName": user.username, "name": user.get_full_name()} for
+            user in query]
 
         return api_response(obj)
 

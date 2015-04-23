@@ -1,4 +1,60 @@
 {% extends "registration/base.html" %}
+{% block title %}
+Регистрация
+{% endblock %}
+{% block header_content %}
+{% if user.is_authenticated %}
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <a href="/static/app/index.html" class="btn1 btn-7 btn-7a btn-8">Перейти в приложение</a>
+                                    </div>
+                                </div>
+                                {#                        ВЫ АВТОРИЗОВАНЫ#}
+
+                            {% else %}
+                                {#                            ВЫ НЕ АВТОРИЗОВАНЫ#}
+                                <h1>Регистрация</h1>
+                                <form method="post" action="/accounts/register/">{% csrf_token %}
+                                    <dl class="register">
+
+                                        <div class="row">
+
+
+                                            {% for field in form %}
+                                                <dt>{{ field.label_tag }}</dt>
+                                                <dd class="clearfix">{{ field }}
+                                                    {% if field.help_text %}
+                                                        <div class="clearfix">{{ field.help_text }}</div>{% endif %}
+                                                    {% if field.errors %}
+                                                        <div class="myerrors clearfix">{{ field.errors }}</div>
+                                                    {% endif %}
+                                                </dd></div>
+                                            {% endfor %}
+                                         </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <button type="submit" class="btn1 btn-7 btn-7a btn-8"> Зарегистрироваться
+                                        </button>
+                                    </div>
+
+                                    {#                             <div class="col-md-6">#}
+                                    {#                                 <ul class="list-inline top-buttons">#}
+                                    {#						<li><a href="#"><button class="btn1 btn-7 btn-7a btn-8"><i class="fa fa-inbox"></i> Buy Now</button></a></li>#}
+                                    {#                                <li style="padding-top: 10%;"><a href="/accounts/login/" class="lmore"><i class="fa fa-arrow-circle-o-right fa-fw"></i> <span>Войти</span></a></li>#}
+                                    {#					                </ul>#}
+                                    {#                                </div>#}
+
+                                </div>
+
+
+                                </form>
+
+
+                            {% endif %}
+{% endblock %}
 {% block content %}
 
 
