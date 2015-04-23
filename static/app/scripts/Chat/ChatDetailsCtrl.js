@@ -88,8 +88,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
             jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()-30+"px");
         }
 
-
-
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
 
@@ -114,12 +112,19 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.getHistoryMessageWhenScrolling = function () {
-        if ($scope.updatedMessagesTimes < 2) return;
-        if ($("#messageConversationBox").scrollTop() == 0  ){
+        if ($scope.updatedMessagesTimes < 2 ) return;
+        if ($("#messageConversationBox").scrollTop()  < 20  ){
 
             $scope.prevScrollHeight = $("#messageConversationBox")[0].scrollHeight;
             $scope.getFromHistory();
-            $("#messageConversationBox").scrollTop($scope.prevScrollHeight) ;
+
+            console.log ($scope.prevScrollHeight);
+            console.log ($("#messageConversationBox")[0].scrollHeight);
+
+            //if ($scope.prevScrollHeight != $("#messageConversationBox")[0].scrollHeight){
+                $("#messageConversationBox").scrollTop($scope.prevScrollHeight) ;
+            //}
+
         }
 
     };

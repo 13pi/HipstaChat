@@ -245,7 +245,7 @@
 
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <section class="panel panel-primary">
                                 <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Аватар</div>
                                 <div class="panel-body text-center">
@@ -264,10 +264,7 @@
                                         <br/>
 
                                         <div>Select an image file: <input type="file" id="fileInput" /></div>
-                                        <div class="cropArea">
-                                            <br/>
-                                            <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
-                                        </div>
+
 
                                     </div>
 
@@ -277,12 +274,28 @@
                         </div>
 
 
-                        <div class="col-md-6" ng-show="myCroppedImage && editProfileMode">
+                        <div class="col-md-8" ng-show="myCroppedImage && editProfileMode">
                             <section class="panel panel-primary">
                                 <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Аватар - правка</div>
                                 <div class="panel-body text-center">
-                                    <div>Cropped Image:</div>
-                                    <div><img ng-src="{{myCroppedImage}}" /></div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div>Cropped Image:</div>
+                                            <div><img ng-src="{{myCroppedImage}}" /></div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="cropArea">
+                                                <br/>
+                                                <img-crop   image="myImage" result-image="myCroppedImage"></img-crop>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
 
                                     <button class="btn btn-success" ng-click="uploadAvatar()">Отправить аватар</button>
 
@@ -292,7 +305,7 @@
                         </div>
 
 
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <section class="panel panel-primary">
                                 <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Мой профиль
                                 </div>
@@ -568,7 +581,18 @@
                                             </td>
 
 
-                                            <td ng-class="{'success': resolveUser(room.owner).id == currentUser.id}"><a href="#/room/details/{{room.id}}"> {{room.name}} </a>
+                                            <td ng-class="{'success': resolveUser(room.owner).id == currentUser.id}"><a href="#/room/details/{{room.id}}">
+                                                {{room.name}}
+
+
+                                                <div class="callout callout-warning" ng-if="room.lastMessage">
+                                                    <img class="  img-rounded  " width="30" height="30"
+                                                         ng-src="{{getAvatarUrlByUser(resolveUser(room.lastMessage.sender))}}"/>
+
+                                                    {{room.lastMessage.text}}
+                                                    </div>
+
+                                            </a>
                                             </td>
                                             <!--<td>-->
                                                 <!--<a href="#/user/details/{{resolveUser(room.owner).id}}">-->

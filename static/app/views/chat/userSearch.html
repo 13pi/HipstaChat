@@ -27,7 +27,10 @@
                             {{ project.name}}
                             </a>
 
-                        <div ng-if="project.username" > | {{ project.username}}  </div>
+
+                        {{printUser(project.id)}}
+
+                        <!--<div ng-if="project.username" > | {{ project.username}}  </div>-->
 
                     </td>
                     <td>
