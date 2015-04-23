@@ -14,7 +14,17 @@
 
                             {% else %}
                                 {#                            ВЫ НЕ АВТОРИЗОВАНЫ#}
-                                <h1>Регистрация</h1>
+                                <h2>Регистрация</h2>
+
+                            <script type="application/javascript">
+                                $(document).ready(function () {
+                                    $(".slides").remove();
+                                })
+
+
+                            </script>
+
+
                                 <form method="post" action="/accounts/register/">{% csrf_token %}
                                     <dl class="register">
 
@@ -29,9 +39,11 @@
                                                     {% if field.errors %}
                                                         <div class="myerrors clearfix">{{ field.errors }}</div>
                                                     {% endif %}
-                                                </dd></div>
+                                                </dd>
                                             {% endfor %}
-                                         </div>
+                                          </div>
+
+                                </dl>
 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -78,3 +90,6 @@
 {#        <input type="submit" value="Зарегистрироваться" / class="clearfix">#}
 {#    </form>#}
 {% endblock %}
+
+
+

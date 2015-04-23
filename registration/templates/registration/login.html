@@ -4,58 +4,58 @@
 
             <!-- Welcome Content -->
 <div class="section text-center welcome">
-	<div class="container">
-
-    <h1>Авторизация</h1>
-
-    {% if user.is_authenticated %}
-        Что такое, {{ user.username }}? Вы же уже авторизорваны.
-        Впрочем, всегда можно <a href="{% url 'auth_logout' %}">выйти</a>.<br/><br/>
-    {% else %}
-
-        {% if form.non_field_errors %}
-            {{ form.non_field_errors }}
-        {% endif %}
-
-
-
-        <form method="post" action="">{% csrf_token %}
-
-        <div class="row">
-            <div class="col-md-4">
-                <dl class="register">
-                {% for field in form %}
-                    <dt>{{ field.label_tag }}</dt>
-                    <dd class="clearfix">{{ field }}
-                        {% if field.help_text %}
-                            <div class="clearfix">{{ field.help_text }}</div>{% endif %}
-                        {% if field.errors %}
-                            <div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
-                    </dd>
-                {% endfor %}
-            </dl>
-            </div>
-
-
-            <div class="col-md-6">
-                <h5>Используйте логин и пароль, который указывали при регистации </h5>
-
-                 <button  type="submit"  class="btn1 btn-7 btn-7a btn-8"> Вход </button>
-            </div>
-
-        </div>
-
-
-                </form>
-
-
-
-
-
-        <br/><br/>
-
-
-
+{#	<div class="container">#}
+{##}
+{#    <h1>Авторизация</h1>#}
+{##}
+{#    {% if user.is_authenticated %}#}
+{#        Что такое, {{ user.username }}? Вы же уже авторизорваны.#}
+{#        Впрочем, всегда можно <a href="{% url 'auth_logout' %}">выйти</a>.<br/><br/>#}
+{#    {% else %}#}
+{##}
+{#        {% if form.non_field_errors %}#}
+{#            {{ form.non_field_errors }}#}
+{#        {% endif %}#}
+{##}
+{##}
+{##}
+{#        <form method="post" action="">{% csrf_token %}#}
+{##}
+{#        <div class="row">#}
+{#            <div class="col-md-4">#}
+{#                <dl class="register">#}
+{#                {% for field in form %}#}
+{#                    <dt>{{ field.label_tag }}</dt>#}
+{#                    <dd class="clearfix">{{ field }}#}
+{#                        {% if field.help_text %}#}
+{#                            <div class="clearfix">{{ field.help_text }}</div>{% endif %}#}
+{#                        {% if field.errors %}#}
+{#                            <div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}#}
+{#                    </dd>#}
+{#                {% endfor %}#}
+{#            </dl>#}
+{#            </div>#}
+{##}
+{##}
+{#            <div class="col-md-6">#}
+{#                <h5>Используйте логин и пароль, который указывали при регистации </h5>#}
+{##}
+{#                 <button  type="submit"  class="btn1 btn-7 btn-7a btn-8"> Вход </button>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{##}
+{##}
+{#                </form>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#        <br/><br/>#}
+{##}
+{##}
+{##}
 {#		<div class="row">#}
 {#			<div class="col-lg-12">#}
 {#				<h2>A Clean &amp; Simple landing page for all type of websites</h2>#}
@@ -66,13 +66,13 @@
 {#				<hr>#}
 {#			</div>#}
 {#		</div>#}
-		<!-- /.row -->
-	</div>
-	<!-- /.container -->
-</div>
-<!-- Welcome Content -->
-
-    {% endif %}
+{#		<!-- /.row -->#}
+{#	</div>#}
+{#	<!-- /.container -->#}
+{#</div>#}
+{#<!-- Welcome Content -->#}
+{##}
+{#    {% endif %}#}
 {% endblock %}
 
 
