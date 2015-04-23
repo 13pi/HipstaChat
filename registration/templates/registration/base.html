@@ -4,7 +4,9 @@
 <head>
     {% block styles %}
     {% endblock %}
-    <title>abc</title>
+    <title>
+        {% block title %}HipstaChat{% endblock %}
+    </title>
 
     {#/static/css#}
 
@@ -79,7 +81,8 @@
 
 
                     {% if user.is_authenticated %}
-                        АВТОРИЗОВАНЫ
+                        <li><a href="">Привет, {{ user.email }}</a></li>
+                        <li><a href="/accounts/logout">Выход</a></li>
                     {% else %}
 
                         <li><a href="/accounts/register/">Регистрация</a></li>
@@ -109,9 +112,18 @@
                     <br>
 
                     <p>
+                    {% block header_content %}
+
+
 
 
                         {% if user.is_authenticated %}
+                            <div class="row">
+                                    <div class="col-md-6">
+
+                                        <a href="/static/app/index.html" class="btn1 btn-7 btn-7a btn-8">Перейти в приложение</a>
+                                    </div>
+                            </div>
                             {#                        ВЫ АВТОРИЗОВАНЫ#}
 
                         {% else %}
@@ -166,7 +178,7 @@
                         {% endif %}
 
                     {#                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis elit nec sem laoreet tempor sit amet a quam. Maecenas commodo lorem ac turpis ornare lacinia.#}
-
+                    {% endblock %}
 
                     </p>
 
