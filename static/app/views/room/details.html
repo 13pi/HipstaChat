@@ -71,7 +71,7 @@
                     <div class=" ">
 
                         <div class="row">
-                            <div class="col-lg-1 col-md-2">
+                            <div class="col-lg-1 col-md-2 hidden-sm hidden-xs visible-md visible-lg">
                                 <img class="  img-rounded  " width="70" height="70"
                                      ng-src="{{getAvatarUrlByUser(currentUser)}}"/>
 
@@ -94,7 +94,7 @@
 
                             </div>
 
-                            <div class="col-lg-2 col-md-4">
+                            <div class="col-lg-2 col-md-4 hidden-sm hidden-xs visible-md visible-lg">
                                 <div class="row">
                                     <div class="col-md-6" ng-repeat="member in currentRoom.members | limitTo:4">
                                         <a href="#/user/details/{{resolveUser(member).id}}" target="_blank">
