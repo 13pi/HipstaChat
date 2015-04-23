@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
+{% extends "registration/base.html" %}
+{% block content %}
 <ul>
     {% if user.is_authenticated %}
         <p>You are <b>{{ user.username }} ({{ user.email }}) </b></p>
@@ -23,7 +17,12 @@
     <li><a href="/app">angular <app></app></a></li>
 
 </ul>
+{% endblock %}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head lang="en">#}
+{#    <meta charset="UTF-8">#}
+{#    <title></title>#}
+{#</head>#}
+{#<body>#}
 
-
-</body>
-</html>
