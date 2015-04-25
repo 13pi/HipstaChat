@@ -427,9 +427,26 @@
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
                             <section class="panel panel-primary">
-                                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Мой контакт лист
+                                <div class="panel-heading">
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                            Мой контакт лист ( {{getAccountListFullResult.length}} )
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <input type="text" ng-model="contactListNameFilter" class="form-control" >
+                                        </div>
+
+                                    </div>
+
+
                                 </div>
                                 <div class="panel-body text-center">
+
+
+
 
                                     <div ng-if="isDebugMode()">
                                         {{getAccountListFullResult | json}}
@@ -446,7 +463,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="project in getAccountListFullResult">
+                                        <tr ng-repeat="project in getAccountListFullResult | filter:contactListNameFilter">
                                             <td class="col-md-1">{{$index+1}}</td>
 
                                             <td>
@@ -527,8 +544,21 @@
                     <div class="row">
                         <div class="col-md-12 col-lg-10">
                             <section class="panel panel-primary">
-                                <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Существующие
-                                    комнаты ( {{allRooms.length}} )
+                                <div class="panel-heading">
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                            Существующие
+                                            комнаты ( {{allRooms.length}} )
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <input type="text" ng-model="roomNameFilter" class="form-control" >
+                                        </div>
+
+                                    </div>
+
                                 </div>
                                 <div class="panel-body text-center">
 
@@ -555,7 +585,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="room in allRooms">
+                                        <tr ng-repeat="room in allRooms | filter:roomNameFilter">
 
                                             <td class="hidden-sm hidden-xs hidden-md visible-lg"> <small> {{$index+1}} </small> </td>
 

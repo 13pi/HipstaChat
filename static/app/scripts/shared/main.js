@@ -244,12 +244,12 @@
                                             '</div>' +
                                             ' <div class="col-md-8">' +
                                             ' Сообщение: '+ $rootScope.printUser( $rootScope.resolveUser(msg.sender) ) +'  <br/>' +
-                                            '  <strong> '+ msg.text +' </strong> </div>  </div>' +
+                                            '  <strong> ') + msg.text + $sce.trustAsHtml(' </strong> </div>  </div>' +
                                             ' <small class="text-muted pull-right ">   '+ $rootScope.timeConverter( msg.date ) +' </small> <br/>' +
-                                            '  <div class="row"> <div class="col-md-6"> <a href="#/room/details/'+msg.room+'"> '+room.name+'  </a> ' +
-                                            '</div> <div class="col-md-6"> <button ng-click="deleteNotificationById('+notificationId+')" class="btn btn-warning"> [ X ]  </button>' +
+                                            '  <div class="row"> <div class="col-md-6"> <a href="#/room/details/'+msg.room+'">  ' ) + room.name+ $sce.trustAsHtml ('  </a> ' ) +
+                                            //$sce.trustAsHtml ( '</div> <div class="col-md-6"> <button ng-click="deleteNotificationById('+notificationId+')" class="btn btn-warning"> [ X ]  </button>') +
                                             '   ' +
-                                            ''),
+                                            '',
                                             timeout :1000000,
                                             compileContent: true,
                                             //dismissButton : true

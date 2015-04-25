@@ -44,6 +44,14 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.updatedMessagesTimes = 0;
     $scope.messageToConversation = "";
 
+    $scope.alreadyRequestedHistoryLock = false;
+    $scope.alreadyRequestedHistoryInThePastLock = false;
+
+    $scope.lastUpdatedHistoryTime = new Date();
+
+    // selector for main conversation box
+    $scope.messageBox = $("#messageConversationBox");
+
 ///////////////////////////////////////////////////////////////////////////
     $scope.deleteNotificationsFromThisRoom = function () {
         for (var i=0; i < $rootScope.allNotifications.length; i++){
@@ -64,6 +72,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 ///////////////////////////////////////////////////////////////////////////
 
 
+    // Возвращает новые сообщения полученные из "истории"
     $scope.appendDiffHistory =  function(){
         var bIds = {};
         $scope.currentRoomMessages.forEach(function(obj){
@@ -76,47 +85,61 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     };
 
+    // Высота кнопки "Отправить" равна высоте поле ввода текста сообщения
     jQuery("#btnSendMsg").height(  jQuery("#textareaWithMsg").height()  );
 
 
+    $scope.scrollbarChanged = function () {
+        if (!$scope.useScrollable){
+            //$("#messageConversationBox").css("max-height",  "400000000px");
+            $scope.messageBox.css("max-height",  "400000000px");
+        }else{
+            $scope.iniConversationBoxHeight();
+        }
+    };
 
+    $scope.iniConversationBoxHeight = function () {
+        if (window.screen.height == 768 && window.screen.width == 1024){
+            $scope.messageBox.css("max-height",  ( window.screen.height -  $(".top-nav").height()-30) / 1.8 +"px");
+        }else{
+            if (window.screen.height == 1080 && window.screen.width == 1920){
+                $scope.messageBox.css("max-height",  ( window.screen.height -  $(".top-nav").height()-30) / 1.8 +"px");
+            }else{
+                $scope.messageBox.css("max-height",  "400px");
+            }
+        }
+    };
 
-    //max-height
     $scope.updateMessagesData  = function () {
+        if ($scope.alreadyRequestedHistoryLock) return;
+        $scope.alreadyRequestedHistoryLock = true;
 
         if ($scope.updatedMessagesTimes < 2){
-            if (window.screen.height == 768 && window.screen.width == 1024){
-                jQuery("#messageConversationBox").css("max-height",  ( window.screen.height -  $(".top-nav").height()-30) / 1.8 +"px");
-            }else{
-                if (window.screen.height == 1080 && window.screen.width == 1920){
-                    jQuery("#messageConversationBox").css("max-height",  ( window.screen.height -  $(".top-nav").height()-30) / 1.8 +"px");
-                }else{
-                    jQuery("#messageConversationBox").css("max-height",  "400px");
-                }
-            }
-
-            //jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()-30+"px");
+            $scope.iniConversationBoxHeight();
+        }else{
+            clearInterval($scope.refreshMessages);
+            $scope.refreshMessages =  setInterval($scope.updateMessagesData, 3000);
         }
 
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
 
-            //jQuery("#messageConversationBox").css("max-height",  jQuery("#content").height()+"px");
-
 
 
             if ( $scope.updatedMessagesTimes < 2){
-                if (!$("#messageConversationBox")){
+                if (!$scope.messageBox){
                     $scope.updatedMessagesTimes --;
                 }
-              console.warn (   $("#messageConversationBox").scrollTop($("#messageConversationBox")[0].scrollHeight) );
+              console.warn (   $scope.messageBox.scrollTop($scope.messageBox[0].scrollHeight) );
             }
 
             if ($scope.postsInHistory.length > 0){
                 $scope.currentRoomMessages = $scope.currentRoomMessages.concat (  $scope.appendDiffHistory () );
             }
             $scope.updatedMessagesTimes ++;
-        })
+            $scope.alreadyRequestedHistoryLock = false;
+
+        });
         $scope.deleteNotificationsFromThisRoom();
     };
 
@@ -124,23 +147,23 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     $scope.getHistoryMessageWhenScrolling = function () {
         if ($scope.updatedMessagesTimes < 2 ) return;
-        if ($("#messageConversationBox").scrollTop()  < 20  ){
+        if ($scope.messageBox.scrollTop()  < 20  ){
 
-            $scope.prevScrollHeight = $("#messageConversationBox")[0].scrollHeight;
-            $scope.getFromHistory();
+            // refresh history only one time in 3 second (when we are in the top of the message box)
+            if ( ( ( new Date() - $scope.lastUpdatedHistoryTime ) / 1000 )  > 3  ){
 
-            console.log ($scope.prevScrollHeight);
-            console.log ($("#messageConversationBox")[0].scrollHeight);
+                if ($scope.alreadyRequestedHistoryInThePastLock) return;
+                $scope.alreadyRequestedHistoryInThePastLock = true;
 
-            //if ($scope.prevScrollHeight != $("#messageConversationBox")[0].scrollHeight){
-                $("#messageConversationBox").scrollTop($scope.prevScrollHeight) ;
-            //}
-
+                $scope.prevScrollHeight = $scope.messageBox[0].scrollHeight;
+                console.warn ( "Prev height: " +  $scope.prevScrollHeight  );
+                $scope.getFromHistory();
+            }
         }
 
     };
 
-    $scope.refreshistoryMsg =  setInterval($scope.getHistoryMessageWhenScrolling, 1000);
+    $scope.refreshistoryMsg =  setInterval($scope.getHistoryMessageWhenScrolling, 100);
 
     $scope.currentParticipants = $modal({scope: $scope, html:true,placement:"center ", title:'', show:false, contentTemplate: 'templates/chatMembers.html'});
     $scope.showCurrentParticipantsModal = function() {
@@ -182,16 +205,16 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     };
 
 
-   $scope.interval = 3000;
-   $scope.refreshMessages =  setInterval($scope.updateMessagesData, $scope.interval);
+    // refresh only 2 times to get right height of display. then will be another speed of updates (3000)
+   $scope.refreshMessages =  setInterval($scope.updateMessagesData, 100);
 
-    //// Убираем обновление после ухода со страницы
+    //// Убираем обновления после ухода со страницы
     $rootScope.$on("$locationChangeStart", function () {
-        console.info("Уход из комнаты: " + $scope.currentRoom.name + " с ID: " + $scope.currentRoom.id)
+        console.info("Уход из комнаты: " + $scope.currentRoom.name + " с ID: " + $scope.currentRoom.id);
         clearInterval($scope.refreshMessages);
+        clearInterval($scope.refreshistoryMsg);
+        $scope.currentRoomSettings.hide();
     });
-
-    $scope.updateMessagesData ();
 
 
     $scope.getFromHistory = function () {
@@ -205,9 +228,22 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         }else{
             var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
         }
+
         chatService.getAllMessagesByRoomIdInHistory($scope.currentRoomId, elel, 20).then(function(e){
             $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(e.messages);
             $scope.postsInHistory = $scope.postsInHistory.concat (e.messages);
+
+            console.log(e.messages.length);
+
+            console.info ( "Текщая высотаЖ " +  $scope.messageBox[0].scrollHeight);
+            console.info ( "Предыдущая высотаЖ " +  $scope.prevScrollHeight);
+
+            if (e.messages.length > 0){
+                $scope.messageBox.scrollTop($scope.prevScrollHeight) ;
+            }
+
+            $scope.lastUpdatedHistoryTime = new Date();
+            $scope.alreadyRequestedHistoryInThePastLock = false;
         })
     };
 
