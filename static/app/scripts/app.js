@@ -14,7 +14,8 @@
 
         'mgcrea.ngStrap',
         'ngToast',
-        'ngImgCrop'
+        'ngImgCrop',
+        //'app.services.mobile'
     ])
 
     .run((['$location', '$rootScope' ,function($location, $rootScope, editableOptions) {

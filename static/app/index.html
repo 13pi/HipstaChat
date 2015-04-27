@@ -125,9 +125,12 @@
 
 <script src="js/jquery.touchSwipe.min.js"></script>
     <script type="application/javascript">
-        if (screen.width < 980) {
-            document.write("<script type='application/javascript' src='js/mobile.js'>");
-            document.write("<\x2fscript>");
+
+    if (screen.width < 980) {
+        window.hipstachat = {};
+        window.hipstachat.mobile = true;
+//            document.write("<script type='application/javascript' src='js/mobile.js'>");
+//            document.write("<\x2fscript>");
     }
     </script>
 

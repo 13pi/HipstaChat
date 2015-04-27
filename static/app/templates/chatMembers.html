@@ -1,7 +1,11 @@
-<div class="panel panel-primary ">
+<section class="panel panel-primary">
+    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span>  Участники ( {{currentRoom.members.length}} чел. ) <b> </b></div>
+    <div class="panel-body text-center">
+
+
 
     <div class="panel-heading">
-        Участники ( {{currentRoom.members.length}} чел. )
+
     </div>
     <div class="panel-body">
         <ul class="media-list">
@@ -54,37 +58,28 @@
 
 
 
+    </section>
+
 
 
 <style>
 
-    .modal-dialog{
-        overflow: auto;
-    }
 
-    .modal-backdrop.am-fade {
+    .aside-backdrop.am-fade {
         opacity: .5;
         transition: opacity .15s linear;
-
-    &
-    .ng-enter {
-        opacity: 0;
-
-    &
-    .ng-enter-active {
-        opacity: .5;
+    &.ng-enter {
+         opacity: 0;
+    &.ng-enter-active {
+         opacity: .5;
+     }
     }
-
-    }
-    &
-    .ng-leave {
-        opacity: .5;
-
-    &
-    .ng-leave-active {
-        opacity: 0;
-    }
-
+    &.ng-leave {
+         opacity: .5;
+    &.ng-leave-active {
+         opacity: 0;
+     }
     }
     }
+
 </style>

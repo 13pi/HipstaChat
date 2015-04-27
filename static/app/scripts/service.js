@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('app.services', ['restangular', 'LocalStorageModule'])
-    .service('userInfo', function (Restangular, localStorageService, $http, configurationService,$q) {
+angular.module('app.services', ['restangular', 'LocalStorageModule' ])
+    .service('userInfo', function (Restangular, localStorageService, $http, configurationService,$q, $aside,$rootScope ) {
         Restangular.setBaseUrl(configurationService.returnAPIhost());
         Restangular.setDefaultHeaders({"Accept": "application/json"});
         Restangular.setDefaultHeaders({"Content-Type": "application/json"});
@@ -14,8 +14,80 @@ angular.module('app.services', ['restangular', 'LocalStorageModule'])
             });
 
             return abc;
+        };
+
+        if (window.hipstachat && window.hipstachat.mobile){
+
+            $rootScope.currentRoomsFast = $aside({scope: $rootScope, html:true,placement:"right", show:false, animation:"am-slide-right",  contentTemplate: 'templates/fastRoom.html'});
+            $rootScope.currentRoomsFast.showAction = function() {
+                $rootScope.currentRoomsFast.$promise.then( $rootScope.currentRoomsFast.show);
+            };
+
+            (function () {
+                var count = 0;
+                //Enable swiping...
+                $("html").swipe({
+                    //Generic swipe handler for all directions
+                    swipeLeft: function (event, direction, distance, duration, fingerCount) {
+
+                        //console.log($rootScope.currentRoomsFast.isShown);
+
+
+                        $rootScope.currentRoomsFast.hide();
+
+                        //if ($rootScope.currentRoomsFast.show){
+                        //    $rootScope.currentRoomsFast.hide();
+                        //}
+
+
+
+                        // свайп влево и меню навигацции показано - закрываем
+                        if ($('#app').hasClass('on-canvas')) {
+                            $('#app').toggleClass('on-canvas');
+                        } else {
+
+                            $rootScope.currentRoomsFast.showAction();
+                        }
+                        //                $(this).text("You swiped " + direction + " " + ++count + " times " );
+                    },
+
+                    swipeRight: function (event, direction, distance, duration, fingerCount) {
+
+                        // если свайп вправо и нет показано мею навигацци - показываем
+                        if (!$('#app').hasClass('on-canvas')) {
+                            $('#app').toggleClass('on-canvas');
+                        }else{
+                            //$rootScope.currentRoomsFast.hide();
+                        }
+
+
+                        //$('#app').toggleClass('on-canvas');
+                        //                $(this).text("You swiped " + direction + " " + ++count + " times " );
+                    },
+
+                    //Default is 75px, set to 0 for demo so any distance triggers swipe
+                    threshold: 75,
+                    cancelable: true
+
+
+                })
+
+            })();
         }
+
+
+
+
     })
+
+
+
+
+
+
+
+
+
 
     .factory('favicoService', [
         function() {

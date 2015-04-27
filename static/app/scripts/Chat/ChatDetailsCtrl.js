@@ -165,7 +165,8 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     $scope.refreshistoryMsg =  setInterval($scope.getHistoryMessageWhenScrolling, 100);
 
-    $scope.currentParticipants = $modal({scope: $scope, html:true,placement:"center ", title:'', show:false, contentTemplate: 'templates/chatMembers.html'});
+    $scope.currentParticipants = $aside({scope: $scope, html:true,placement:"right", show:false, animation:"am-slide-right",  contentTemplate: 'templates/chatMembers.html'});
+        //$modal({scope: $scope, html:true,placement:"center ", title:'', show:false, contentTemplate: 'templates/chatMembers.html'});
     $scope.showCurrentParticipantsModal = function() {
         $scope.currentParticipants.$promise.then( $scope.currentParticipants.show);
     };
