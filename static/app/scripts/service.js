@@ -123,10 +123,10 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                             console.log("Response 403");
                         }
 
-                        if (response.status === 503) {
-                            $location.path('pages/503');
-                            console.log("Response 503");
-                        }
+                        //if (response.status === 503) {
+                        //    $location.path('pages/503');
+                        //    console.log("Response 503");
+                        //}
 
                         return response || $q.when(response);
                     },
@@ -142,10 +142,10 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                             $location.path('pages/403').search('returnTo', $location.path());
                         }
 
-                        if (rejection.status === 503) {
-                            console.log("Response Error 503", rejection);
-                            $location.path('pages/503').search('returnTo', $location.path());
-                        }
+                        //if (rejection.status === 503) {
+                        //    console.log("Response Error 503", rejection);
+                        //    $location.path('pages/503').search('returnTo', $location.path());
+                        //}
                         return $q.reject(rejection);
                     }
                 }
@@ -245,6 +245,8 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                      return Restangular.one("uploadAvatar/").customPOST(a);
                  };
 
+
+                 // for offline
                 this.getUserById = function (userId) {
                     return Restangular.one("user/" + userId + "/");
                 };
@@ -254,16 +256,19 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                     return Restangular.one("messagesById/" + id +"/");
                 };
 
+                // for offline
                 this.getAccountListFull = function () {
                     return Restangular.one("contactListWithDetails/");
                 };
 
 
+                // for offline
                 this.getNotifications = function () {
                     return Restangular.one("notifications/");
                 };
 
 
+                // for offline
                 this.getAccountSettings = function () {
                     return Restangular.one("accountSettings/");
                 };
@@ -276,21 +281,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                 };
 
 
-
-
-
-        // Delete from server and delete Notification Toasts
-                this.deleteNotificationById = function (id) {
-                    console.log($rootScope.allNotificationToasts);
-                    for (var i=0; i < $rootScope.allNotificationToasts.length; i++){
-                        if ($rootScope.allNotificationToasts[i].id == id){
-                            ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
-                        }
-                    }
-                    return Restangular.one("notifications/"+id+"/").customDELETE();
-
-                };
-
+                // for offline
                 this.getRoomById = function (id) {
                     return Restangular.one("room/"+id+"/").get();
                 };
@@ -305,10 +296,13 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                     return Restangular.one("room/"+room+"/").customDELETE();
                 };
 
+
+                // for offline
                 this.getAllMessagesByRoomId = function (id) {
                     return Restangular.one("messages/"+id+"/").get();
                 };
 
+                 // for offline
                 this.getAllMessagesByRoomIdInHistory = function (id, startId, how) {
                     return Restangular.one("messages/"+id+"/"+startId+"/"+how+"/").get();
                 };
@@ -324,6 +318,7 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                     return Restangular.one("contactList/"+id+"/").customDELETE();
                 };
 
+                 // for offline
                 this.getAllRooms = function () {
                     return Restangular.all("room/").getList();
                 };
@@ -349,6 +344,18 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                 };
 
 
+
+                // Delete from server and delete Notification Toasts
+                this.deleteNotificationById = function (id) {
+                    console.log($rootScope.allNotificationToasts);
+                    for (var i=0; i < $rootScope.allNotificationToasts.length; i++){
+                        if ($rootScope.allNotificationToasts[i].id == id){
+                            ngToast.dismiss (   $rootScope.allNotificationToasts[i].obj );
+                        }
+                    }
+                    return Restangular.one("notifications/"+id+"/").customDELETE();
+
+                };
 
 
             })

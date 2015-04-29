@@ -29,6 +29,38 @@
 
             $httpProvider.defaults.withCredentials = true;
 
+            $httpProvider.interceptors.push(function($q, localStorageService ) {
+                return {
+                    'request': function(config) {
+                        //console.log(config);
+                        // same as above
+                        return config;
+                    },
+
+                    'response': function(response) {
+                        // same as above
+                        console.log("AAAA");
+                        console.log(response);
+                        console.log("BBB");
+
+                        if (response.status == 200 && response.config.method == "GET"){
+                            localStorageService.set(response.config.url, response);
+                        }
+
+
+                        if (response.status == 503 && response.config.method == "GET"){
+                            response =  localStorageService.get(response.config.url);
+                        }
+                        //503 error
+
+                        return response;
+
+                    }
+                };
+            });
+
+
+
             routes = [
                 'dashboard',
                 'pages/404',
