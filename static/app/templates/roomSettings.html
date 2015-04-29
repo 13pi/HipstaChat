@@ -2,7 +2,7 @@
     <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Настройки <b> </b></div>
     <div class="panel-body text-center">
 
-        <div class="panel-body text-center">
+
 
 
             <div class="row" ng-show="resolveUser(currentRoom.owner).id == currentUser.id">
@@ -45,7 +45,7 @@
             <table class="table table-bordered table-stripped" ng-show="resolveUser(currentRoom.owner).id == currentUser.id">
                 <thead>
                 <tr>
-                    <th>№</th>
+                    <th class="hidden-sm hidden-xs">№</th>
                     <th>Имя</th>
                     <th>Добавить</th>
                     <!--<th>выгнать</th>-->
@@ -55,7 +55,7 @@
 
 
                 <tr ng-repeat="project in getAccountListFullResult | filter:alreadyInChatFilter as filteredContactList">
-                    <td class="col-md-1">{{$index+1}}</td>
+                    <td class="col-md-1 hidden-sm hidden-xs">{{$index+1}}</td>
                     <!--<td > {{project.id}} </td>-->
                     <td>
                         {{printUser(project) }}
@@ -72,6 +72,11 @@
             </table>
 
 
+
+
+
+
+
             <div ng-if="filteredContactList.length == 0">
                 <div class="callout callout-warning">
                     <h4>людей из контакт листа нет</h4>
@@ -82,7 +87,7 @@
 
         </div>
 
-    </div>
+
 </section>
 
 
@@ -93,7 +98,7 @@
         <div class="panel-body text-center">
             <br/>
             <label class="ui-checkbox">
-                <input name="checkbox1" type="checkbox" ng-model="$parent.useScrollable" ng-change="scrollbarChanged()"><span> Использовать scrollbar </span></label>
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.useScrollable" ng-change="scrollbarChanged()"><span> Использовать scrollbar </span></label>
 
             <br/>
             <label class="ui-checkbox">

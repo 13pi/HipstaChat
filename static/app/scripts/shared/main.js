@@ -80,7 +80,15 @@
             };
             // Get all rooms of current user
             chatService.getAllRooms().then(function (e) {
-                $rootScope.allRooms =  e;
+
+                var rooms = e;
+
+                for (var i=0; i < rooms.length; i++){
+                    if (rooms[i].lastMessage && rooms[i].lastMessage.date){
+                        rooms[i].lastMessage.normalDate = $rootScope.timeConverter( rooms[i].lastMessage.date);
+                    }
+                }
+                $rootScope.allRooms =  rooms;
             });
 
 
@@ -111,6 +119,40 @@
 
 
 ///////////////////////////////////////////////////////////////////////////
+
+            $rootScope.defaultAccountSettings = {};
+            $rootScope.defaultAccountSettings = {};
+            $rootScope.defaultAccountSettings.navigation = {};
+            $rootScope.defaultAccountSettings.navigation.useScrollable = true;
+            $rootScope.defaultAccountSettings.navigation.useScrollable = true;
+            $rootScope.defaultAccountSettings.navigation.useScrollable = true;
+
+
+
+            $rootScope.accountSettings = {};
+            $rootScope.accountSettings = chatService.getAccountSettings().get().then(function (data) {
+                console.warn(data.data);
+
+
+                if (typeof data.data == "string" && data.data == ""){
+                    $rootScope.accountSettings = $rootScope.defaultAccountSettings;
+                    console.warn("USED DEFAULT SETTINGS");
+                }else{
+
+                    $rootScope.accountSettings =  JSON.parse(data.data);
+                    $rootScope.useScrollable = $rootScope.accountSettings.navigation.useScrollable ;
+                }
+
+
+            });
+
+
+            $rootScope.saveAccountSettings = function () {
+                console.log($rootScope.useScrollable);
+                $rootScope.accountSettings.navigation.useScrollable = $rootScope.useScrollable;
+                chatService.updateAccountSettings($rootScope.accountSettings);
+            };
+
 
 
             $rootScope.addToContactListfoo = function(c){
@@ -169,6 +211,32 @@
                 }
                 return false;
             };
+
+
+
+            $rootScope.countNotificationInRoomById = function (id) {
+
+                var result = 0;
+                for (var i=0; i < $rootScope.allNotifications.length; i++){
+                    console.log($rootScope.allNotifications[i].type + " | " + id);
+
+                    if ( ($rootScope.allNotifications[i].type == 0
+                        || $rootScope.allNotifications[i].type == 1
+                        || $rootScope.allNotifications[i].type == 2
+                        || $rootScope.allNotifications[i].type == 3
+                        || $rootScope.allNotifications[i].type == 4 )
+                        && $rootScope.allNotifications[i].details == id ){
+                        console.log(1);
+                        result ++;
+                        //chatService.deleteNotificationById ($rootScope.allNotifications[i].id)
+                    }
+                }
+                return result;
+
+            };
+
+
+
 
             // From unix time to JS
             $rootScope.timeConverter =  function (UNIX_timestamp){

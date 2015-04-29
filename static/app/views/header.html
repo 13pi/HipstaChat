@@ -30,8 +30,8 @@
             </li>
 
             <li>
-                <div style="align-content: center; padding-top: 10%; padding-left: 5px; padding-right: 5px;">
-                    <b>{{getDatetime | date:'medium'}}</b>
+                <div style="align-content: center; padding-top: 10%; padding-left: 5px; padding-right: 5px">
+                    <b style="; font-size: 91%;">{{getDatetime | date:'medium'}}</b>
                 </div>
 
             </li>
@@ -41,14 +41,26 @@
         <!-- <ul class="nav-right pull-right list-unstyled hidden-sm  hidden-xs"> -->
         <ul class="nav-right pull-right list-unstyled  ">
 
+
+
             <li class="dropdown text-normal nav-profile">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                     <span class="hidden-xs">
-                        <span> {{printUser(currentUser)}}    </span>
+                     <span  >
+                        <span> <img class="  img-rounded" align="center" height="30" width="30"
+                                    ng-src="{{getAvatarUrlByUser(currentUser)}}"/>  {{printUser(currentUser)}}    </span>
                     </span>
+
+
+
+
                 </a>
 
             </li>
+
+
+
+
+
         </ul>
 
     </div>

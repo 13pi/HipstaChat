@@ -264,7 +264,22 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                 };
 
 
-                // Delete from server and delete Notification Toasts
+                this.getAccountSettings = function () {
+                    return Restangular.one("accountSettings/");
+                };
+
+
+                this.updateAccountSettings = function (settings) {
+                    var a = {};
+                    a.data = JSON.stringify ( settings);
+                    return Restangular.one("accountSettings/").customPOST(a);
+                };
+
+
+
+
+
+        // Delete from server and delete Notification Toasts
                 this.deleteNotificationById = function (id) {
                     console.log($rootScope.allNotificationToasts);
                     for (var i=0; i < $rootScope.allNotificationToasts.length; i++){

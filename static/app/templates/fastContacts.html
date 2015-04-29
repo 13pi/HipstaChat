@@ -17,7 +17,17 @@
 
     <tr ng-repeat="project in getAccountListFullResult">
         <td  class="col-md-1" >{{$index+1}}</td>
-        <td > {{project.firstName}}  {{project.lastName}} (  {{resolveUser(project.id).nickName}}  )  </td>
+        <td >
+
+            <a href="#/user/details/{{project.id}}">
+                {{project.firstName}}  {{project.lastName}} (  {{resolveUser(project.id).nickName}}  )
+            </a>
+
+
+
+
+
+        </td>
         <!--<td>  <button ng-click="addToContactListfoo(project.id)" class="btn btn-success"> В контакт лист</button>    </td>-->
     </tr>
 

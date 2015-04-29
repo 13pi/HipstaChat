@@ -90,12 +90,12 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.scrollbarChanged = function () {
-        if (!$scope.useScrollable){
-            //$("#messageConversationBox").css("max-height",  "400000000px");
+        if (!$rootScope.useScrollable){
             $scope.messageBox.css("max-height",  "400000000px");
         }else{
             $scope.iniConversationBoxHeight();
         }
+        $rootScope.saveAccountSettings ();
     };
 
     $scope.iniConversationBoxHeight = function () {
@@ -123,8 +123,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
             $scope.currentRoomMessages = e.messages;
-
-
 
             if ( $scope.updatedMessagesTimes < 2){
                 if (!$scope.messageBox){

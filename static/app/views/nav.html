@@ -34,11 +34,58 @@
             <a href="">
                 <i class="fa fa-outdent"></i>
                 <span data-i18n="Быстрые Контакты"
-                                                 content-template="templates/fastContacts.html"
-                                                 data-placement="right" data-animation="am-slide-right"  data-container="body" bs-aside="getAccountListFullResult"
-                    ></span>
+                      content-template="templates/fastContacts.html"
+                      data-placement="right" data-animation="am-slide-right"  data-container="body" bs-aside="getAccountListFullResult"
+                        ></span>
             </a>
         </li>
+
+        <br/><br/>
+
+        <!--hidden-sm hidden-xs-->
+        <li class="  admin-section "  ng-repeat="room in allRooms">
+            <a href="#/room/details/{{room.id}}" >
+
+
+
+
+                     <div ng-if="room.pm">
+                         <div  ng-repeat="member in room.members       ">
+                             <div ng-if="member != currentUser.id">
+                                 <i class="fa fa-child" ng-if="room.pm" ></i>
+
+                                 {{printUser(resolveUser(member))}}
+                             </div>
+                         </div>
+                     </div>
+
+                    <div ng-if="!room.pm">
+
+                                <span ng-if="room.name.length > 42">
+                                    <i class="fa fa-bookmark" ng-if="!room.pm" ></i>
+                                     {{room.name | limitTo:42}} ...
+                                </span>
+
+                                <span ng-if="room.name.length <= 42">
+                                    <i class="fa fa-bookmark" ng-if="!room.pm" ></i>
+                                    {{room.name   }}
+                                </span>
+
+                    </div>
+
+                <span class="badge badge-info" ng-if="countNotificationInRoomById(room.id) > 0 "> {{countNotificationInRoomById(room.id)}} </span>
+
+            </a>
+
+
+
+
+
+        </li>
+
+
+
+
 
     </ul>
 
