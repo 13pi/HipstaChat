@@ -120,12 +120,54 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
+            $rootScope.muteRoomById = function (id) {
+                $rootScope.accountSettings.notifications.ignoredRoomsIDs.push(id);
+                logger.logSuccess("Уведомления в комнате отключены!");
+                $rootScope.saveAccountSettings();
+            };
+
+            $rootScope.unMuteRoomById = function (id) {
+                var index = $rootScope.accountSettings.notifications.ignoredRoomsIDs.indexOf(id);
+
+                if (index > -1) {
+                    $rootScope.accountSettings.notifications.ignoredRoomsIDs.splice(index, 1);
+                }
+
+                logger.logSuccess("Уведомления в комнате включены!");
+                $rootScope.saveAccountSettings();
+            };
+
+
+            $rootScope.isRoomMuted = function (id) {
+
+                if (!$rootScope.accountSettings) return false;
+                if (!$rootScope.accountSettings.notifications  || !$rootScope.accountSettings.notifications.ignoredRoomsIDs) return false;
+
+                for (var i=0; i < $rootScope.accountSettings.notifications.ignoredRoomsIDs.length; i++){
+                    if ($rootScope.accountSettings.notifications.ignoredRoomsIDs[i] == id){
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+
             $rootScope.defaultAccountSettings = {};
             $rootScope.defaultAccountSettings = {};
             $rootScope.defaultAccountSettings.navigation = {};
             $rootScope.defaultAccountSettings.navigation.useScrollable = true;
             $rootScope.defaultAccountSettings.navigation.useScrollable = true;
             $rootScope.defaultAccountSettings.navigation.useScrollable = true;
+
+            $rootScope.defaultAccountSettings.notifications = {};
+            $rootScope.defaultAccountSettings.notifications.newMessageTypeDisabled = false;
+            $rootScope.defaultAccountSettings.notifications.addedToRoomTypeDisabled = false;
+            $rootScope.defaultAccountSettings.notifications.deletedFromToomTypeDisabled = false;
+            $rootScope.defaultAccountSettings.notifications.changesInRoomTypeDisabled = false;
+            $rootScope.defaultAccountSettings.notifications.addedToContactListTypeDisabled = false;
+            $rootScope.defaultAccountSettings.notifications.deletedFromContactListTypeDisabled = false;
+
+            $rootScope.defaultAccountSettings.notifications.ignoredRoomsIDs = [];
 
 
 
@@ -138,9 +180,17 @@
                     $rootScope.accountSettings = $rootScope.defaultAccountSettings;
                     console.warn("USED DEFAULT SETTINGS");
                 }else{
-
                     $rootScope.accountSettings =  JSON.parse(data.data);
                     $rootScope.useScrollable = $rootScope.accountSettings.navigation.useScrollable ;
+
+                    if (! $rootScope.accountSettings.notifications){
+                        $rootScope.accountSettings.notifications = $rootScope.defaultAccountSettings.notifications;
+                    }
+                    if (!$rootScope.accountSettings.notifications.ignoredRoomsIDs){
+                        $rootScope.accountSettings.notifications.ignoredRoomsIDs = $rootScope.defaultAccountSettings.notifications.ignoredRoomsIDs;
+                    }
+
+
                 }
 
 
@@ -265,7 +315,36 @@
             // Get all notifications from the server
             $rootScope.getNotificationsFromServers = function () {
                 chatService.getNotifications ().get().then(function (e) {
-                    $rootScope.allNotifications = e.notifications;
+
+
+                    var haveOgnoredNotifications = false;
+
+
+                    for (var i=0; i < e.notifications.length; i++){
+                        console.log(e.notifications[i].type + " | " + $scope.currentRoomId);
+
+                        if (    ($rootScope.accountSettings.notifications.newMessageTypeDisabled && e.notifications[i].type == 0 ) ||
+                                ($rootScope.accountSettings.notifications.addedToRoomTypeDisabled && e.notifications[i].type == 1 ) ||
+                                ($rootScope.accountSettings.notifications.deletedFromToomTypeDisabled && e.notifications[i].type == 2 ) ||
+                                ($rootScope.accountSettings.notifications.changesInRoomTypeDisabled && e.notifications[i].type == 4 ) ||
+                                ($rootScope.accountSettings.notifications.addedToContactListTypeDisabled && e.notifications[i].type == 5 ) ||
+                                ($rootScope.accountSettings.notifications.deletedFromContactListTypeDisabled && e.notifications[i].type == 6 )
+
+                                || ( ( (e.notifications[i].type ==0 ) || (e.notifications[i].type == 1) || (e.notifications[i].type == 2) || (e.notifications[i].type) == 4)
+                                && ( $rootScope.isRoomMuted(e.notifications[i].details) )
+                                    )
+                            ){
+                             haveOgnoredNotifications = true;
+                            console.log(1);
+                            chatService.softDeleteNotificationById (e.notifications[i].id).then (function (a) {
+                                $rootScope.getNotificationsFromServers();
+                            });
+                        }
+                    }
+                    
+                    if (!haveOgnoredNotifications){
+                        $rootScope.allNotifications = e.notifications;
+                    }
 
 
 
@@ -282,12 +361,9 @@
 
 
                     for (var i=0; i < $rootScope.allNotifications.length; i++ ){
-
                         $rootScope.allNotifications[i].more_detailed = JSON.parse( $rootScope.allNotifications[i].more_details );
-
-
                         if ($rootScope.allNotifications[i].shown) continue;
-
+                        
 
                         switch ($rootScope.allNotifications[i].type){
                          /////////////////START: We have new message notification //////////////

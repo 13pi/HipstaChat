@@ -343,6 +343,10 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                     return Restangular.one("room/"+roomId+"/").customPOST(a);
                 };
 
+                this.softDeleteNotificationById = function (id) {
+                    return Restangular.one("notifications/"+id+"/").customDELETE();
+
+                };
 
 
                 // Delete from server and delete Notification Toasts

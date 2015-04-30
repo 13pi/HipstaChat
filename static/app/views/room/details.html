@@ -11,6 +11,13 @@
 
             <div class="panel panel-info">
                 <div class="panel-heading" style="text-align: right;">
+
+                    <i class="fa fa-bell" ng-if="!isRoomMuted(currentRoom.id)" ng-click="muteRoomById(currentRoom.id)" ></i>
+
+
+                    <i class="fa fa-bell-slash" ng-if="isRoomMuted(currentRoom.id)" ng-click="unMuteRoomById(currentRoom.id)" ></i>
+                    <!--<i class="fa fa-bell-slash" ng-if="" ></i>-->
+
                     История сообщений ( {{currentRoomMessages.length}} ) | <strong>  {{currentRoom.name}} </strong> |
                     <a   ng-click="showRoomSettings()">Настройки</a>
                     <br/>

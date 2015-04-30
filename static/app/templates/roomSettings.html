@@ -111,6 +111,67 @@
             <br/>
 
 
+            <br/>
+
+
+            </div>
+        </div>
+    </section>
+
+
+<section class="panel panel-primary">
+    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Глобальные уведомления <b> </b></div>
+    <div class="panel-body text-center">
+
+        <div class="panel-body text-center">
+
+            <br/>
+            <label class="ui-checkbox">
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.accountSettings.notifications.newMessageTypeDisabled" ng-change="saveAccountSettings()"><span> отключить ВСЕ уведолмения
+                о новых сообщениях
+            </span></label>
+
+            <br/>
+
+
+            <label class="ui-checkbox">
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.accountSettings.notifications.addedToRoomTypeDisabled"  ng-change="saveAccountSettings()"><span> отключить ВСЕ уведолмения
+                о добавлении в комнату
+            </span></label>
+
+            <br/>
+
+
+            <label class="ui-checkbox">
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.accountSettings.notifications.deletedFromToomTypeDisabled"  ng-change="saveAccountSettings()"><span> отключить ВСЕ уведолмения
+                об удалении из комнат
+            </span></label>
+
+            <br/>
+
+
+            <label class="ui-checkbox">
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.accountSettings.notifications.changesInRoomTypeDisabled"  ng-change="saveAccountSettings()"><span> отключить ВСЕ уведолмения
+                об изменениях в комнатах
+            </span></label>
+
+            <br/>
+
+            <label class="ui-checkbox">
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.accountSettings.notifications.addedToContactListTypeDisabled"  ng-change="saveAccountSettings()"><span> отключить ВСЕ уведолмения
+                о внесении в контакт-лист
+            </span></label>
+
+            <br/>
+
+            <label class="ui-checkbox">
+                <input name="checkbox1" type="checkbox" ng-model="$parent.$parent.$parent.accountSettings.notifications.deletedFromContactListTypeDisabled"  ng-change="saveAccountSettings()"><span> отключить ВСЕ уведолмения
+                об удалении из контакт-листа
+            </span></label>
+
+            <br/>
+
+
             <!--<label class="ui-input">-->
                 <!--<input type="text" ng-model="$parent.messengesColumn" class="form-control">-->
                 <!--<span>  Колонка сообщений [0-12] </span></label>-->
