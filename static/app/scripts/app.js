@@ -15,6 +15,8 @@
         'mgcrea.ngStrap',
         'ngToast',
         'ngImgCrop',
+        'naif.base64',
+        'mc.resizer'
         //'app.services.mobile'
     ])
 
@@ -23,6 +25,19 @@
                 $rootScope.title = current.$$route.title;
             });
     }] ) )
+
+
+        .filter('bytes', function() {
+        return function(bytes, precision) {
+            if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+            if (typeof precision === 'undefined') precision = 1;
+            var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+                number = Math.floor(Math.log(bytes) / Math.log(1024));
+            return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+        }
+    })
+
+
         .config(['$routeProvider',  '$httpProvider', function ($routeProvider, $httpProvider) {
             $httpProvider.interceptors.push('authHttpResponseInterceptor');
             var routes, setRoutes;
@@ -122,6 +137,4 @@
 }).call(this)
 
 ;
-
-
 

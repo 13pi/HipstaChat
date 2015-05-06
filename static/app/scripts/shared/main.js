@@ -285,6 +285,25 @@
 
             };
 
+            String.prototype.replaceAll = function(search, replace){
+                return this.split(search).join(replace);
+            };
+
+            $rootScope.deSeserialiseMessages = function (messageArray) {
+                var result = [];
+              for (var i = 0; i< messageArray.length; i++){
+                  var object = {};
+                  object = messageArray[i];
+                  object.text = object.text.replaceAll ("'", "\"");
+                  //console.log(object);
+                  //console.info (typeof object);
+                  object.text = JSON.parse ( object.text );
+                  //console.info (typeof object);
+
+                  result.push (object);
+              }
+                return result;
+            };
 
 
 

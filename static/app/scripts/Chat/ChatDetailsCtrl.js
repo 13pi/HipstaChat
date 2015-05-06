@@ -110,7 +110,9 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         }
     };
 
-    $scope.updateMessagesData  = function () {
+ //////////////////////////////////////////////////
+ //////////////////////////////////////////////////
+   $scope.updateMessagesData  = function () {
         if ($scope.alreadyRequestedHistoryLock) return;
         $scope.alreadyRequestedHistoryLock = true;
 
@@ -122,8 +124,14 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         }
 
         chatService.getAllMessagesByRoomId($scope.currentRoomId).then(function (e) {
-            $scope.currentRoomMessages = e.messages;
 
+            var haveNewMSG = false;
+
+            if ( $scope.currentRoomMessages.length != e.messages.length || e.messages.length == 20){
+                $scope.currentRoomMessages = $rootScope.deSeserialiseMessages (e.messages);
+                haveNewMSG = true;
+            }
+            //$scope.currentRoomMessages = e.messages;
             if ( $scope.updatedMessagesTimes < 2){
                 if (!$scope.messageBox){
                     $scope.updatedMessagesTimes --;
@@ -131,7 +139,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
               console.warn (   $scope.messageBox.scrollTop($scope.messageBox[0].scrollHeight) );
             }
 
-            if ($scope.postsInHistory.length > 0){
+            if ($scope.postsInHistory.length > 0 && haveNewMSG){
                 $scope.currentRoomMessages = $scope.currentRoomMessages.concat (  $scope.appendDiffHistory () );
             }
             $scope.updatedMessagesTimes ++;
@@ -142,6 +150,23 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     };
 
 
+    /// show button and div
+    $scope.enableDraw = function () {
+        if (!$scope.drawCanvasEnabled){
+            $scope.drawCanvasEnabled = true;
+        }else{
+            $scope.drawCanvasEnabled = false;
+        }
+    };
+
+    /// show button and div
+    $scope.enableUpload = function () {
+        if (!$scope.uploadEnabled){
+            $scope.uploadEnabled = true;
+        }else{
+            $scope.uploadEnabled = false;
+        }
+    };
 
     $scope.getHistoryMessageWhenScrolling = function () {
         if ($scope.updatedMessagesTimes < 2 ) return;
@@ -160,11 +185,11 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         }
 
     };
-
     $scope.refreshistoryMsg =  setInterval($scope.getHistoryMessageWhenScrolling, 100);
 
+
+
     $scope.currentParticipants = $aside({scope: $scope, html:true,placement:"right", show:false, animation:"am-slide-right",  contentTemplate: 'templates/chatMembers.html'});
-        //$modal({scope: $scope, html:true,placement:"center ", title:'', show:false, contentTemplate: 'templates/chatMembers.html'});
     $scope.showCurrentParticipantsModal = function() {
         $scope.currentParticipants.$promise.then( $scope.currentParticipants.show);
     };
@@ -177,19 +202,31 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
 
-    $scope.updateRoom = function(){
-        chatService.getRoomById ($scope.currentRoomId).then(function (e) {
-            $scope.newRoomName = e.name;
-            $scope.currentRoom = e;
-        });
-    };
-    $scope.updateRoom();
-
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
     $scope.addMessageToConversation = function () {
-        chatService.addNewMessage ( $scope.currentRoomId, $scope.messageToConversation).then(function (e) {
+        var messageToSend = {};
+        messageToSend.textMsg = $scope.messageToConversation;
+
+        if ($scope.drawCanvasEnabled){
+            messageToSend.canvasImg = $scope.canvasDrawing.toDataURL('png');
+        }
+
+        if ($scope.yourModel){
+            messageToSend.file = $scope.yourModel;
+        }
+
+        chatService.addNewMessage ( $scope.currentRoomId, messageToSend).then(function (e) {
             logger.logSuccess("Сообщение отправлено!");
             $scope.updateMessagesData ();
+            $scope.canvasDrawing.clear();
+
+            $scope.messageBox.scrollTop($scope.messageBox[0].scrollHeight + 9999999)
+
+            $scope.drawCanvasEnabled = false;
+            $scope.yourModel = null;
             $scope.messageToConversation = "";
+            $scope.resetFile ();
         } )
     };
 
@@ -201,6 +238,44 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         }
         return true;
 
+    };
+
+    $scope.resetFile = function () {
+        var e = $("#uploadFile");
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+    };
+
+
+
+    $scope.base64toBlob = function (b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, {type: contentType});
+        return blob;
+    };
+
+
+    $scope.downloadBase64 = function (file) {
+        var blob = $scope.base64toBlob(file.base64, file.filetype);
+        saveAs(blob, file.filename);
     };
 
 
@@ -217,23 +292,15 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.getFromHistory = function () {
-
-        if (!$scope.currentRoomMessages[ $scope.currentRoomMessages.length-1]){
-            return;
-        }
-
-        if (!$scope.revBoolVal){
-            var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
-        }else{
-            var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
-        }
+        if (!$scope.currentRoomMessages[ $scope.currentRoomMessages.length-1]) return;
+        var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
 
         chatService.getAllMessagesByRoomIdInHistory($scope.currentRoomId, elel, 20).then(function(e){
-            $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(e.messages);
+            $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(  $rootScope.deSeserialiseMessages (e.messages)   );
+
             $scope.postsInHistory = $scope.postsInHistory.concat (e.messages);
 
             console.log(e.messages.length);
-
             console.info ( "Текщая высотаЖ " +  $scope.messageBox[0].scrollHeight);
             console.info ( "Предыдущая высотаЖ " +  $scope.prevScrollHeight);
 
@@ -267,6 +334,23 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
             logger.logSuccess("Название изменено на: " + userId);
         } )
     };
+
+    $scope.updateRoom = function(){
+        chatService.getRoomById ($scope.currentRoomId).then(function (e) {
+            $scope.newRoomName = e.name;
+            $scope.currentRoom = e;
+        });
+    };
+    $scope.updateRoom();
+
+
+    $scope.updateCanvasView = function () {
+        $scope.canvasDrawing = window.canvas;
+    };
+
+    $scope.updatingCanvas = setInterval ($scope.updateCanvasView , 1000);
+
+
 
 
 };
