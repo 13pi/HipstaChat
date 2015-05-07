@@ -78,31 +78,37 @@
 
 
             };
-            // Get all rooms of current user
-            chatService.getAllRooms().then(function (e) {
 
-                var rooms = e;
+            $rootScope.getAllRooms = function () {
+                // Get all rooms of current user
+                chatService.getAllRooms().then(function (e) {
 
-                for (var i=0; i < rooms.length; i++){
-                    if (rooms[i].lastMessage && rooms[i].lastMessage.date){
-                        rooms[i].lastMessage.normalDate = $rootScope.timeConverter( rooms[i].lastMessage.date);
+                    var rooms = e;
+
+                    for (var i=0; i < rooms.length; i++){
+                        if (rooms[i].lastMessage && rooms[i].lastMessage.date){
+                            rooms[i].lastMessage.normalDate = $rootScope.timeConverter( rooms[i].lastMessage.date);
+                        }
                     }
-                }
-                $rootScope.allRooms =  rooms;
-            });
+                    $rootScope.allRooms =  rooms;
+                });
 
 
-            $rootScope.getRoomByRoomId = function (id) {
-                if (!id) return;
-                for (var i =0; i < $rootScope.allRooms.length; i++){
-                    if ($rootScope.allRooms[i].id == id) return $rootScope.allRooms[i];
-                }
+                $rootScope.getRoomByRoomId = function (id) {
+                    if (!id) return;
+                    for (var i =0; i < $rootScope.allRooms.length; i++){
+                        if ($rootScope.allRooms[i].id == id) return $rootScope.allRooms[i];
+                    }
 
-                //chatService.getAllRooms().then(function (e) {
-                //    $rootScope.allRooms =  e;
-                //});
+                    //chatService.getAllRooms().then(function (e) {
+                    //    $rootScope.allRooms =  e;
+                    //});
 
+                };
             };
+
+            $rootScope.getAllRooms();
+
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
@@ -209,6 +215,7 @@
                 chatService.addToContactList (c).then(function(e){
                     logger.logSuccess("Добавлен новый в контакт лист");
                     $scope.getContactList();
+                    $rootScope.getAllRooms();
                 })
             };
 
@@ -216,11 +223,11 @@
                 chatService.addToContactList (c).then(function(e){
                     logger.logSuccess("Добавлен новый в контакт лист");
                     $scope.getContactList();
+                    $rootScope.getAllRooms();
                     $rootScope.deleteNotificationById(notificationId);
 
                 })
             };
-
 
             // legacy
             $rootScope.addToContactList = $rootScope.addToContactListfoo;
@@ -681,8 +688,7 @@
                   chatService.addNewRoom($scope.newRomName, $scope.newRoomType).then(function(e){
                       logger.logSuccess("Новая комната добавлена!");
                       /// обновить комнаты с сервера
-                      $rootScope.allRooms = chatService.getAllRooms().$object;
-
+                      $rootScope.getAllRooms();
                   })
                 };
 
@@ -700,7 +706,7 @@
                 $scope.leaveRoom = function (roomId) {
                     chatService.leaveRoom(roomId).then(function(e){
                         logger.logSuccess("Вы покинули комнату!");
-                        $rootScope.allRooms = chatService.getAllRooms().$object;
+                        $rootScope.getAllRooms();
                     })
                 };
 
@@ -709,6 +715,7 @@
                     chatService.deleteFromContactList ( id).then(function (e) {
                         logger.logSuccess("Удален успешно из контакт-листа!");
                         $scope.getContactList();
+                        $rootScope.getAllRooms();
                     });
                 };
 
