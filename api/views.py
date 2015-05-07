@@ -175,7 +175,7 @@ class ContactList(APIView):
                 "isAuthorizationRequest": True
             })
         else:
-            room = Room.objects.create(owner=request.user, name="%s %s ЛС" % (request.user.username, other.username),
+            room = Room.objects.create(owner=request.user, name="%s %s ЛС" % (request.user.username, other.username), type=0,
                                        private_message=True)
             room.members.add(request.user, other)
 

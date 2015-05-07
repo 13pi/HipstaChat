@@ -230,21 +230,13 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
                         messageToSend.fileUrlName = objectToSend.filename;
                         $scope.sendMessageToServer(messageToSend);
                     });
-
-
                 })();
-
-
             }
-
         }else{
             $scope.sendMessageToServer(messageToSend);
 
         }
-
         //console.info ( $scope.yourModel.filesize);
-
-
     };
 
 
@@ -393,8 +385,6 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
     $scope.updateCanvasView = function () {
         $scope.canvasDrawing = window.canvas;
 
-
-        //var A = new SimplBox(document.querySelectorAll("[data-simplbox='demo1']"), {
         var A = new SimplBox(document.querySelectorAll(".imgToZoom"), {
             quitOnDocumentClick: true
         });

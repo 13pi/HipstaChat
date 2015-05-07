@@ -11,9 +11,7 @@
                             <a ng-click="deleteAllNotifications()"  >
                                 удалить все
                             </a>
-
                         </div>
-
 
                         <div class="panel-body ">
                             <div class="conversationWrap">
@@ -23,8 +21,6 @@
                                     <div ng-if="isDebugMode()">
                                         {{notification}}
                                     </div>
-
-
 
                                         <div ng-if="notification.type == 5 && notification.more_detailed.isAuthorizationRequest  ">
                                             <div class="row">
@@ -221,20 +217,13 @@
                                         <!--</div>-->
                                     <!--</div>-->
 
-
-
-
                                         <!--[ {{notification.id}} ]-->
                                     <!--</h4>-->
 
-                                    <p>
 
                                     <!--<div ng-if="getRoomByRoomId(notification.details).id">-->
                                         <!--в комнате <a href="#/room/details/{{notification.details}}">{{getRoomByRoomId(notification.details).name}}</a>-->
                                     <!--</div>-->
-
-
-                                    </p>
                                 </div>
 
                             </div>
@@ -266,8 +255,6 @@
                                         <div class="col-md-4">
                                             <img class="  img-rounded" align="center" height="250" width="250"
                                                  ng-src="{{getAvatarUrlByUser(currentUser)}}"/>
-
-
                                             <br>
 
                                             <div ng-show="editProfileMode">
@@ -275,16 +262,9 @@
                                                 <input type="text" ng-model="currentUser.avatarUrl" class="form-control">
                                                 или загрузите
                                                 <br/>
-
                                                 <div>Select an image file: <input type="file" id="fileInput" /></div>
-
-
                                             </div>
-
-
-
                                         </div>
-
 
 
                                         <div class="col-md-8">
@@ -424,27 +404,12 @@
                                             </div>
                                         </div>
 
-
-
-
                                     </div>
-
-
-
                                     <button class="btn btn-success" ng-click="uploadAvatar()">Отправить аватар</button>
-
                                 </div>
-
                             </section>
                         </div>
-
-
                     </div>
-
-
-
-
-
 
 
                     <div class="row">
@@ -470,9 +435,6 @@
                                 </div>
                                 <div class="panel-body text-center">
 
-
-
-
                                     <div ng-if="isDebugMode()">
                                         {{getAccountListFullResult | json}}
                                     </div>
@@ -493,8 +455,6 @@
 
                                             <td>
                                                 <a href="#/user/details/{{project.id}}">
-                                                    <!--<i class="fa fa-circle-o-notch" style="color: green;"></i>-->
-
                                                                 <img class="  img-rounded  " width="30" height="30"
                                                                      ng-src="{{getAvatarUrlByUser(resolveUser(project.id))}}"/>
                                                     {{printUser(project)}}
@@ -583,7 +543,6 @@
                                             <th>Участники</th>
                                             <th>Название</th>
                                             <th>Сообщение</th>
-                                            <!--<th>Владелец</th>-->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -603,101 +562,65 @@
                                                 </div>
 
                                                 <div class="row nopadding" ng-if="room.pm">
-                                                    <!--{{room.members}}-->
-
                                                     <div  ng-repeat="member in room.members       ">
                                                         <div ng-if="member != currentUser.id">
                                                             <img class="  img-rounded  " width="40" height="40"
                                                                  ng-src="{{getAvatarUrlByUser(resolveUser(member))}}"/>
                                                         </div>
-
-
                                                     </div>
-
                                                 </div>
-
-
 
                                                 <br/>
                                                 <span class="badge  " ng-if="!room.pm">{{room.members.length}}</span>
-
-
                                                 <br/>
-                                               <!--<div class="hidden-sm hidden-xs hidden-md visible-lg"> ( {{room.members.length}} ) </div>-->
                                             </td>
 
                                             <td ng-class="{'warning': resolveUser(room.owner).id == currentUser.id}">
-
-
                                                 <h5 ng-if="!room.pm">  <a href="#/room/details/{{room.id}}"> {{room.name}}   </a> </h5>
-
-
                                                 <div ng-if="room.type == 1">Шифрование</div>
-
                                                 <h5 ng-if="room.pm">  <a href="#/room/details/{{room.id}}">
-
                                                     <div  ng-repeat="member in room.members       ">
                                                         <div ng-if="member != currentUser.id">
-
                                                             {{printUser(resolveUser(member))}}
                                                         </div>
-
-
                                                     </div>
-
                                                 </a> </h5>
-
-                                                <!--<h5>  <a href="#/room/details/{{room.id}}"> {{room.name}}   </a> </h5>-->
-
                                                 <div ng-if="room.lastMessage" style=" position: relative;  ">
-                                                    <!--<div style="position: absolute;  bottom: 9999; " >-->
-
                                                 </div>
-
                                             </td>
-
 
                                             <td >
                                                 <a href="#/room/details/{{room.id}}">
 
-                                                <div class="callout callout-warning" ng-if="room.lastMessage" style="margin: 0; !important  ">
+                                                    <div class="callout callout-warning" ng-if="room.lastMessage" style="margin: 0; !important  ">
 
-                                                   <div class="row">
-                                                       <div class="col-md-3">
-                                                           <img class="  img-rounded  " width="30" height="30"
-                                                                ng-src="{{getAvatarUrlByUser(resolveUser(room.lastMessage.sender))}}"/>
-                                                       </div>
-                                                       <div class="co-md-9">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <img class="  img-rounded  " width="30" height="30"
+                                                                     ng-src="{{getAvatarUrlByUser(resolveUser(room.lastMessage.sender))}}"/>
+                                                            </div>
+                                                            <div class="co-md-9">
 
-                                                           <div ng-if="room.lastMessage.text.length > 30">
-                                                               {{room.lastMessage.text | limitTo: 30}} ...
-                                                           </div>
+                                                                <div ng-if="deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg.length > 30">
+                                                                    {{deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg | limitTo: 30}} ...
+                                                                </div>
 
-                                                           <div ng-if="room.lastMessage.text.length <= 30">
-                                                               {{room.lastMessage.text  }}
-                                                           </div>
-
-
-                                                           <br/>
-
-
-                                                       </div>
-
-                                                       </div>
-
-                                                    <b>
-                                                        <small class="text-muted pull-right ">  {{ timeConverter( room.lastMessage.date )}}</small> </b>
-                                                   </div>
+                                                                <div ng-if="deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg.length <= 30">
+                                                                    {{deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg }}
+                                                                </div>
+                                                                <br/>
+                                                            </div>
+                                                        </div>
+                                                        <b>
+                                                            <small class="text-muted pull-right ">  {{ timeConverter( room.lastMessage.date )}}</small> </b>
+                                                    </div>
 
 
                                                     <div class="callout callout-warning" ng-if="!room.lastMessage" style="margin: 0; !important  ">
                                                         <h5> нет сообщений ! </h5>
                                                     </div>
 
-
-
-
-                                            </a>
+                                                </a>
                                             </td>
 
                                             <td ng-if="editProfileMode">
@@ -739,12 +662,12 @@
                                             <input type="text" ng-model="newRomName" class="form-control" placeholder="введите название">
                                         </div>
 
-                                        <div class="col-md-3">
-                                            <label class="ui-checkbox" ng-show="newRomName.length > 0">
-                                                <input type="checkbox" ng-model="newRoomTypeCheckBox">
-                                                <span> Шифровать </span>
-                                            </label>
-                                        </div>
+                                        <!--<div class="col-md-3">-->
+                                            <!--<label class="ui-checkbox" ng-show="newRomName.length > 0">-->
+                                                <!--<input type="checkbox" ng-model="newRoomTypeCheckBox">-->
+                                                <!--<span> Шифровать </span>-->
+                                            <!--</label>-->
+                                        <!--</div>-->
 
 
                                         <div class="col-md-3">
@@ -781,9 +704,7 @@
 
                                             <th class="hidden-sm hidden-xs hidden-md visible-lg">№</th>
                                             <th>Участники</th>
-                                            <!--<th>Название</th>-->
                                             <th>  </th>
-                                            <!--<th>Владелец</th>-->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -803,55 +724,29 @@
                                                 </div>
 
                                                 <div class="row nopadding" ng-if="room.pm">
-                                                    <!--{{room.members}}-->
-
                                                     <div  ng-repeat="member in room.members       ">
                                                         <div ng-if="member != currentUser.id">
                                                             <img class="  img-rounded  " width="40" height="40"
                                                                  ng-src="{{getAvatarUrlByUser(resolveUser(member))}}"/>
                                                         </div>
-
-
                                                     </div>
-
                                                 </div>
-
-
-
                                                 <br/>
                                                 <span class="badge  " ng-if="!room.pm">{{room.members.length}}</span>
-
-
                                                 <br/>
-                                                <!--<div class="hidden-sm hidden-xs hidden-md visible-lg"> ( {{room.members.length}} ) </div>-->
                                             </td>
 
-
-                                            <td >
-
-
-
+                                            <td>
                                                 <h5 ng-if="!room.pm">  <a href="#/room/details/{{room.id}}"> {{room.name}}   </a> </h5>
                                                 <h5 ng-if="room.pm">  <a href="#/room/details/{{room.id}}">
-
                                                     <div  ng-repeat="member in room.members       ">
                                                         <div ng-if="member != currentUser.id">
-
                                                             {{printUser(resolveUser(member))}}
                                                         </div>
-
-
                                                     </div>
-
                                                 </a> </h5>
 
-                                                <div ng-if="room.lastMessage" style=" position: relative;  ">
-                                                    <!--<div style="position: absolute;  bottom: 9999; " >-->
-
-                                                </div>
-
                                                 <br/>
-
 
                                                 <a href="#/room/details/{{room.id}}">
 
@@ -864,18 +759,14 @@
                                                             </div>
                                                             <div class="co-md-9">
 
-                                                                <div ng-if="room.lastMessage.text.length > 30">
-                                                                    {{room.lastMessage.text | limitTo: 30}} ...
+                                                                <div ng-if="deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg.length > 30">
+                                                                    {{deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg | limitTo: 30}} ...
                                                                 </div>
 
-                                                                <div ng-if="room.lastMessage.text.length <= 30">
-                                                                    {{room.lastMessage.text  }}
+                                                                <div ng-if="deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg.length <= 30">
+                                                                    {{deSeserialiseOneMessage(room.lastMessage, room.type).text.textMsg }}
                                                                 </div>
-
-
                                                                 <br/>
-
-
                                                             </div>
 
                                                         </div>
@@ -888,9 +779,6 @@
                                                     <div class="callout callout-warning" ng-if="!room.lastMessage" style="margin: 0; !important  ">
                                                         <h5> нет сообщений ! </h5>
                                                     </div>
-
-
-
 
                                                 </a>
                                             </td>
@@ -940,33 +828,6 @@
                                     </div>
 
                                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                             </section>

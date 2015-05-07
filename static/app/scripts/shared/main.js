@@ -268,7 +268,7 @@
 
                 var result = 0;
                 for (var i=0; i < $rootScope.allNotifications.length; i++){
-                    console.log($rootScope.allNotifications[i].type + " | " + id);
+                    //console.log($rootScope.allNotifications[i].type + " | " + id);
 
                     if ( ($rootScope.allNotifications[i].type == 0
                         || $rootScope.allNotifications[i].type == 1
@@ -276,7 +276,7 @@
                         || $rootScope.allNotifications[i].type == 3
                         || $rootScope.allNotifications[i].type == 4 )
                         && $rootScope.allNotifications[i].details == id ){
-                        console.log(1);
+                        //console.log(1);
                         result ++;
                         //chatService.deleteNotificationById ($rootScope.allNotifications[i].id)
                     }
@@ -294,6 +294,9 @@
             $rootScope.decryptMessage = function (msg, roomType, key) {
                 if (roomType == 0) return msg;
 
+                // already decrypted
+                if ( msg.text && typeof msg.text == "object" && roomType == 1) return msg;
+
                 key = "3eddffewfew";
                 var res = msg;
 
@@ -304,32 +307,28 @@
 
                 console.log(decrypted);
 
+                return decrypted;
+            };
 
-                res.text = decrypted.replaceAll ("'", "\"");
+            $rootScope.deSeserialiseOneMessage = function (msg, roomType) {
+                var object = {};
+                object = msg;
+                object = $rootScope.decryptMessage ( object, roomType, "343243"  );
 
-                console.log(res);
-                res = JSON.parse (res);
-                return res;
+                //console.warn (object);
+                if ( typeof object.text == "string" ){
+                    object.text = object.text.replaceAll ("'", "\"");
+                    object.text = JSON.parse ( object.text );
+                }
 
+                return object;
             };
 
 
             $rootScope.deSeserialiseMessages = function (messageArray, roomType) {
-                var result = [];
+              var result = [];
               for (var i = 0; i< messageArray.length; i++){
-                  var object = {};
-                  object = messageArray[i];
-
-                  object = $rootScope.decryptMessage ( object, roomType, "343243"  );
-
-                  object.text = object.text.replaceAll ("'", "\"");
-                  //console.log(object);
-                  //console.info (typeof object);
-                  object.text = JSON.parse ( object.text );
-                  //console.info (typeof object);
-
-
-                  result.push (object);
+                  result.push ( $rootScope.deSeserialiseOneMessage(messageArray[i], roomType)  );
               }
                 return result;
             };
@@ -436,7 +435,7 @@
                                             '</div>' +
                                             ' <div class="col-md-8">' +
                                             ' Сообщение: '+ $rootScope.printUser( $rootScope.resolveUser(msg.sender) ) +'  <br/>' +
-                                            '  <strong> ') + msg.text + $sce.trustAsHtml(' </strong> </div>  </div>' +
+                                            '  <strong> ') + $rootScope.deSeserialiseOneMessage ( msg, room.type).text.textMsg + $sce.trustAsHtml(' </strong> </div>  </div>' +
                                             ' <small class="text-muted pull-right ">   '+ $rootScope.timeConverter( msg.date ) +' </small> <br/>' +
                                             '  <div class="row"> <div class="col-md-6"> <a href="#/room/details/'+msg.room+'">  ' ) + room.name+ $sce.trustAsHtml ('  </a> ' ) +
                                             //$sce.trustAsHtml ( '</div> <div class="col-md-6"> <button ng-click="deleteNotificationById('+notificationId+')" class="btn btn-warning"> [ X ]  </button>') +
