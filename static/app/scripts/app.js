@@ -38,11 +38,13 @@
     })
 
 
-        .config(['$routeProvider',  '$httpProvider', function ($routeProvider, $httpProvider) {
+        .config(['$routeProvider',  '$httpProvider', '$compileProvider', function ($routeProvider, $httpProvider, $compileProvider) {
             $httpProvider.interceptors.push('authHttpResponseInterceptor');
             var routes, setRoutes;
 
             $httpProvider.defaults.withCredentials = true;
+            //$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript|data|http):/);
+            $compileProvider.aHrefSanitizationWhitelist(/[\x21-\x7E]/);
 
             //$httpProvider.interceptors.push(function($q, localStorageService ) {
             //    return {

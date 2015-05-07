@@ -128,7 +128,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
             var haveNewMSG = false;
 
             if ( $scope.currentRoomMessages.length != e.messages.length || e.messages.length == 20){
-                $scope.currentRoomMessages = $rootScope.deSeserialiseMessages (e.messages);
+                $scope.currentRoomMessages = $rootScope.deSeserialiseMessages (e.messages, $scope.currentRoom.type);
                 haveNewMSG = true;
             }
             //$scope.currentRoomMessages = e.messages;
@@ -249,6 +249,14 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
 
     $scope.sendMessageToServer = function (messageToSend) {
+        var secretRommKey = "3eddffewfew";
+
+        if ($scope.currentRoom.type == 1){
+            //messageToSend.hash = CryptoJS.SHA512( JSON.stringify( messageToSend )).toString();
+            var encryptedPart = CryptoJS.AES.encrypt(JSON.stringify( messageToSend ), secretRommKey).toString();
+            messageToSend = encryptedPart;
+        }
+
         chatService.addNewMessage ( $scope.currentRoomId, messageToSend).then(function (e) {
             logger.logSuccess("Сообщение отправлено!");
             $scope.updateMessagesData ();
@@ -324,6 +332,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         console.info("Уход из комнаты: " + $scope.currentRoom.name + " с ID: " + $scope.currentRoom.id);
         clearInterval($scope.refreshMessages);
         clearInterval($scope.refreshistoryMsg);
+        clearInterval($scope.updatingCanvas);
         $scope.currentRoomSettings.hide();
     });
 
@@ -333,7 +342,7 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         var elel = $scope.currentRoomMessages[ $scope.currentRoomMessages.length-1].id;
 
         chatService.getAllMessagesByRoomIdInHistory($scope.currentRoomId, elel, 20).then(function(e){
-            $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(  $rootScope.deSeserialiseMessages (e.messages)   );
+            $scope.currentRoomMessages =  $scope.currentRoomMessages.concat(  $rootScope.deSeserialiseMessages (e.messages, $scope.currentRoom.type )   );
 
             $scope.postsInHistory = $scope.postsInHistory.concat (e.messages);
 
@@ -383,6 +392,14 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
 
     $scope.updateCanvasView = function () {
         $scope.canvasDrawing = window.canvas;
+
+
+        //var A = new SimplBox(document.querySelectorAll("[data-simplbox='demo1']"), {
+        var A = new SimplBox(document.querySelectorAll(".imgToZoom"), {
+            quitOnDocumentClick: true
+        });
+        A.init();
+
     };
 
     $scope.updatingCanvas = setInterval ($scope.updateCanvasView , 1000);

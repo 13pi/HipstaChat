@@ -289,16 +289,45 @@
                 return this.split(search).join(replace);
             };
 
-            $rootScope.deSeserialiseMessages = function (messageArray) {
+
+
+            $rootScope.decryptMessage = function (msg, roomType, key) {
+                if (roomType == 0) return msg;
+
+                key = "3eddffewfew";
+                var res = msg;
+
+                console.log("msg" );
+                console.log(msg );
+
+                var decrypted = CryptoJS.AES.decrypt(msg.text, key).toString();
+
+                console.log(decrypted);
+
+
+                res.text = decrypted.replaceAll ("'", "\"");
+
+                console.log(res);
+                res = JSON.parse (res);
+                return res;
+
+            };
+
+
+            $rootScope.deSeserialiseMessages = function (messageArray, roomType) {
                 var result = [];
               for (var i = 0; i< messageArray.length; i++){
                   var object = {};
                   object = messageArray[i];
+
+                  object = $rootScope.decryptMessage ( object, roomType, "343243"  );
+
                   object.text = object.text.replaceAll ("'", "\"");
                   //console.log(object);
                   //console.info (typeof object);
                   object.text = JSON.parse ( object.text );
                   //console.info (typeof object);
+
 
                   result.push (object);
               }
@@ -639,10 +668,9 @@
                 };
 
 
+
+
                 $scope.newRoomType = 0;
-
-
-
                 $scope.addNewRoom = function(){
 
                     if ($scope.newRoomTypeCheckBox){

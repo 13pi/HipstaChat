@@ -71,6 +71,9 @@
 
                                     <div class="media-body">
 
+
+
+
                                         <div ng-if="isDebugMode() ">
                                             {{mess.text  | json}}
                                         </div>
@@ -80,15 +83,24 @@
                                         </div>
 
                                         <div ng-if="mess.text.canvasImg" >
-                                             <img ng-src="{{ mess.text.canvasImg }}" height="150" width="150">
+                                            <a ng-href="{{ mess.text.canvasImg }}" class="imgToZoom" data-simplbox="{{mess.id}}">
+                                                <img ng-src="{{ mess.text.canvasImg }}" height="150" width="150">
+                                            </a>
+
                                         </div>
+
+
+
+
                                         <div ng-if="mess.text.file" >
 
                                             <div ng-if="mess.text.file.filetype == 'image/jpeg'">
-                                                <img  ng-src="data:image/png;base64,{{ mess.text.file.base64 }}" height="150" width="150">
+
+                                                <a href="data:image/png;base64,{{ mess.text.file.base64 }}" class="imgToZoom" data-simplbox="{{mess.id}}">
+                                                    <img  ng-src="data:image/png;base64,{{ mess.text.file.base64 }}" height="150" width="150" alt="{{mess.text}}">
+                                                </a>
+                                                <!--<img  ng-src="data:image/png;base64,{{ mess.text.file.base64 }}" height="150" width="150">-->
                                             </div>
-
-
 
                                             Файл: {{mess.text.file.filename}} <br/>
                                             Размер:  {{mess.text.file.filesize | bytes}}
@@ -96,10 +108,16 @@
                                             <button class="btn btn-success" ng-click="downloadBase64(mess.text.file)">Скачать</button>
                                         </div>
 
+
+
                                         <div ng-if="mess.text.fileUrl">
                                          Файл: <a href=" {{mess.text.fileUrl}}"  target="_blank">  {{mess.text.fileUrlName}}  </a>
                                             <br/>
-                                            <img  ng-src="{{mess.text.fileUrl}}" height="150" width="150">
+
+                                            <a href="{{mess.text.fileUrl}}" class="imgToZoom" data-simplbox="{{mess.id}}">
+                                                <img  ng-src="{{mess.text.fileUrl}}" height="150" width="150" alt="{{mess.text}}">
+                                            </a>
+
                                         </div>
 
 
