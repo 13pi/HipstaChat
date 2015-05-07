@@ -513,7 +513,7 @@
 
         quitOnImageClick: true,
         quitOnDocumentClick: false,
-        enableKeyboard: true,
+        enableKeyboard: false,
 
         onImageLoadStart: function () {},
         onImageLoadEnd: function () {},
