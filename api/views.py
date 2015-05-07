@@ -255,6 +255,7 @@ class Rooms(APIView):
             'id': room.pk,
             'owner': room.owner.email,
             'pm': room.private_message,
+            'type': room.type,
             'lastMessage': messages[0].serialize() if messages.exists() else ''
         }
 
@@ -288,7 +289,7 @@ class Rooms(APIView):
         else:
             members = []
 
-        room = Room.objects.create(owner=request.user, name=parsed['name'])
+        room = Room.objects.create(owner=request.user, name=parsed['name'], type=parsed['type'])
         room.members.add(request.user, *members)
         room.save()
 
@@ -511,7 +512,29 @@ class AvatarUpload(APIView):
         return api_response({"response": "ok"})
 
 
+class FileUpload(APIView):
+    methods = ['POST']
 
+    @auth_required
+    def post(self, request):
+        parsed = json.loads(request.body.decode())
+
+        if not 'data' in parsed:
+            self.error_response('data should be in request')
+
+        data = parsed['data']
+        image = decodebytes(data.encode())
+
+        ava_path = 'static_files/' + md5(data.encode()).hexdigest() + '.' + parsed['filename']
+        path = os.path.join(MEDIA_ROOT, ava_path)
+
+        with open(path, 'wb') as f:
+            f.write(image)
+
+        # request.user.avatar = MEDIA_URL + ava_path
+        # request.user.save()
+
+        return api_response({"response": "ok", "url": ava_path})
 
 
 

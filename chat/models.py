@@ -12,6 +12,7 @@ class Room(Model):
     name = CharField(max_length=256, blank=True)
     members = ManyToManyField('HipstaChat.HCUser')
     private_message = BooleanField(default=False)
+    type = IntegerField()
 
 
 class Message(Model):

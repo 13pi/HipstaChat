@@ -245,6 +245,15 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                      return Restangular.one("uploadAvatar/").customPOST(a);
                  };
 
+                this.uploadFile = function (avatarBase64) {
+                    var a = {};
+                    a.data = avatarBase64.data;
+                    a.filename = avatarBase64.filename;
+                    return Restangular.one("uploadFile/").customPOST(a);
+                };
+
+
+
 
                  // for offline
                 this.getUserById = function (userId) {
@@ -286,9 +295,10 @@ angular.module('app.services', ['restangular', 'LocalStorageModule' ])
                     return Restangular.one("room/"+id+"/").get();
                 };
 
-                this.addNewRoom = function (room) {
+                this.addNewRoom = function (room,type) {
                     var a = {};
                     a.name = room;
+                    a.type = type;
                     return Restangular.one("room/").customPUT(a);
                 };
 

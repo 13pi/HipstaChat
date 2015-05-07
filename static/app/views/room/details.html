@@ -89,12 +89,21 @@
                                             </div>
 
 
+
                                             Файл: {{mess.text.file.filename}} <br/>
                                             Размер:  {{mess.text.file.filesize | bytes}}
                                             <br/>
                                             <button class="btn btn-success" ng-click="downloadBase64(mess.text.file)">Скачать</button>
-                                           <!--{{mess.text.file}}-->
                                         </div>
+
+                                        <div ng-if="mess.text.fileUrl">
+                                         Файл: <a href=" {{mess.text.fileUrl}}"  target="_blank">  {{mess.text.fileUrlName}}  </a>
+                                            <br/>
+                                            <img  ng-src="{{mess.text.fileUrl}}" height="150" width="150">
+                                        </div>
+
+
+
 
 
 

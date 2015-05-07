@@ -639,12 +639,19 @@
                 };
 
 
-
+                $scope.newRoomType = 0;
 
 
 
                 $scope.addNewRoom = function(){
-                  chatService.addNewRoom($scope.newRomName).then(function(e){
+
+                    if ($scope.newRoomTypeCheckBox){
+                        $scope.newRoomType = 1;
+                    }else{
+                        $scope.newRoomType = 0;
+                    }
+
+                  chatService.addNewRoom($scope.newRomName, $scope.newRoomType).then(function(e){
                       logger.logSuccess("Новая комната добавлена!");
                       /// обновить комнаты с сервера
                       $rootScope.allRooms = chatService.getAllRooms().$object;

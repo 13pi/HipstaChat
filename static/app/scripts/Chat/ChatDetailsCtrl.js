@@ -213,9 +213,42 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
         }
 
         if ($scope.yourModel){
-            messageToSend.file = $scope.yourModel;
+            // if file size less then 150 kb - encode attachment to message
+            // else upload to server as file
+            if ( $scope.yourModel.filesize < 150000 ){
+                messageToSend.file = $scope.yourModel;
+                $scope.sendMessageToServer (messageToSend);
+            }else{
+
+                (function () {
+                    var objectToSend = {};
+                    objectToSend.data = $scope.yourModel.base64;
+                    objectToSend.filename = $scope.yourModel.filename;
+
+                    chatService.uploadFile (objectToSend).then(function (data) {
+                        messageToSend.fileUrl = "/media/" + data.url;
+                        messageToSend.fileUrlName = objectToSend.filename;
+                        $scope.sendMessageToServer(messageToSend);
+                    });
+
+
+                })();
+
+
+            }
+
+        }else{
+            $scope.sendMessageToServer(messageToSend);
+
         }
 
+        //console.info ( $scope.yourModel.filesize);
+
+
+    };
+
+
+    $scope.sendMessageToServer = function (messageToSend) {
         chatService.addNewMessage ( $scope.currentRoomId, messageToSend).then(function (e) {
             logger.logSuccess("Сообщение отправлено!");
             $scope.updateMessagesData ();
@@ -229,6 +262,10 @@ function ChatDetailsCtrl($scope, $rootScope,  Restangular, $route, $http, localS
             $scope.resetFile ();
         } )
     };
+
+
+
+
 
 
     $scope.alreadyInChatFilter = function(obj){

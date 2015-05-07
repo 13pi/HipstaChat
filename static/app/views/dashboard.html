@@ -630,6 +630,10 @@
 
 
                                                 <h5 ng-if="!room.pm">  <a href="#/room/details/{{room.id}}"> {{room.name}}   </a> </h5>
+
+
+                                                <div ng-if="room.type == 1">Шифрование</div>
+
                                                 <h5 ng-if="room.pm">  <a href="#/room/details/{{room.id}}">
 
                                                     <div  ng-repeat="member in room.members       ">
@@ -727,15 +731,23 @@
                                     <hr/>
                                     <br/>
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             Создать комнату
                                         </div>
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <input type="text" ng-model="newRomName" class="form-control" placeholder="введите название">
                                         </div>
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
+                                            <label class="ui-checkbox" ng-show="newRomName.length > 0">
+                                                <input type="checkbox" ng-model="newRoomTypeCheckBox">
+                                                <span> Шифровать </span>
+                                            </label>
+                                        </div>
+
+
+                                        <div class="col-md-3">
                                             <button ng-click="addNewRoom()" class="btn btn-success" ng-if="newRomName.length > 0">создать</button>
                                         </div>
                                     </div>
